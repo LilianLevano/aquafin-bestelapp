@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Aanvraag;
 use App\Models\Role;
 use App\Models\User;
 
@@ -29,5 +30,9 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
             'is_admin' => true,
         ]);
+
+        User::factory()->count(4)->create();
+
+        Aanvraag::factory()->count(10)->create();
     }
 }
