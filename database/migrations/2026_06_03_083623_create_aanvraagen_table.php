@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('aanvraagen', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('posted_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->string('name');
             $table->string('title');
             $table->text('description');
             $table->date('posted_on');

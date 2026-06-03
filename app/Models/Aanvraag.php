@@ -10,14 +10,12 @@ class Aanvraag extends Model
     use HasFactory;
     protected $table = 'aanvraagen';
    protected $fillable = [
-       'posted_by',
+       'name',
        'title',
        'description',
        'posted_on',
        'is_completed',
    ];
 
-   public function user(){
-       return $this->belongsTo(User::class, 'posted_by'); // M:1 Many to One relation
-   }
+
 }
