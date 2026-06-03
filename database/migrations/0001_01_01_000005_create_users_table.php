@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->foreignId('role_id')->nullable()->constrained()->nullOnDelete();
             $table->string('password');
-            $table->boolean('is_admin')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
