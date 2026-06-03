@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email')->unique();
-            $table->string('role_id');
+            $table->foreignId('role_id')->nullable()->constrained()->nullOnDelete();
             $table->string('password');
             $table->boolean('is_admin')->default(false);
             $table->rememberToken();
