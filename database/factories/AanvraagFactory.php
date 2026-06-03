@@ -18,7 +18,7 @@ class AanvraagFactory extends Factory
     public function definition(): array
     {
         return [
-            'posted_by' => $this->faker->numberBetween(1, 5),
+            'name' => $this->faker->name(),
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
             'posted_on' => $this->faker->date(),
