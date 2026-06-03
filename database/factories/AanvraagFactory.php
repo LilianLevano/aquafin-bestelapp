@@ -19,6 +19,7 @@ class AanvraagFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'email' => $this->faker->email(),
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
             'posted_on' => $this->faker->date(),

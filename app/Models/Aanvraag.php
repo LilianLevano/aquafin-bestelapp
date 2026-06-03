@@ -11,6 +11,7 @@ class Aanvraag extends Model
     protected $table = 'aanvraagen';
    protected $fillable = [
        'name',
+       'email',
        'title',
        'description',
        'posted_on',
