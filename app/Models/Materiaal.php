@@ -18,4 +18,8 @@ class Materiaal extends Model
     public function category(){
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
+
+    public function bestelling(){
+        return $this->belongsToMany(Bestelling::class, 'bestelling-materiaal', 'bestelling_id', 'materialen_id');
+    }
 }
