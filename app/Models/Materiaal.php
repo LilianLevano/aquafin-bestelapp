@@ -14,4 +14,8 @@ class Materiaal extends Model
         'name',
         'categorie_id',
     ];
+
+    public function category(){
+        return $this->belongsTo(Category::class, 'category_id', 'id');
+    }
 }

@@ -37,8 +37,9 @@ class DatabaseSeeder extends Seeder
 
         Aanvraag::factory()->count(10)->create();
 
+        Category::factory()->count(6)->create();
         Materiaal::factory()->count(30)->create();
 
-        Category::factory()->count(6)->create();
+
     }
 }
