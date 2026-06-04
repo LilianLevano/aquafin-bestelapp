@@ -2,15 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AanvraagController;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
 
-// AUTH PAGES
+
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register.form');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 
-// AUTH ACTIONS
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+
+
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/', function () {
+        return view('welcome');
+    })->name('home');
+
+});
+
+
+Route::post('/aanvraag', [AanvraagController::class, 'store'])->name('aanvraag.store');

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
+    
     public function showLogin()
     {
         return view('index');
@@ -14,29 +15,43 @@ class AuthController extends Controller
 
     public function showRegister()
     {
-        return view('register');
+        return view('register'); // if exists
     }
 
+  
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required']
-        ]);
+        try {
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
+          
+            $credentials = $request->validate([
+                'email' => ['required', 'email'],
+                'password' => ['required']
+            ]);
 
-            return redirect()->route('home');
+           
+            if (Auth::attempt($credentials)) {
+
+                $request->session()->regenerate();
+
+                return response()->json([
+                    'status' => 'success',
+                    'redirect' => route('home')
+                ], 200);
+            }
+
+          
+            return response()->json([
+                'status' => 'fail',
+                'message' => 'Foutieve login gegevens.'
+            ], 401);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Er ging iets mis met het verzoeken voor autorisatie...'
+            ], 500);
         }
-
-        return back()->withErrors([
-            'email' => 'Foutieve login gegevens.'
-        ]);
-    }
-
-    public function register(Request $request)
-    {
-        // optional for your assignment
     }
 }
