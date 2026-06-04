@@ -15,20 +15,6 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/', function () {
-        return view('welcome');
-    })->name('home');
-
+Route::get('/', function () {
+    return view('welcome');
 });
-
-
-Route::post('/aanvraag', [AanvraagController::class, 'store'])->name('aanvraag.store');
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-
-User::create([
-    'first_name' => 'Test',
-    'last_name' => 'User',
-    'email' => 'test@test.com',
-    'password' => Hash::make('password123')
-]);
