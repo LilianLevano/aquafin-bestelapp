@@ -23,3 +23,12 @@ Route::middleware('auth')->group(function () {
 
 
 Route::post('/aanvraag', [AanvraagController::class, 'store'])->name('aanvraag.store');
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+
+User::create([
+    'first_name' => 'Test',
+    'last_name' => 'User',
+    'email' => 'test@test.com',
+    'password' => Hash::make('password123')
+]);
