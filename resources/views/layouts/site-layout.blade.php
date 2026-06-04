@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aquafin</title>
+
+    @vite(['resources/css/app.css'])
+</head>
+<body>
+
+<header class="navbar">
+    <h2>AQUAFIN</h2>
+
+    <nav>
+<a href="/technieker">Home</a>
+<a href="#">Bestellingen</a>
+<a href="/admin/catalogus">Catalogus</a>
+<a href="/technieker/bestellen">Bestellen</a>
+<a href="#">Accounts</a>
+<a href="#">Rollen</a>
+<a href="#">Hulpaanvraag</a>
+<a href="/admin/aanvragen">Aanvragen</a>
+    </nav>
+</header>
+
+<main class="manager-page">
+    {{ $slot }}
+</main>
+
+<footer>
+    Aquafin Bestelapp © 2026
+</footer>
+
+</body>
+</html>
