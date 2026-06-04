@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('materialen', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('category_id'); //->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('category_id')->nullable()->constrained('categories')->nullOnDelete();
             $table->timestamps();
         });
     }
