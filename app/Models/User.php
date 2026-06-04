@@ -35,5 +35,9 @@ class User extends Authenticatable
         return $this->belongsTo(Role::class, 'role_id', 'id'); // M:1 Many to One relation
     }
 
+    public function bestelling(){
+        return $this->hasMany(Bestelling::class, 'user_id', 'id');
+    }
+
 
 }
