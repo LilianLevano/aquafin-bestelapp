@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Aanvraag;
+use App\Models\Materiaal;
 use App\Models\Role;
 use App\Models\User;
 
@@ -34,5 +35,8 @@ class DatabaseSeeder extends Seeder
         User::factory()->count(4)->create();
 
         Aanvraag::factory()->count(10)->create();
+
+        Materiaal::factory()->count(30)->create();
+
     }
 }
