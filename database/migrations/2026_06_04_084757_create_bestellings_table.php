@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->date('delivery_date')->nullable();
-            $table->string('site_id')->nullable();
+            $table->foreignId('site_id')->nullable()->constrained('sites')->nullOnDelete();
             $table->timestamps();
         });
     }
