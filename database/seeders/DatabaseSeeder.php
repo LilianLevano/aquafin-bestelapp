@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Aanvraag;
+use App\Models\Bestelling;
 use App\Models\Category;
 use App\Models\Materiaal;
 use App\Models\Role;
@@ -39,7 +40,7 @@ class DatabaseSeeder extends Seeder
 
         Category::factory()->count(6)->create();
         Materiaal::factory()->count(30)->create();
-
+        Bestelling::factory()->count(10)->create();
 
     }
 }
