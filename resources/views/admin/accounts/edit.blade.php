@@ -1,0 +1,46 @@
+@extends('layouts.admin')
+@section('title', 'Edit account')
+
+@section('content')
+<div class="card" style="max-width:560px;margin:0 auto;">
+    <h1 class="h1">Edit Account</h1>
+
+    <form method="POST" action="{{ route('admin.accounts.update', $account) }}" class="form">
+        @csrf @method('PUT')
+
+        <div class="field">
+            <label for="mail">Mail</label>
+            <input id="mail" type="email" name="mail" value="{{ old('mail', $account->mail) }}" required>
+            @error('mail') <p class="error">{{ $message }}</p> @enderror
+        </div>
+
+        <div class="grid-2">
+            <div class="field">
+                <label for="voornaam">Voornaam</label>
+                <input id="voornaam" name="voornaam" value="{{ old('voornaam', $account->voornaam) }}" required>
+                @error('voornaam') <p class="error">{{ $message }}</p> @enderror
+            </div>
+            <div class="field">
+                <label for="achternaam">Achternaam</label>
+                <input id="achternaam" name="achternaam" value="{{ old('achternaam', $account->achternaam) }}" required>
+                @error('achternaam') <p class="error">{{ $message }}</p> @enderror
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="role_id">Rol</label>
+            <select id="role_id" name="role_id" required>
+                @foreach($roles as $r)
+                    <option value="{{ $r->id }}" @selected(old('role_id', $account->role_id) == $r->id)>{{ $r->name }}</option>
+                @endforeach
+            </select>
+            @error('role_id') <p class="error">{{ $message }}</p> @enderror
+        </div>
+
+        <div class="row-end">
+            <a href="{{ route('admin.accounts.index') }}" class="btn btn-outline">Annuleren</a>
+            <button type="submit" class="btn btn-primary">Opslaan</button>
+        </div>
+    </form>
+</div>
+@endsection
