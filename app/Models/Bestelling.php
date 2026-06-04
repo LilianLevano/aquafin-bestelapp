@@ -18,4 +18,8 @@ class Bestelling extends Model
     public function materiaal(){
         return $this->belongsToMany(Materiaal::class, 'bestelling-materiaal', 'bestelling_id', 'materiaal_id' );
     }
+
+    public function site(){
+        return $this->belongsTo(Site::class, 'site_id', 'id');
+    }
 }

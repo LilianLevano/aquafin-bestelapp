@@ -9,4 +9,8 @@ class Site extends Model
 {
     /** @use HasFactory<\Database\Factories\SiteFactory> */
     use HasFactory;
+
+    public function bestelling(){
+        return $this->hasMany(Bestelling::class, 'site_id', 'id');
+    }
 }

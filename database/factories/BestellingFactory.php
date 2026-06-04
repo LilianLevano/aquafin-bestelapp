@@ -20,7 +20,7 @@ class BestellingFactory extends Factory
         return [
             'user_id' => $this->faker->numberBetween(1,5),
             'delivery_date' => $this->faker->date(),
-            'site_id' => $this->faker->numberBetween(1,5),
+            'site_id' => $this->faker->numberBetween(1,17),
         ];
     }
 }
