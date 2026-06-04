@@ -14,4 +14,8 @@ class Bestelling extends Model
     public function user(){
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function materiaal(){
+        return $this->belongsToMany(Materiaal::class, 'bestelling-materiaal', 'bestelling_id', 'materiaal_id' );
+    }
 }

@@ -11,6 +11,8 @@ use App\Models\User;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use function Laravel\Prompts\table;
 
 class DatabaseSeeder extends Seeder
 {
@@ -41,6 +43,13 @@ class DatabaseSeeder extends Seeder
         Category::factory()->count(6)->create();
         Materiaal::factory()->count(30)->create();
         Bestelling::factory()->count(10)->create();
+
+        DB::table('bestelling-materiaal')->insert([
+
+            ['bestelling_id' => 1, 'materiaal_id' => 1],
+            ['bestelling_id' => 1, 'materiaal_id' => 2],
+
+        ]);
 
     }
 }
