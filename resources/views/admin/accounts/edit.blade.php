@@ -50,19 +50,25 @@
 
         <div class="field">
             <label for="password">Nieuw wachtwoord <span class="muted">(optioneel)</span></label>
-            <input id="password" type="password" name="password"
-                   class="{{ $errors->has('password') ? 'is-invalid' : '' }}">
+            <div class="input-group">
+                <input id="password" type="password" name="password"
+                       class="{{ $errors->has('password') ? 'is-invalid' : '' }}">
+                <button type="button" class="btn-toggle-pw" onclick="togglePw('password', this)">Toon</button>
+            </div>
             @error('password') <p class="error">{{ $message }}</p> @enderror
         </div>
 
         <div class="field">
             <label for="password_confirmation">Bevestig wachtwoord</label>
-            <input id="password_confirmation" type="password" name="password_confirmation">
+            <div class="input-group">
+                <input id="password_confirmation" type="password" name="password_confirmation">
+                <button type="button" class="btn-toggle-pw" onclick="togglePw('password_confirmation', this)">Toon</button>
+            </div>
         </div>
 
         <div class="row-end">
             <a href="{{ route('admin.accounts.index') }}" class="btn btn-outline">Annuleren</a>
-            <button id="submit-btn" type="submit" class="btn btn-primary">Opslaan</button>
+            <button id="submit-btn" type="submit" class="btn btn-primary">Gebruiker bewerken</button>
         </div>
     </form>
 </div>
@@ -99,6 +105,12 @@ document.getElementById('achternaam').addEventListener('blur', function() {
     var ok = /^[A-Za-zÀ-ÿ\s\-']{2,}$/.test(this.value.trim());
     setValidity(this, ok, 'Min. 2 letters, alleen letters toegestaan.');
 });
+
+function togglePw(id, btn) {
+    var input = document.getElementById(id);
+    input.type = input.type === 'password' ? 'text' : 'password';
+    btn.textContent = input.type === 'password' ? 'Toon' : 'Verberg';
+}
 
 document.getElementById('password').addEventListener('blur', function() {
     if (!this.value) return;
