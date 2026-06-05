@@ -23,6 +23,28 @@
 <p id="message"></p>
 
 <script>
+function showToast(message, type) {
+    // Simple toast system (you can later upgrade to Toastr/SweetAlert)
+    let toast = document.createElement("div");
+
+    toast.innerText = message;
+    toast.style.position = "fixed";
+    toast.style.bottom = "20px";
+    toast.style.right = "20px";
+    toast.style.padding = "12px 16px";
+    toast.style.color = "white";
+    toast.style.borderRadius = "6px";
+    toast.style.zIndex = 9999;
+
+    if (type === "success") toast.style.background = "green";
+    if (type === "warning") toast.style.background = "orange";
+    if (type === "error") toast.style.background = "red";
+
+    document.body.appendChild(toast);
+
+    setTimeout(() => toast.remove(), 3000);
+}
+
 document.getElementById("loginForm").addEventListener("submit", async function(e) {
     e.preventDefault();
 
@@ -46,20 +68,21 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
 
         let result = await response.json();
 
-        if (response.status === 200) {
+        if (result.status === "success") {
             window.location.href = result.redirect;
+            return;
         }
 
-        if (response.status === 401) {
-            alert("Foutieve login gegevens.");
+        if (result.status === "fail") {
+            showToast("Foutieve login gegevens.", "warning");
         }
 
-        if (response.status === 500) {
-            alert("Er ging iets mis met het verzoeken voor autorisatie...");
+        if (result.status === "error") {
+            showToast("Er ging iets mis met het verzoeken voor autorisatie...", "error");
         }
 
     } catch (err) {
-        alert("Er ging iets mis met het verzoeken voor autorisatie...");
+        showToast("Er ging iets mis met het verzoeken voor autorisatie...", "error");
     }
 
     btn.disabled = false;
