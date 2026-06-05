@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    
     public function showLogin()
     {
         return view('index');
@@ -15,32 +14,26 @@ class AuthController extends Controller
 
     public function showRegister()
     {
-        return view('register'); // if exists
+        return view('register');
     }
 
-  
     public function login(Request $request)
     {
         try {
 
-          
-            $credentials = $request->validate([
-                'email' => ['required', 'email'],
-                'password' => ['required']
-            ]);
 
-           
+            $credentials = $request->only('email', 'password');
+
             if (Auth::attempt($credentials)) {
 
                 $request->session()->regenerate();
 
                 return response()->json([
                     'status' => 'success',
-                    'redirect' => route('home')
+                  'redirect' => route('home')
                 ], 200);
             }
 
-          
             return response()->json([
                 'status' => 'fail',
                 'message' => 'Foutieve login gegevens.'
@@ -52,6 +45,7 @@ class AuthController extends Controller
                 'status' => 'error',
                 'message' => 'Er ging iets mis met het verzoeken voor autorisatie...'
             ], 500);
+            
         }
     }
 }
