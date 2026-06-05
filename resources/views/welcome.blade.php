@@ -7,7 +7,7 @@
 <body>
   <h1>Welkom terug!</h1>
   <p>Click the button below to log in.</p>
-  
+
  <a href="{{ route('login') }}" class="btn">
     Login
 </a>

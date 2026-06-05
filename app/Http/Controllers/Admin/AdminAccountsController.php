@@ -53,9 +53,10 @@ class AdminAccountsController extends Controller
         //
     }
 
-    public function edit(User $user){
+    public function edit(User $account){
 
-        return view('admin.accounts.edit', compact('user'));
+        $roles = Role::all();
+        return view('admin.accounts.edit', compact('account', 'roles'));
     }
 
     /**
@@ -63,16 +64,29 @@ class AdminAccountsController extends Controller
      */
     public function update(Request $request, string $id)
     {
+
+
         $validated = $request->validate([
             'first_name' => ['required', 'max:40'],
             'last_name' => ['required', 'max:40'],
             'email' => ['required','email','unique:users,email,'.$id],
             'role_id' => ['required', 'exists:roles,id'],
-            'password' => ['required','min:8'],
-            'password_confirmation' => ['required','same:password'],
+            'password' => ['nullable'],
+            'password_confirmation' => ['nullable'],
 
         ]);
-        $validated['password'] = Hash::make($validated['password']);
+
+        if ($validated['password']) {
+
+            if($validated['password'] == $validated['password_confirmation']) {
+                $validated['password'] = Hash::make($validated['password']);
+            }
+        } else {
+            unset($validated['password']);
+            unset($validated['password_confirmation']);
+        }
+
+
 
         $user = User::findOrFail($id);
         $user->update($validated);
