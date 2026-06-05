@@ -9,30 +9,30 @@
         @csrf @method('PUT')
 
         <div class="field">
-            <label for="mail">Mail</label>
-            <input id="mail" type="email" name="mail"
-                   value="{{ old('mail', $account->mail) }}" required
-                   data-original="{{ $account->mail }}"
-                   class="{{ $errors->has('mail') ? 'is-invalid' : '' }}">
-            @error('mail') <p class="error">{{ $message }}</p> @enderror
+            <label for="email">Mail</label>
+            <input id="email" type="email" name="email"
+                   value="{{ old('email', $account->email) }}" required
+                   data-original="{{ $account->email }}"
+                   class="{{ $errors->has('email') ? 'is-invalid' : '' }}">
+            @error('email') <p class="error">{{ $message }}</p> @enderror
         </div>
 
         <div class="grid-2">
             <div class="field">
-                <label for="voornaam">First Name</label>
-                <input id="voornaam" name="voornaam"
-                       value="{{ old('voornaam', $account->voornaam) }}" required
-                       data-original="{{ $account->voornaam }}"
-                       class="{{ $errors->has('voornaam') ? 'is-invalid' : '' }}">
-                @error('voornaam') <p class="error">{{ $message }}</p> @enderror
+                <label for="first_name">First Name</label>
+                <input id="first_name" name="first_name"
+                       value="{{ old('first_name', $account->first_name) }}" required
+                       data-original="{{ $account->first_name }}"
+                       class="{{ $errors->has('first_name') ? 'is-invalid' : '' }}">
+                @error('first_name') <p class="error">{{ $message }}</p> @enderror
             </div>
             <div class="field">
-                <label for="achternaam">Last Name</label>
-                <input id="achternaam" name="achternaam"
-                       value="{{ old('achternaam', $account->achternaam) }}" required
-                       data-original="{{ $account->achternaam }}"
-                       class="{{ $errors->has('achternaam') ? 'is-invalid' : '' }}">
-                @error('achternaam') <p class="error">{{ $message }}</p> @enderror
+                <label for="last_name">Last Name</label>
+                <input id="last_name" name="last_name"
+                       value="{{ old('last_name', $account->last_name) }}" required
+                       data-original="{{ $account->last_name }}"
+                       class="{{ $errors->has('last_name') ? 'is-invalid' : '' }}">
+                @error('last_name') <p class="error">{{ $message }}</p> @enderror
             </div>
         </div>
 
@@ -64,6 +64,7 @@
                 <input id="password_confirmation" type="password" name="password_confirmation">
                 <button type="button" class="btn-toggle-pw" onclick="togglePw('password_confirmation', this)">Show</button>
             </div>
+            @error('password_confirmation') <p class="error">{{ $message }}</p> @enderror
         </div>
 
         <div class="row-end">

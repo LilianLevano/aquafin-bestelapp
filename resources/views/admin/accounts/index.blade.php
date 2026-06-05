@@ -42,15 +42,16 @@
                 @forelse($accounts as $a)
                 <tr>
                     <td>{{ $a->id }}</td>
-                    <td>{{ $a->voornaam }}</td>
-                    <td>{{ $a->achternaam }}</td>
-                    <td>{{ $a->mail }}</td>
+                    <td>{{ $a->first_name }}</td>
+                    <td>{{ $a->last_name }}</td>
+                    <td>{{ $a->email }}</td>
                     <td><a href="{{ route('admin.accounts.edit', $a) }}" class="link">Reset</a></td>
                     <td>{{ $a->role->name ?? '—' }}</td>
                     <td class="right">
-                        <button type="button" class="link"
-                            data-account="{{ json_encode(['id' => $a->id, 'mail' => $a->mail, 'voornaam' => $a->voornaam, 'achternaam' => $a->achternaam, 'role_id' => $a->role_id]) }}"
-                            onclick="openEdit(this)">Edit</button>
+
+                        <a href="{{route('admin.accounts.edit', $a->id)}}" class="link">Edit</a>
+
+
                         <form method="POST" action="{{ route('admin.accounts.destroy', $a) }}" style="display:inline"
                               onsubmit="return confirm('Delete this account?');">
                             @csrf @method('DELETE')
@@ -135,8 +136,8 @@ function showTable() {
 function openEdit(btn) {
     var a = JSON.parse(btn.dataset.account);
     document.getElementById('inline-edit-form').action = '{{ url("admin/accounts") }}/' + a.id;
-    document.getElementById('edit-mail').value = a.mail;
-    document.getElementById('edit-mail').dataset.original = a.mail;
+    document.getElementById('edit-mail').value = a.email;
+    document.getElementById('edit-mail').dataset.original = a.email;
     document.getElementById('edit-voornaam').value = a.voornaam;
     document.getElementById('edit-voornaam').dataset.original = a.voornaam;
     document.getElementById('edit-achternaam').value = a.achternaam;
