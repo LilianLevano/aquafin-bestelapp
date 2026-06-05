@@ -3,6 +3,12 @@
 
 @section('content')
 <div class="card" style="max-width:640px;margin:0 auto;">
+
+    <div class="tabs">
+        <a href="{{ route('admin.accounts.index') }}" class="tab">Overzicht</a>
+        <a href="{{ route('admin.accounts.create') }}" class="tab tab-active">Nieuw</a>
+    </div>
+
     <h1 class="h1">Nieuw Account</h1>
 
     <form id="create-form" method="POST" action="{{ route('admin.accounts.store') }}" class="form">
@@ -17,15 +23,21 @@
 
         <div class="field">
             <label for="password">Wachtwoord</label>
-            <input id="password" type="password" name="password" required
-                   class="{{ $errors->has('password') ? 'is-invalid' : '' }}">
+            <div class="input-group">
+                <input id="password" type="password" name="password" required
+                       class="{{ $errors->has('password') ? 'is-invalid' : '' }}">
+                <button type="button" class="btn-toggle-pw" onclick="togglePw('password', this)">Toon</button>
+            </div>
             @error('password') <p class="error">{{ $message }}</p> @enderror
         </div>
 
         <div class="field">
             <label for="password_confirmation">Bevestig wachtwoord</label>
-            <input id="password_confirmation" type="password" name="password_confirmation" required
-                   class="{{ $errors->has('password_confirmation') ? 'is-invalid' : '' }}">
+            <div class="input-group">
+                <input id="password_confirmation" type="password" name="password_confirmation" required
+                       class="{{ $errors->has('password_confirmation') ? 'is-invalid' : '' }}">
+                <button type="button" class="btn-toggle-pw" onclick="togglePw('password_confirmation', this)">Toon</button>
+            </div>
         </div>
 
         <div class="grid-2">
@@ -57,12 +69,23 @@
 
         <div class="row-end">
             <a href="{{ route('admin.accounts.index') }}" class="btn btn-outline">Annuleren</a>
-            <button id="submit-btn" type="submit" class="btn btn-primary">Maken</button>
+            <button id="submit-btn" type="submit" class="btn btn-primary">Gebruiker aanmaken</button>
         </div>
     </form>
 </div>
 
 <script>
+function togglePw(id, btn) {
+    var input = document.getElementById(id);
+    if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = 'Verberg';
+    } else {
+        input.type = 'password';
+        btn.textContent = 'Toon';
+    }
+}
+
 function setValidity(input, valid, message) {
     var field = input.closest('.field');
     var existing = field.querySelector('.error-js');
