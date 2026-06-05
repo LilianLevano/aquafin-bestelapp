@@ -33,7 +33,6 @@
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Email</th>
-                    <th>Password Reset</th>
                     <th>Role</th>
                     <th class="right">Actions</th>
                 </tr>
@@ -45,7 +44,6 @@
                     <td>{{ $a->first_name }}</td>
                     <td>{{ $a->last_name }}</td>
                     <td>{{ $a->email }}</td>
-                    <td><a href="{{ route('admin.accounts.edit', $a) }}" class="link">Reset</a></td>
                     <td>{{ $a->role->name ?? '—' }}</td>
                     <td class="right">
 
@@ -66,7 +64,8 @@
         </table>
         <p id="no-results" class="muted center" style="display:none;padding:16px;">No results found.</p>
     </div>
-    
+
+
 </div>
 
 <script>
