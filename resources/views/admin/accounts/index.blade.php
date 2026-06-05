@@ -120,6 +120,35 @@
         </form>
     </div>
 
+    <table class="table">
+        <thead>
+            <tr>
+                <th>id</th><th>Voornaam</th><th>Achternaam</th>
+                <th>Rol</th><th>Mail</th><th class="right">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($accounts as $a)
+            <tr>
+                <td>{{ $a->id }}</td>
+                <td>{{ $a->first_name }}</td>
+                <td>{{ $a->last_name }}</td>
+                <td>{{ $a->role->name ?? '—' }}</td>
+                <td>{{ $a->email }}</td>
+                <td class="right">
+                    <a href="{{ route('admin.accounts.edit', $a) }}" class="link">edit</a>
+                    <form method="POST" action="{{ route('admin.accounts.destroy', $a) }}" style="display:inline"
+                          onsubmit="return confirm('Account verwijderen?');">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="link link-danger">delete</button>
+                    </form>
+                </td>
+            </tr>
+            @empty
+            <tr><td colspan="6" class="muted center">Geen accounts.</td></tr>
+            @endforelse
+        </tbody>
+    </table>
 </div>
 
 <script>

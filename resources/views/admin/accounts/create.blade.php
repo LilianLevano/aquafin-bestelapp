@@ -42,16 +42,14 @@
 
         <div class="grid-2">
             <div class="field">
-                <label for="voornaam">Voornaam</label>
-                <input id="voornaam" name="voornaam" value="{{ old('voornaam') }}" required
-                       class="{{ $errors->has('voornaam') ? 'is-invalid' : '' }}">
-                @error('voornaam') <p class="error">{{ $message }}</p> @enderror
+                <label for="first_name">Voornaam</label>
+                <input id="first_name" name="first_name" value="{{ old('first_name') }}" required>
+                @error('first_name') <p class="error">{{ $message }}</p> @enderror
             </div>
             <div class="field">
-                <label for="achternaam">Achternaam</label>
-                <input id="achternaam" name="achternaam" value="{{ old('achternaam') }}" required
-                       class="{{ $errors->has('achternaam') ? 'is-invalid' : '' }}">
-                @error('achternaam') <p class="error">{{ $message }}</p> @enderror
+                <label for="last_name">Achternaam</label>
+                <input id="last_name" name="last_name" value="{{ old('last_name') }}" required>
+                @error('last_name') <p class="error">{{ $message }}</p> @enderror
             </div>
         </div>
 
