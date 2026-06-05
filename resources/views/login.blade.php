@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="field">
-                    <label for="password">Wachtwoord</label>
+                    <label for="password">Password</label>
                     <input id="password" type="password" name="password" required
                            class="{{ $errors->has('password') && !$showHulp ? 'is-invalid' : '' }}">
                     @if(!$showHulp)
@@ -40,23 +40,23 @@
                 </div>
 
                 <div class="row-between">
-                    <button type="button" class="link" onclick="toggleHulp(true)">Hulp nodig?</button>
+                    <button type="button" class="link" onclick="toggleHulp(true)">Need help?</button>
                     <button type="submit" class="btn btn-primary">Login</button>
                 </div>
             </form>
         </div>
 
-        {{-- HULP FORM --}}
+        {{-- HELP FORM --}}
         <div id="section-hulp" @if(!$showHulp) style="display:none" @endif>
-            <button type="button" class="back-link" onclick="toggleHulp(false)">← Terug naar login</button>
-            <h1 class="h1">Hulp aanvragen</h1>
+            <button type="button" class="back-link" onclick="toggleHulp(false)">← Back to login</button>
+            <h1 class="h1">Request Help</h1>
 
             <form method="POST" action="{{ route('hulp.store') }}" class="form">
                 @csrf
                 <input type="hidden" name="_form" value="hulp">
 
                 <div class="field">
-                    <label for="hulp-mail">Mail</label>
+                    <label for="hulp-mail">Email</label>
                     <input id="hulp-mail" type="email" name="mail"
                            value="{{ old('mail') }}" required
                            class="{{ $errors->has('mail') && $showHulp ? 'is-invalid' : '' }}">
@@ -67,14 +67,14 @@
 
                 <div class="grid-2">
                     <div class="field">
-                        <label for="hulp-voornaam">Voornaam</label>
+                        <label for="hulp-voornaam">First Name</label>
                         <input id="hulp-voornaam" name="voornaam"
                                value="{{ old('voornaam') }}" required
                                class="{{ $errors->has('voornaam') ? 'is-invalid' : '' }}">
                         @error('voornaam') <p class="error">{{ $message }}</p> @enderror
                     </div>
                     <div class="field">
-                        <label for="hulp-achternaam">Achternaam</label>
+                        <label for="hulp-achternaam">Last Name</label>
                         <input id="hulp-achternaam" name="achternaam"
                                value="{{ old('achternaam') }}" required
                                class="{{ $errors->has('achternaam') ? 'is-invalid' : '' }}">
@@ -83,7 +83,7 @@
                 </div>
 
                 <div class="field">
-                    <label for="hulp-titel">Titel</label>
+                    <label for="hulp-titel">Title</label>
                     <input id="hulp-titel" name="titel"
                            value="{{ old('titel') }}" required
                            class="{{ $errors->has('titel') ? 'is-invalid' : '' }}">
@@ -91,14 +91,14 @@
                 </div>
 
                 <div class="field">
-                    <label for="hulp-descriptie">Beschrijving</label>
+                    <label for="hulp-descriptie">Description</label>
                     <textarea id="hulp-descriptie" name="descriptie" rows="4" required
                               class="{{ $errors->has('descriptie') ? 'is-invalid' : '' }}">{{ old('descriptie') }}</textarea>
                     @error('descriptie') <p class="error">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="row-end">
-                    <button type="submit" class="btn btn-primary">Verstuur</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </form>
         </div>

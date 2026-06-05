@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,19 +12,15 @@
         <div class="nav-inner">
             <div class="nav-left">
                 <a href="{{ route('admin.accounts.index') }}" class="nav-brand">Admin</a>
-                {{--   <a href="{{ route('admin.accounts.index') }}" class="nav-link {{ request()->is('admin/accounts*') ? 'active' : '' }}">Accounts</a>--}}
-
-               </div>
-               <div class="nav-right">
-                   <span class="muted">{{ auth()->user()->mail ?? '' }}</span>
-                   {{--
-                      <form method="POST" action="{{ route('logout') }}" style="display:inline">
-                       @csrf
-                       <button type="submit" class="btn btn-outline btn-sm">Uitloggen</button>
-                   </form>
-                   --}}
-
-
+                <a href="{{ route('admin.accounts.index') }}" class="nav-link {{ request()->is('admin/accounts*') ? 'active' : '' }}">Accounts</a>
+                <a href="{{ route('admin.rollen.index') }}" class="nav-link {{ request()->is('admin/rollen*') ? 'active' : '' }}">Roles</a>
+            </div>
+            <div class="nav-right">
+                <span class="muted">{{ auth()->user()->mail ?? '' }}</span>
+                <form method="POST" action="{{ route('logout') }}" style="display:inline">
+                    @csrf
+                    <button type="submit" class="btn btn-outline btn-sm">Log out</button>
+                </form>
             </div>
         </div>
     </nav>
