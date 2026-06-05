@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('title');
             $table->text('description');
+            $table->text('answer')->nullable();
             $table->date('posted_on');
             $table->boolean('is_completed');
             $table->timestamps();

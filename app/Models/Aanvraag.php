@@ -14,6 +14,7 @@ class Aanvraag extends Model
         'email',
         'title',
         'description',
+        'answer',
         'posted_on',
         'is_completed'
     ];
