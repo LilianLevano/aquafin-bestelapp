@@ -1,17 +1,17 @@
 @extends('layouts.app')
-@section('title', 'Hulp aanvragen')
+@section('title', 'Request Help')
 
 @section('content')
 <div class="centered">
     <div class="card" style="max-width:520px;width:100%;">
-        <a href="{{ route('login') }}" class="back-link">← Terug naar login</a>
-        <h1 class="h1">Hulp aanvragen</h1>
+        <a href="{{ route('login') }}" class="back-link">← Back to login</a>
+        <h1 class="h1">Request Help</h1>
 
         <form method="POST" action="{{ route('hulp.store') }}" class="form">
             @csrf
 
             <div class="field">
-                <label for="mail">Mail</label>
+                <label for="mail">Email</label>
                 <input id="mail" type="email" name="mail"
                        value="{{ old('mail') }}" required
                        class="{{ $errors->has('mail') ? 'is-invalid' : '' }}">
@@ -20,14 +20,14 @@
 
             <div class="grid-2">
                 <div class="field">
-                    <label for="voornaam">Voornaam</label>
+                    <label for="voornaam">First Name</label>
                     <input id="voornaam" name="voornaam"
                            value="{{ old('voornaam') }}" required
                            class="{{ $errors->has('voornaam') ? 'is-invalid' : '' }}">
                     @error('voornaam') <p class="error">{{ $message }}</p> @enderror
                 </div>
                 <div class="field">
-                    <label for="achternaam">Achternaam</label>
+                    <label for="achternaam">Last Name</label>
                     <input id="achternaam" name="achternaam"
                            value="{{ old('achternaam') }}" required
                            class="{{ $errors->has('achternaam') ? 'is-invalid' : '' }}">
@@ -36,7 +36,7 @@
             </div>
 
             <div class="field">
-                <label for="titel">Titel</label>
+                <label for="titel">Title</label>
                 <input id="titel" name="titel"
                        value="{{ old('titel') }}" required
                        class="{{ $errors->has('titel') ? 'is-invalid' : '' }}">
@@ -44,14 +44,14 @@
             </div>
 
             <div class="field">
-                <label for="descriptie">Beschrijving</label>
+                <label for="descriptie">Description</label>
                 <textarea id="descriptie" name="descriptie" rows="5" required
                           class="{{ $errors->has('descriptie') ? 'is-invalid' : '' }}">{{ old('descriptie') }}</textarea>
                 @error('descriptie') <p class="error">{{ $message }}</p> @enderror
             </div>
 
             <div class="row-end">
-                <button type="submit" class="btn btn-primary">Verstuur</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
         </form>
     </div>
