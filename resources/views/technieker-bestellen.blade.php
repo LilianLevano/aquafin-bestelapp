@@ -2,11 +2,9 @@
 
     <h1>Bestelling plaatsen</h1>
 
-    <div class="top-actions">
-        <button class="btn-primary">Plaats</button>
-    </div>
-
     <section class="filter-zone">
+
+                <button class="btn-primary">Plaats</button>
 
         <div class="filter-item">
             <label>Filter</label>
