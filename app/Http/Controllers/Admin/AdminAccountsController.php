@@ -42,7 +42,7 @@ class AdminAccountsController extends Controller
         $validated['password'] = Hash::make($validated['password']);
 
         User::create($validated);
-        return redirect()->route('admin.accounts.index');
+        return redirect()->route('admin.accounts.index')->with('status', 'Gebruiker aangemaakt!');
     }
 
     /**
@@ -63,7 +63,20 @@ class AdminAccountsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'first_name' => ['required', 'max:40'],
+            'last_name' => ['required', 'max:40'],
+            'email' => ['required','email','unique:users,email,'.$id],
+            'role_id' => ['required', 'exists:roles,id'],
+            'password' => ['required','min:8'],
+            'password_confirmation' => ['required','same:password'],
+
+        ]);
+        $validated['password'] = Hash::make($validated['password']);
+
+        $user = User::findOrFail($id);
+        $user->update($validated);
+        return redirect()->route('admin.accounts.index')->with('status', 'Gebruiker aangepast!');
     }
 
     /**
@@ -71,6 +84,7 @@ class AdminAccountsController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        User::destroy($id);
+        return redirect()->route('admin.accounts.index')->with('status', 'Gebruiker verwijderd!');
     }
 }
