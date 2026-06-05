@@ -31,6 +31,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Value</th>
                     <th class="right">Actions</th>
                 </tr>
             </thead>
@@ -39,9 +40,10 @@
                 <tr>
                     <td>{{ $r->id }}</td>
                     <td>{{ $r->name }}</td>
+                    <td>{{ $r->value ?? '—' }}</td>
                     <td class="right">
                         <button type="button" class="link"
-                            data-role="{{ json_encode(['id' => $r->id, 'name' => $r->name]) }}"
+                            data-role="{{ json_encode(['id' => $r->id, 'name' => $r->name, 'value' => $r->value ?? '']) }}"
                             onclick="openEdit(this)">Edit</button>
                         <form method="POST" action="{{ route('admin.rollen.destroy', $r) }}" style="display:inline"
                               onsubmit="return confirm('Delete this role?');">
@@ -51,7 +53,7 @@
                     </td>
                 </tr>
                 @empty
-                <tr id="empty-row"><td colspan="3" class="muted center">No roles found.</td></tr>
+                <tr id="empty-row"><td colspan="4" class="muted center">No roles found.</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -74,6 +76,11 @@
                 <input id="edit-name" name="name" required>
             </div>
 
+            <div class="field">
+                <label for="edit-value">Role Value</label>
+                <input id="edit-value" name="value">
+            </div>
+
             <div class="row-end">
                 <button type="button" class="btn btn-outline" onclick="showTable()">Cancel</button>
                 <button id="edit-submit-btn" type="submit" class="btn btn-primary">Save Role</button>
@@ -94,6 +101,8 @@ function openEdit(btn) {
     document.getElementById('inline-edit-form').action = '{{ url("admin/rollen") }}/' + r.id;
     document.getElementById('edit-name').value = r.name;
     document.getElementById('edit-name').dataset.original = r.name;
+    document.getElementById('edit-value').value = r.value;
+    document.getElementById('edit-value').dataset.original = r.value;
     document.querySelectorAll('#inline-edit-form .is-invalid, #inline-edit-form .is-modified').forEach(function(el) {
         el.classList.remove('is-invalid', 'is-modified');
     });
