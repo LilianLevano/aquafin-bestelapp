@@ -19,10 +19,10 @@
             @forelse($accounts as $a)
             <tr>
                 <td>{{ $a->id }}</td>
-                <td>{{ $a->voornaam }}</td>
-                <td>{{ $a->achternaam }}</td>
+                <td>{{ $a->first_name }}</td>
+                <td>{{ $a->last_name }}</td>
                 <td>{{ $a->role->name ?? '—' }}</td>
-                <td>{{ $a->mail }}</td>
+                <td>{{ $a->email }}</td>
                 <td class="right">
                     <a href="{{ route('admin.accounts.edit', $a) }}" class="link">edit</a>
                     <form method="POST" action="{{ route('admin.accounts.destroy', $a) }}" style="display:inline"

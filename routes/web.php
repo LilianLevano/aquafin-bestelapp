@@ -11,9 +11,16 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
-
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('accounts', \App\Http\Controllers\Admin\AdminAccountsController::class);
+});
 
 Route::middleware('auth')->group(function () {
+
+
+
+
+
 });
 Route::get('/', function () {
     return view('welcome');

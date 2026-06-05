@@ -9,9 +9,9 @@
         @csrf
 
         <div class="field">
-            <label for="mail">Mail</label>
-            <input id="mail" type="email" name="mail" value="{{ old('mail') }}" required>
-            @error('mail') <p class="error">{{ $message }}</p> @enderror
+            <label for="email">Mail</label>
+            <input id="email" type="email" name="email" value="{{ old('email') }}" required>
+            @error('email') <p class="error">{{ $message }}</p> @enderror
         </div>
 
         <div class="field">
@@ -27,14 +27,14 @@
 
         <div class="grid-2">
             <div class="field">
-                <label for="voornaam">Voornaam</label>
-                <input id="voornaam" name="voornaam" value="{{ old('voornaam') }}" required>
-                @error('voornaam') <p class="error">{{ $message }}</p> @enderror
+                <label for="first_name">Voornaam</label>
+                <input id="first_name" name="first_name" value="{{ old('first_name') }}" required>
+                @error('first_name') <p class="error">{{ $message }}</p> @enderror
             </div>
             <div class="field">
-                <label for="achternaam">Achternaam</label>
-                <input id="achternaam" name="achternaam" value="{{ old('achternaam') }}" required>
-                @error('achternaam') <p class="error">{{ $message }}</p> @enderror
+                <label for="last_name">Achternaam</label>
+                <input id="last_name" name="last_name" value="{{ old('last_name') }}" required>
+                @error('last_name') <p class="error">{{ $message }}</p> @enderror
             </div>
         </div>
 

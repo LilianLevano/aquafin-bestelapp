@@ -26,7 +26,16 @@ class DatabaseSeeder extends Seeder
     {
 
 
-        Role::factory()->count(4)->create();
+        Role::factory()->sequence(
+
+            ['name'=>'Admin'],
+            ['name'=>'Technieker'],
+            ['name'=>'Manager'],
+            ['name'=>'Magazijnier'],
+
+        )->count(4)->create();
+
+
 
         User::factory()->create([
             'first_name' => 'Test',
