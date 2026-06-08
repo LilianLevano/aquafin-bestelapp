@@ -31,7 +31,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
-                    <th>Value</th>
+
                     <th class="right">Actions</th>
                 </tr>
             </thead>
@@ -40,11 +40,9 @@
                 <tr>
                     <td>{{ $r->id }}</td>
                     <td>{{ $r->name }}</td>
-                    <td>{{ $r->value ?? '—' }}</td>
+
                     <td class="right">
-                        <button type="button" class="link"
-                            data-role="{{ json_encode(['id' => $r->id, 'name' => $r->name, 'value' => $r->value ?? '']) }}"
-                            onclick="openEdit(this)">Edit</button>
+                        <button type="button" class="link"><a href="{{route('admin.rollen.edit', $r->id)}}">Edit</a> </button>
                         <form method="POST" action="{{ route('admin.rollen.destroy', $r) }}" style="display:inline"
                               onsubmit="return confirm('Delete this role?');">
                             @csrf @method('DELETE')
@@ -60,33 +58,7 @@
         <p id="no-results" class="muted center" style="display:none;padding:16px;">No results found.</p>
     </div>
 
-    {{-- INLINE EDIT FORM --}}
-    <div id="section-edit" style="display:none">
-        <div class="row-between mb">
-            <h1 class="h1">Edit Role</h1>
-            <button type="button" class="btn btn-outline btn-sm" onclick="showTable()">← Back</button>
-        </div>
 
-        <form id="inline-edit-form" method="POST" action="" class="form" style="max-width:480px">
-            @csrf
-            <input type="hidden" name="_method" value="PUT">
-
-            <div class="field">
-                <label for="edit-name">Role Name</label>
-                <input id="edit-name" name="name" required>
-            </div>
-
-            <div class="field">
-                <label for="edit-value">Role Value</label>
-                <input id="edit-value" name="value">
-            </div>
-
-            <div class="row-end">
-                <button type="button" class="btn btn-outline" onclick="showTable()">Cancel</button>
-                <button id="edit-submit-btn" type="submit" class="btn btn-primary">Save Role</button>
-            </div>
-        </form>
-    </div>
 
 </div>
 
@@ -96,20 +68,6 @@ function showTable() {
     document.getElementById('section-edit').style.display = 'none';
 }
 
-function openEdit(btn) {
-    var r = JSON.parse(btn.dataset.role);
-    document.getElementById('inline-edit-form').action = '{{ url("admin/rollen") }}/' + r.id;
-    document.getElementById('edit-name').value = r.name;
-    document.getElementById('edit-name').dataset.original = r.name;
-    document.getElementById('edit-value').value = r.value;
-    document.getElementById('edit-value').dataset.original = r.value;
-    document.querySelectorAll('#inline-edit-form .is-invalid, #inline-edit-form .is-modified').forEach(function(el) {
-        el.classList.remove('is-invalid', 'is-modified');
-    });
-    document.querySelectorAll('#inline-edit-form .error-js').forEach(function(el) { el.remove(); });
-    document.getElementById('section-table').style.display = 'none';
-    document.getElementById('section-edit').style.display = 'block';
-}
 
 function togglePw(id, btn) {
     var input = document.getElementById(id);
