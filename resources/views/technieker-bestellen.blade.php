@@ -16,11 +16,6 @@
         </div>
 
         <div class="filter-item">
-            <label>Quantity</label>
-            <input type="number" min="1" value="1">
-        </div>
-
-        <div class="filter-item">
             <label>Seizoen</label>
             <select>
                 <option>Winter</option>

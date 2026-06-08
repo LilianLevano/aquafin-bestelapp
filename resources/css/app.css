@@ -105,3 +105,232 @@ a:hover { text-decoration: underline; }
 .alert-success { background: var(--success-bg); color: var(--success-text); }
 
 .back-link { display: inline-block; margin-bottom: 12px; color: var(--primary); font-size: 13px; }
+
+.navbar {
+    background-color: #005fa3 !important;
+    color: white !important;
+    padding: 20px 40px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+.navbar h2 {
+    color: white !important;
+    margin: 0 !important;
+}
+
+.navbar nav {
+    display: flex !important;
+    gap: 22px !important;
+}
+
+.navbar a {
+    color: white !important;
+    text-decoration: none !important;
+    font-weight: bold !important;
+}
+
+.manager-page {
+    min-height: 70vh !important;
+    padding: 60px !important;
+    text-align: center !important;
+    background-color: #f4f8fb !important;
+}
+
+footer {
+    background-color: #003f6b !important;
+    color: white !important;
+    text-align: center !important;
+    padding: 20px !important;
+}
+.navbar button,
+.navbar .menu-toggle {
+    display: none !important;
+}
+
+.manager-page h1 {
+    margin-bottom: 30px;
+    font-size: 32px;
+}
+
+.manager-table,
+table {
+    width: 85%;
+    margin: 30px auto;
+    border-collapse: collapse;
+    background: white;
+}
+
+.manager-table th,
+.manager-table td,
+table th,
+table td {
+    border: 1px solid #d1d5db;
+    padding: 15px;
+    text-align: center;
+}
+
+.manager-table th,
+table th {
+    background-color: #eaf3ff;
+    color: #005fa3;
+    font-weight: bold;
+}
+
+.form-card,
+.aanvraag-card,
+.filter-zone {
+    background: white;
+    max-width: 850px;
+    margin: 30px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.form-card label {
+    display: block;
+    font-weight: bold;
+    margin-top: 15px;
+    margin-bottom: 8px;
+}
+
+.text-field,
+.description-box,
+.form-card input,
+.form-card select,
+.filter-zone input,
+.filter-zone select {
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+}
+
+.filter-zone {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.btn-primary {
+    background-color: #005fa3 !important;
+    color: white !important;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+}
+
+.empty-message {
+    display: none;
+    text-align: center;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #64748b;
+}
+
+.btn-edit {
+    background-color: #2ecc71;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    border: none;
+}
+
+.btn-delete {
+    background-color: #e74c3c;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.status-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 36px;
+}
+
+.status-tabs .tab {
+    background-color: #0067a8;
+    color: white;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.status-tabs .tab.active {
+    background-color: #004f82;
+}
+
+.aanvraag-card {
+    max-width: 850px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 14px;
+    padding: 32px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.aanvraag-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.aanvraag-title {
+    flex: 1;
+}
+
+.aanvraag-title label,
+.aanvraag-description label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.text-field,
+.description-box {
+    width: 100%;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 15px;
+    background-color: #f8fafc;
+}
+
+.description-box {
+    margin-top: 6px;
+    resize: none;
+}
+
+.aanvraag-description {
+    margin-top: 20px;
+}
+
+.aanvraag-footer {
+    display: flex;
+    gap: 32px;
+    margin-top: 20px;
+    color: #0f172a;
+}
+
+.btn-primary {
+    background-color: #0067a8;
+    color: white;
+    padding: 11px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+}
