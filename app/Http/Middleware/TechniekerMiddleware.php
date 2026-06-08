@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class AdminMiddleware
+class TechniekerMiddleware
 {
     /**
      * Handle an incoming request.
@@ -19,10 +19,9 @@ class AdminMiddleware
             return redirect()->route('login')->with('status', 'You must be logged in.');
         }
 
-        if (!auth()->user()->role->name == 'Admin') {
+        if (!auth()->user()->role->name == 'Technieker') {
             return redirect()->route('home')->with('status', 'You do not have access to this page.');
         }
-
         return $next($request);
     }
 }
