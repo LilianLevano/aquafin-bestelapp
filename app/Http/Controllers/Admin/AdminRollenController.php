@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use Illuminate\Http\Request;
 
 class AdminRollenController extends Controller
@@ -12,7 +13,8 @@ class AdminRollenController extends Controller
      */
     public function index()
     {
-        //
+        $roles = Role::all();
+        return view('admin.rollen.index', compact('roles'));
     }
 
     /**
@@ -20,7 +22,7 @@ class AdminRollenController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.rollen.create');
     }
 
     /**
@@ -28,15 +30,19 @@ class AdminRollenController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $validated = $request->validate([
+            'name' => 'required|unique:roles|max:255',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+
+        try{
+            Role::create($validated);
+            return redirect()->route('admin.rollen.index')->with('status', 'Rol aangemaakt!');
+        }catch (\Exception $exception){
+            return redirect()->route('admin.rollen.create')->with('status', $exception->getMessage());
+        }
+
+
     }
 
     /**
@@ -44,7 +50,8 @@ class AdminRollenController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        return view('admin.rollen.edit', compact('role'));
     }
 
     /**
@@ -52,7 +59,20 @@ class AdminRollenController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|unique:roles|max:255',
+        ]);
+
+
+        try{
+            $role = Role::findOrFail($id);
+            $role->update($validated);
+            return redirect()->route('admin.rollen.index')->with('status', 'Rol bijgewerkt!');
+        }catch (\Exception $exception){
+            return redirect()->route('admin.rollen.edit')->with('status', $exception->getMessage());
+        }
+
+
     }
 
     /**
@@ -60,6 +80,14 @@ class AdminRollenController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+
+        try{
+            $role = Role::findOrFail($id);
+            $role->delete();
+            return redirect()->route('admin.rollen.index')->with('status', 'Rol verwijderd!');
+        }catch (\Exception $exception){
+            return redirect()->route('admin.rollen.index')->with('status', $exception->getMessage());
+        }
+
     }
 }

@@ -14,11 +14,16 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::resource('accounts', \App\Http\Controllers\Admin\AdminAccountsController::class);
-    Route::resource('rollen', \App\Http\Controllers\Admin\AdminRollenController::class);
-});
 
+
+Route::middleware('auth')->group(function () {
+
+    Route::prefix('admin')->name('admin.')->middleware(\App\Http\Middleware\AdminMiddleware::class)->group(function () {
+        Route::resource('accounts', \App\Http\Controllers\Admin\AdminAccountsController::class);
+        Route::resource('rollen', \App\Http\Controllers\Admin\AdminRollenController::class);
+    });
+
+});
 Route::get('/', function () {
     return view('welcome');
 });

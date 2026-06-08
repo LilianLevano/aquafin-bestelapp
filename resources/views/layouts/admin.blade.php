@@ -16,7 +16,7 @@
                 <a href="{{ route('admin.rollen.index') }}" class="nav-link {{ request()->is('admin/rollen*') ? 'active' : '' }}">Roles</a>
             </div>
             <div class="nav-right">
-                <span class="muted">{{ auth()->user()->mail ?? '' }}</span>
+                <span class="muted">{{ auth()->user()->email ?? '' }}</span>
                 <form method="POST" action="{{ route('logout') }}" style="display:inline">
                     @csrf
                     <button type="submit" class="btn btn-outline btn-sm">Log out</button>

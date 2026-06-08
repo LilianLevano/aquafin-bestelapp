@@ -4,7 +4,9 @@
 @section('content')
 <div class="card" style="max-width:480px;margin:0 auto;">
     <h1 class="h1">Edit Role</h1>
-
+    @if(session('status'))
+        <div class="alert alert-success">{{ session('status') }}</div>
+    @endif
     <form id="edit-form" method="POST" action="{{ route('admin.rollen.update', $role) }}" class="form">
         @csrf @method('PUT')
 

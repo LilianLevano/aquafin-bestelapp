@@ -10,7 +10,9 @@
     </div>
 
     <h1 class="h1">Create Role</h1>
-
+    @if(session('status'))
+        <div class="alert alert-success">{{ session('status') }}</div>
+    @endif
     <form id="create-form" method="POST" action="{{ route('admin.rollen.store') }}" class="form">
         @csrf
 
@@ -19,13 +21,6 @@
             <input id="name" name="name" value="{{ old('name') }}" required autofocus
                    class="{{ $errors->has('name') ? 'is-invalid' : '' }}">
             @error('name') <p class="error">{{ $message }}</p> @enderror
-        </div>
-
-        <div class="field">
-            <label for="value">Role Value</label>
-            <input id="value" name="value" value="{{ old('value') }}"
-                   class="{{ $errors->has('value') ? 'is-invalid' : '' }}">
-            @error('value') <p class="error">{{ $message }}</p> @enderror
         </div>
 
         <div class="row-end">
