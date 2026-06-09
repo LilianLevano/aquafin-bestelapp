@@ -1,5 +1,6 @@
-<x-layouts.site-layout>
+@extends('layouts.app')
 
+@section('content')
     <h1>Catalogus</h1>
 
     <table class="manager-table">
@@ -35,5 +36,4 @@
         </tbody>
 
     </table>
-
-</x-layouts.site-layout>
+@endsection

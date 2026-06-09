@@ -1,48 +1,45 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\AuthController;
+use \App\Http\Middleware\AdminMiddleware;
+use \App\Http\Controllers\Admin\AdminAccountsController;
+use \App\Http\Controllers\Admin\AdminRollenController;
 use App\Http\Controllers\AanvraagController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+require __DIR__.'/auth.php';
 
+// Guest Routes
+Route::post('/hulp', [AanvraagController::class, 'store'])->name('hulp.store');
 
-
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-
-
-
-Route::middleware('auth')->group(function () {
-
-    Route::prefix('admin')->name('admin.')->middleware(\App\Http\Middleware\AdminMiddleware::class)->group(function () {
-        Route::resource('accounts', \App\Http\Controllers\Admin\AdminAccountsController::class);
-        Route::resource('rollen', \App\Http\Controllers\Admin\AdminRollenController::class);
-    });
-
+Route::get('/catalogus', function () {
+    return view('materiaal-catalogus');
 });
+
+// Protected Routes
+// Dashboard (requires authentication + verification)
 Route::get('/', function () {
-    return view('welcome');
-});
-
+	return view('dashboard');
+})->middleware(['auth']);
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/admin/catalogus/materiaal', function () {
-    return view('admin-catalogus-materiaal');
-});
+})->middleware(['auth'])->name('dashboard');
 
+// Admin Routes (requires authentication + admin middleware)
 Route::middleware('auth')->group(function () {
+    Route::prefix('admin')
+        ->name('admin.')
+        ->middleware(AdminMiddleware::class)
+        ->group(function () {
+            Route::resource('accounts', AdminAccountsController::class)->except(['show']);
+            Route::resource('rollen', AdminRollenController::class)->except(['show']);
+        });
+
+    // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
-
-Route::get('/catalogus', function () {
-    return view('materiaal-catalogus');
+Route::get('/admin/catalogus/materiaal', function () {
+    return view('admin-catalogus-materiaal');
 });

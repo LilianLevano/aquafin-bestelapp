@@ -1,5 +1,6 @@
-<x-layouts.app>
+@extends('layouts.app')
 
+@section('content')
     <h2 class="mb-4"> Materiaal Catalogus</h2>
 
     <div class="row">
@@ -70,5 +71,4 @@
                 </div>
                 <div class="card-footer">
                     <a href="#" class="btn btn-primary w-100 disabled">Bestellens
-
-</x-layouts.app>
+@endsection

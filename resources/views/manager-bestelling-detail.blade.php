@@ -1,5 +1,6 @@
-<x-layouts.site-layout>
+@extends('layouts.app')
 
+@section('content')
     <h1>Bestelling detail</h1>
 
     <div class="detail-card">
@@ -40,5 +41,4 @@
             </tr>
         </tbody>
     </table>
-
-</x-layouts.site-layout>
+@endsection

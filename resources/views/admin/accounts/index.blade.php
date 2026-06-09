@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 @section('title', 'Accounts')
 
 @section('content')
@@ -103,12 +103,12 @@ document.getElementById('edit-mail').addEventListener('blur', function() {
     setValidity(this, ok, 'Invalid email address.');
 });
 
-document.getElementById('edit-voornaam').addEventListener('blur', function() {
+document.getElementById('edit-first_name').addEventListener('blur', function() {
     var ok = /^[A-Za-zÀ-ÿ\s\-']{2,}$/.test(this.value.trim());
     setValidity(this, ok, 'Min. 2 characters, letters only.');
 });
 
-document.getElementById('edit-achternaam').addEventListener('blur', function() {
+document.getElementById('edit-last_name').addEventListener('blur', function() {
     var ok = /^[A-Za-zÀ-ÿ\s\-']{2,}$/.test(this.value.trim());
     setValidity(this, ok, 'Min. 2 characters, letters only.');
 });
@@ -126,7 +126,7 @@ document.getElementById('edit-password-confirm').addEventListener('blur', functi
     setValidity(this, this.value === pw, 'Passwords do not match.');
 });
 
-document.querySelectorAll('#edit-mail, #edit-voornaam, #edit-achternaam, #edit-role').forEach(function(input) {
+document.querySelectorAll('#edit-mail, #edit-first_name, #edit-last_name, #edit-role').forEach(function(input) {
     input.addEventListener('input', function() {
         if (this.dataset.original !== undefined) {
             this.classList.toggle('is-modified', this.value !== this.dataset.original);

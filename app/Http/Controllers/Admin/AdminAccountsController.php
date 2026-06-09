@@ -15,7 +15,13 @@ class AdminAccountsController extends Controller
      */
     public function index()
     {
-        $accounts = User::paginate(20);
+        $accounts = User::paginate(
+            20,           // perPage
+            ['*'],        // columns
+            'page',       // pageName
+            null,         // page
+            null          // total
+        );
         return view('admin.accounts.index', compact('accounts'));
 
     }

@@ -1,5 +1,6 @@
-<x-layouts.site-layout>
+@extends('layouts.app')
 
+@section('content')
     <div class="page-header">
         <h1>Admin Catalogus</h1>
 
@@ -50,5 +51,4 @@
             </tr>
         </tbody>
     </table>
-
-</x-layouts.site-layout>
+@endsection

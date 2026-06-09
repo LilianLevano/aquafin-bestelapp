@@ -1,5 +1,6 @@
-<x-layouts.site-layout>
+@extends('layouts.app')
 
+@section('content')
     <div class="form-card">
 
         <h1>Materiaal aanmaken</h1>
@@ -19,5 +20,4 @@
         </div>
 
     </div>
-
-</x-layouts.site-layout>
+@endsection

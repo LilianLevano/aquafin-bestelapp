@@ -1,5 +1,6 @@
-<x-layouts.site-layout>
+@extends('layouts.app')
 
+@section('content')
     <h1>Bestelling plaatsen</h1>
 
     <section class="filter-zone">
@@ -69,5 +70,4 @@
     <div class="center-button">
         <button class="btn-primary">Toon alles</button>
     </div>
-
-</x-layouts.site-layout>
+@endsection

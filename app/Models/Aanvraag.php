@@ -2,19 +2,22 @@
 
 namespace App\Models;
 
+use Database\Factories\AanvraagFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Aanvraag extends Model
 {
-    protected $table = 'aanvraagen';
+    /** @use HasFactory<AanvraagFactory> */
     use HasFactory;
+
+    protected $table = 'aanvraagen';
+
     protected $fillable = [
         'name',
         'email',
         'title',
         'description',
-        'answer',
         'posted_on',
         'is_completed'
     ];

@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.app')
 @section('title', 'Edit Account')
 
 @section('content')
@@ -97,12 +97,12 @@ document.getElementById('mail').addEventListener('blur', function() {
     setValidity(this, ok, 'Invalid email address.');
 });
 
-document.getElementById('voornaam').addEventListener('blur', function() {
+document.getElementById('first_name').addEventListener('blur', function() {
     var ok = /^[A-Za-zÀ-ÿ\s\-']{2,}$/.test(this.value.trim());
     setValidity(this, ok, 'Min. 2 characters, letters only.');
 });
 
-document.getElementById('achternaam').addEventListener('blur', function() {
+document.getElementById('last_name').addEventListener('blur', function() {
     var ok = /^[A-Za-zÀ-ÿ\s\-']{2,}$/.test(this.value.trim());
     setValidity(this, ok, 'Min. 2 characters, letters only.');
 });

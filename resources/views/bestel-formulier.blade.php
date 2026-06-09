@@ -1,5 +1,6 @@
-<x-layouts.app>
+@extends('layouts.app')
 
+@section('content')
     <h2 class="mb-4"> Bestelformulier</h2>
 
     <div class="card shadow p-4">
@@ -54,5 +55,4 @@
 
         </form>
     </div>
-
-</x-layouts.app>
+@endsection

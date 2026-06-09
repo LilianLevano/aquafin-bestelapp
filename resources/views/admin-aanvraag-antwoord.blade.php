@@ -1,7 +1,7 @@
-<x-layouts.site-layout>
+@extends('layouts.app')
 
+@section('content')
     <div class="aanvraag-card">
-
         <div class="back-section">
             <a href="/admin/aanvragen" class="btn-primary">← Back</a>
         </div>
@@ -14,10 +14,10 @@
         @endif
 
         <h3>Title</h3>
-        <input type="text" class="text-field" placeholder="Enter title" value="{{ $aanvraag->titel ?? '' }}" readonly>
+        <input type="text" class="text-field" placeholder="Enter title" value="{{ $aanvraag->title ?? '' }}" readonly>
 
         <h3>Description</h3>
-        <textarea class="description-box" rows="4" readonly>{{ $aanvraag->descriptie ?? '' }}</textarea>
+        <textarea class="description-box" rows="4" readonly>{{ $aanvraag->description ?? '' }}</textarea>
 
         <h3>Answer to</h3>
         <input type="email" class="text-field" placeholder="test@gmail.com" value="{{ $aanvraag->mail ?? '' }}" readonly>
@@ -30,5 +30,4 @@
         </div>
 
     </div>
-
-</x-layouts.site-layout>
+@endsection
