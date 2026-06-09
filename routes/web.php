@@ -35,6 +35,7 @@ Route::get('/admin/catalogus/materiaal', function () {
     return view('admin-catalogus-materiaal');
 });
 
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -45,4 +46,47 @@ require __DIR__.'/auth.php';
 
 Route::get('/catalogus', function () {
     return view('materiaal-catalogus');
+});
+
+// Home
+Route::get('/', function () {
+    return view('welcome');
+});
+
+// Bestellen
+Route::get('/bestellen', function () {
+    return view('bestellen');
+});
+
+
+Route::get('/catalogus', function () {
+    return view('materiaal-catalogus');
+});
+
+Route::get('/hulpaanvraag', function () {
+    return view('hulpaanvraag');
+});
+
+Route::get('/technieker/bestellen', function () {
+    return view('technieker-bestellen');
+});
+
+Route::get('/admin/catalogus', function () {
+    return view('admin-catalogus');
+});
+
+Route::get('/catalogus/aanmaken', function () {
+    return view('admin-catalogus-materiaal');
+});
+
+Route::get('/besteklijst', function () {
+    return view('besteklijst');
+});
+
+Route::get('/technieker', function () {
+    return view('technieker-welkom');
+});
+
+Route::get('/admin/aanvragen', function () {
+    return view('admin-aanvragen');
 });
