@@ -23,6 +23,13 @@ Route::middleware('auth')->group(function () {
         Route::resource('rollen', \App\Http\Controllers\Admin\AdminRollenController::class);
     });
 
+    Route::prefix('technieker')->name('technieker.')->middleware(\App\Http\Middleware\TechniekerMiddleware::class)->group(function () {
+        Route::resource('bestelling', \App\Http\Controllers\TechniekerBestellingController::class);
+    });
+
+
+
+
 });
 Route::get('/', function () {
     return view('welcome');
@@ -46,47 +53,4 @@ require __DIR__.'/auth.php';
 
 Route::get('/catalogus', function () {
     return view('materiaal-catalogus');
-});
-
-// Home
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// Bestellen
-Route::get('/bestellen', function () {
-    return view('bestellen');
-});
-
-
-Route::get('/catalogus', function () {
-    return view('materiaal-catalogus');
-});
-
-Route::get('/hulpaanvraag', function () {
-    return view('hulpaanvraag');
-});
-
-Route::get('/technieker/bestellen', function () {
-    return view('technieker-bestellen');
-});
-
-Route::get('/admin/catalogus', function () {
-    return view('admin-catalogus');
-});
-
-Route::get('/catalogus/aanmaken', function () {
-    return view('admin-catalogus-materiaal');
-});
-
-Route::get('/besteklijst', function () {
-    return view('besteklijst');
-});
-
-Route::get('/technieker', function () {
-    return view('technieker-welkom');
-});
-
-Route::get('/admin/aanvragen', function () {
-    return view('admin-aanvragen');
 });

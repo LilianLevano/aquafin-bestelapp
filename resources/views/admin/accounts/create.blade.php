@@ -67,6 +67,18 @@
             @error('role_id') <p class="error">{{ $message }}</p> @enderror
         </div>
 
+        <div class="field">
+            <label for="site_id">Locatie: </label>
+            <select id="site_id" name="site_id" required
+                    class="{{ $errors->has('site_id') ? 'is-invalid' : '' }}">
+                <option value="">— Select role —</option>
+                @foreach($sites as $s)
+                    <option value="{{ $s->id }}" @selected(old('site_id') == $s->id)>{{ $s->locatie }}</option>
+                @endforeach
+            </select>
+            @error('site_id') <p class="error">{{ $message }}</p> @enderror
+        </div>
+
         <div class="row-end">
             <a href="{{ route('admin.accounts.index') }}" class="btn btn-outline">Cancel</a>
             <button id="submit-btn" type="submit" class="btn btn-primary">Create User</button>

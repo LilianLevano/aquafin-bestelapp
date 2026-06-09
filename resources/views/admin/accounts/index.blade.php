@@ -34,6 +34,7 @@
                     <th>Last Name</th>
                     <th>Email</th>
                     <th>Role</th>
+                    <th>Site</th>
                     <th class="right">Actions</th>
                 </tr>
             </thead>
@@ -45,6 +46,7 @@
                     <td>{{ $a->last_name }}</td>
                     <td>{{ $a->email }}</td>
                     <td>{{ $a->role->name ?? '—' }}</td>
+                    <td>{{$a->site->locatie}}</td>
                     <td class="right">
 
                         <a href="{{route('admin.accounts.edit', $a->id)}}" class="link">Edit</a>
