@@ -49,6 +49,18 @@
         </div>
 
         <div class="field">
+            <label for="site_id">Locatie: </label>
+            <select id="site_id" name="site_id" required
+                    class="{{ $errors->has('site_id') ? 'is-invalid' : '' }}">
+                <option value="">— Select locatie —</option>
+                @foreach($sites as $s)
+                    <option value="{{ $s->id }}" @selected(old('site_id', $account->site_id) == $s->id)>{{ $s->locatie }}</option>
+                @endforeach
+            </select>
+            @error('site_id') <p class="error">{{ $message }}</p> @enderror
+        </div>
+
+        <div class="field">
             <label for="password">New Password <span class="muted">(optional)</span></label>
             <div class="input-group">
                 <input id="password" type="password" name="password"

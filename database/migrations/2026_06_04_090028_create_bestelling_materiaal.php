@@ -16,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('materiaal_id')->constrained('materialen');
             $table->foreignId('bestelling_id')->constrained();
+            $table->integer('quantity');
             $table->timestamps();
         });
 

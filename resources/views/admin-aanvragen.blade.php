@@ -26,7 +26,7 @@
 
                 <div class="aanvraag-description">
                     <label>Description</label>
-                    <textarea class="description-box" rows="5" readonly>{{ $aanvraag->description ?? '' }}</textarea>
+                    <textarea class="description-box" rows="5" placeholder="Beschrijf hier je probleem..." readonly>{{ $aanvraag->description ?? '' }}</textarea>
                 </div>
 
                 <div class="aanvraag-footer">
@@ -38,17 +38,21 @@
         @endforeach
     </div>
 
-    <p id="no-results" style="display:none;text-align:center;color:#64748b;padding:16px;">No requests found for this status.</p>
+    <p id="no-results" style="display:none;text-align:center;color:#64748b;padding:16px;">
+        No requests found for this status.
+    </p>
 
     <script>
     function filterStatus(status, btn) {
         document.querySelectorAll('.status-tabs .tab').forEach(function(t) {
             t.classList.remove('active');
         });
+
         btn.classList.add('active');
 
         var cards = document.querySelectorAll('.aanvraag-card');
         var visible = 0;
+
         cards.forEach(function(card) {
             if (status === 'alle' || card.dataset.status === status) {
                 card.style.display = 'block';

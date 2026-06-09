@@ -17,29 +17,47 @@ Route::get('/catalogus', function () {
 
 // Protected Routes
 // Dashboard (requires authentication + verification)
-Route::get('/', function () {
-	return view('dashboard');
-})->middleware(['auth']);
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return view('dashboard');
+    });
+
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->middleware('verified')->name('dashboard');
+});
 
 // Admin Routes (requires authentication + admin middleware)
 Route::middleware('auth')->group(function () {
     Route::prefix('admin')
-        ->name('admin.')
-        ->middleware(AdminMiddleware::class)
-        ->group(function () {
-            Route::resource('accounts', AdminAccountsController::class)->except(['show']);
-            Route::resource('rollen', AdminRollenController::class)->except(['show']);
-        });
+    ->name('admin.')
+    ->middleware(AdminMiddleware::class)
+    ->group(function () {
+        Route::resource('accounts', AdminAccountsController::class)->except(['show']);
+        Route::resource('rollen', AdminRollenController::class)->except(['show']);
+    });
+    Route::get('/admin/catalogus/materiaal', function () {
+        return view('admin-catalogus-materiaal');
+    });
+
+    Route::get('/admin/catalogus/materiaal', function () {
+        return view('admin-catalogus-materiaal');
+    });
+
+    Route::get('/besteklijst', function () {
+        return view('besteklijst');
+    });
+
+    Route::get('/technieker', function () {
+        return view('technieker-welkom');
+    });
+
+    Route::get('/admin/aanvragen', function () {
+        return view('admin-aanvragen');
+    });
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-Route::get('/admin/catalogus/materiaal', function () {
-    return view('admin-catalogus-materiaal');
 });

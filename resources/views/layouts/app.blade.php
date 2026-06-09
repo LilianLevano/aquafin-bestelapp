@@ -18,8 +18,7 @@
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
-        @include('layouts.navigation')
-        {{--
+        {{-- @include('layouts.navigation') --}}
         <header class="navbar">
             <h2 class="navbar-brand">AQUAFIN</h2>
 
@@ -35,7 +34,6 @@
 
             <button class="navbar-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
         </header>
-        --}}
 
         <!-- Page Heading -->
         @isset($header)

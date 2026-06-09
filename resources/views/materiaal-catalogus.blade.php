@@ -1,74 +1,72 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2 class="mb-4"> Materiaal Catalogus</h2>
+    <div style="padding: 40px; text-align: left;">
 
-    <div class="row">
+        <h2 style="margin-bottom: 24px;">Materiaal Catalogus</h2>
 
-        <!-- Product 1 -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow h-100">
-                <div class="card-body">
-                    <h5 class="card-title">🔧 Veiligheidshelm</h5>
-                    <p class="card-text">Beschermhelm voor op de werf.</p>
-                    <span class="badge bg-success">Beschikbaar</span>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+
+            <!-- Product 1 -->
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); overflow:hidden;">
+                <div style="padding:20px;">
+                    <h5>🔧 Veiligheidshelm</h5>
+                    <p>Beschermhelm voor op de werf.</p>
+                    <span style="background:#198754; color:white; padding:4px 10px; border-radius:5px; font-size:13px;">Beschikbaar</span>
                 </div>
-                <div class="card-footer">
-                    <a href="#" class="btn btn-primary w-100">Bestellen</a>
+                <div style="padding:12px 20px; border-top:1px solid #eee;">
+                    <a href="#" class="btn-primary" style="display:block; text-align:center;">Bestellen</a>
                 </div>
             </div>
-        </div>
 
-        <!-- Product 2 -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow h-100">
-                <div class="card-body">
-                    <h5 class="card-title"> Veiligheidsvest</h5>
-                    <p class="card-text">Fluoriserend vest voor zichtbaarheid.</p>
-                    <span class="badge bg-success">Beschikbaar</span>
+            <!-- Product 2 -->
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); overflow:hidden;">
+                <div style="padding:20px;">
+                    <h5>Veiligheidsvest</h5>
+                    <p>Fluoriserend vest voor zichtbaarheid.</p>
+                    <span style="background:#198754; color:white; padding:4px 10px; border-radius:5px; font-size:13px;">Beschikbaar</span>
                 </div>
-                <div class="card-footer">
-                    <a href="#" class="btn btn-primary w-100">Bestellen</a>
+                <div style="padding:12px 20px; border-top:1px solid #eee;">
+                    <a href="#" class="btn-primary" style="display:block; text-align:center;">Bestellen</a>
                 </div>
             </div>
-        </div>
 
-        <!-- Product 3 -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow h-100">
-                <div class="card-body">
-                    <h5 class="card-title"> Werkhandschoenen</h5>
-                    <p class="card-text">Stevige handschoenen voor zwaar werk.</p>
-                    <span class="badge bg-warning text-dark">Beperkte voorraad</span>
+            <!-- Product 3 -->
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); overflow:hidden;">
+                <div style="padding:20px;">
+                    <h5>Werkhandschoenen</h5>
+                    <p>Stevige handschoenen voor zwaar werk.</p>
+                    <span style="background:#ffc107; color:#000; padding:4px 10px; border-radius:5px; font-size:13px;">Beperkte voorraad</span>
                 </div>
-                <div class="card-footer">
-                    <a href="#" class="btn btn-primary w-100">Bestellen</a>
+                <div style="padding:12px 20px; border-top:1px solid #eee;">
+                    <a href="#" class="btn-primary" style="display:block; text-align:center;">Bestellen</a>
                 </div>
             </div>
-        </div>
 
-        <!-- Product 4 -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow h-100">
-                <div class="card-body">
-                    <h5 class="card-title"> Veiligheidsbril</h5>
-                    <p class="card-text">Beschermt de ogen tegen spatten.</p>
-                    <span class="badge bg-success">Beschikbaar</span>
+            <!-- Product 4 -->
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); overflow:hidden;">
+                <div style="padding:20px;">
+                    <h5>Veiligheidsbril</h5>
+                    <p>Beschermt de ogen tegen spatten.</p>
+                    <span style="background:#198754; color:white; padding:4px 10px; border-radius:5px; font-size:13px;">Beschikbaar</span>
                 </div>
-                <div class="card-footer">
-                    <a href="#" class="btn btn-primary w-100">Bestellen</a>
+                <div style="padding:12px 20px; border-top:1px solid #eee;">
+                    <a href="#" class="btn-primary" style="display:block; text-align:center;">Bestellen</a>
                 </div>
             </div>
-        </div>
 
-        <!-- Product 5 -->
-        <div class="col-md-4 mb-4">
-            <div class="card shadow h-100">
-                <div class="card-body">
-                    <h5 class="card-title"> Veiligheidsschoenen</h5>
-                    <p class="card-text">Stevige schoenen met stalen neus.</p>
-                    <span class="badge bg-danger">Niet beschikbaar</span>
+            <!-- Product 5 -->
+            <div style="background:white; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); overflow:hidden;">
+                <div style="padding:20px;">
+                    <h5>Veiligheidsschoenen</h5>
+                    <p>Stevige schoenen met stalen neus.</p>
+                    <span style="background:#dc3545; color:white; padding:4px 10px; border-radius:5px; font-size:13px;">Niet beschikbaar</span>
                 </div>
-                <div class="card-footer">
-                    <a href="#" class="btn btn-primary w-100 disabled">Bestellens
+                <div style="padding:12px 20px; border-top:1px solid #eee;">
+                    <a href="#" class="btn-primary" style="display:block; text-align:center; opacity:0.6; pointer-events:none;">Bestellen</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
 @endsection

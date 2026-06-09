@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Role;
+use App\Models\Site;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -28,7 +29,8 @@ class AdminAccountsController extends Controller
 
     public function create(){
         $roles = Role::all();
-        return view('admin.accounts.create', compact('roles'));
+        $sites = Site::all();
+        return view('admin.accounts.create', compact('roles', 'sites'));
     }
 
     /**
@@ -41,6 +43,7 @@ class AdminAccountsController extends Controller
             'last_name' => ['required', 'max:40'],
             'email' => ['required','email','unique:users'],
             'role_id' => ['required', 'exists:roles,id'],
+            'site_id' => ['required', 'exists:sites,id'],
             'password' => ['required','min:8'],
             'password_confirmation' => ['required','same:password'],
         ]);
@@ -62,7 +65,8 @@ class AdminAccountsController extends Controller
     public function edit(User $account){
 
         $roles = Role::all();
-        return view('admin.accounts.edit', compact('account', 'roles'));
+        $sites = Site::all();
+        return view('admin.accounts.edit', compact('account', 'roles', 'sites'));
     }
 
     /**
@@ -77,6 +81,7 @@ class AdminAccountsController extends Controller
             'last_name' => ['required', 'max:40'],
             'email' => ['required','email','unique:users,email,'.$id],
             'role_id' => ['required', 'exists:roles,id'],
+            'site_id' => ['required', 'exists:sites,id'],
             'password' => ['nullable'],
             'password_confirmation' => ['nullable'],
 

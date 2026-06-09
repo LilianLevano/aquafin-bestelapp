@@ -13,4 +13,8 @@ class Site extends Model
     public function bestelling(){
         return $this->hasMany(Bestelling::class, 'site_id', 'id');
     }
+
+    public function user(){
+        return $this->hasMany(User::class, 'user_id', 'id');
+    }
 }
