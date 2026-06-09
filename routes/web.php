@@ -23,6 +23,13 @@ Route::middleware('auth')->group(function () {
         Route::resource('rollen', \App\Http\Controllers\Admin\AdminRollenController::class);
     });
 
+    Route::prefix('technieker')->name('technieker.')->middleware(\App\Http\Middleware\TechniekerMiddleware::class)->group(function () {
+        Route::resource('bestelling', \App\Http\Controllers\TechniekerBestellingController::class);
+    });
+
+
+
+
 });
 Route::get('/', function () {
     return view('welcome');
@@ -46,3 +53,5 @@ require __DIR__.'/auth.php';
 Route::get('/catalogus', function () {
     return view('materiaal-catalogus');
 });
+
+

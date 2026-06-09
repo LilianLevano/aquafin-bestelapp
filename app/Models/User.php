@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['first_name', 'last_name', 'email', 'password', 'role_id'])]
+#[Fillable(['first_name', 'last_name', 'email', 'password', 'role_id', 'site_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -37,6 +37,10 @@ class User extends Authenticatable
 
     public function bestelling(){
         return $this->hasMany(Bestelling::class, 'user_id', 'id');
+    }
+
+    public function site(){
+        return $this->belongsTo(Site::class, 'site_id', 'id');
     }
 
 

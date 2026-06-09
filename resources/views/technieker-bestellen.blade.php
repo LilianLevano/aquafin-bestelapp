@@ -4,7 +4,7 @@
 
     <section class="filter-zone">
 
-                <button class="btn-primary">Plaats</button>
+
 
         <div class="filter-item">
             <label>Filter</label>
@@ -29,9 +29,20 @@
 
     </section>
 
-    <table class="manager-table">
+    <form action="{{route('technieker.bestelling.store')}}" method="POST">
+        @csrf
 
-        <thead>
+        <table class="manager-table">
+            <button class="btn-primary">Plaats</button>
+            <input type="date" id="delivery_date" name="delivery_date" required>
+
+            <select name="site_id" id="site_id">
+                @foreach($sites as $site)
+                    <option value="{{$site->id}}" @selected($site->id == auth()->user()->site->id)>{{$site->locatie}} </option>
+                @endforeach
+            </select>
+
+            <thead>
             <tr>
                 <th>ID</th>
                 <th>Materiaal</th>
@@ -39,27 +50,24 @@
                 <th>Quantity</th>
                 <th>Actie</th>
             </tr>
-        </thead>
+            </thead>
 
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Pomp</td>
-                <td>Watermateriaal</td>
-                <td><input type="number" value="1"></td>
-                <td><input type="checkbox"></td>
-            </tr>
+            <tbody>
 
-            <tr>
-                <td>2</td>
-                <td>Buis</td>
-                <td>Installatie</td>
-                <td><input type="number" value="1"></td>
-                <td><input type="checkbox"></td>
-            </tr>
-        </tbody>
+            @foreach($materialen as $materiaal)
+                <tr>
+                    <td>{{$materiaal->id}}</td>
+                    <td>{{$materiaal->name}}</td>
+                    <td>{{$materiaal->category->name}}</td>
+                    <td><input type="number" value="0" min="0" name="quantity[{{ $materiaal->id }}]"></td>
+                    <td><input type="checkbox" name="materialen[]" value="{{$materiaal->id}}"></td>
 
-    </table>
+                </tr>
+            @endforeach
+            </tbody>
+
+        </table>
+    </form>
 
     <div class="center-button">
         <button class="btn-primary">Toon alles</button>
