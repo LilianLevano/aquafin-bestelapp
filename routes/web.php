@@ -46,3 +46,27 @@ require __DIR__.'/auth.php';
 Route::get('/catalogus', function () {
     return view('materiaal-catalogus');
 });
+
+Route::prefix('api')->name('api.')
+    ->group(function () {
+        Route::get('/flood-forecast', function () {
+            return view('');
+        });
+
+        Route::get('/flood-forecast/{years_ahead}', function ($years_ahead) {
+            return view('');
+        });
+
+        Route::get('/risk-months', function () {
+            return view('');
+        });
+
+        Route::get('/risk-months/{years_ahead}', function ($years_ahead) {
+            return view('');
+        });
+
+        Route::post('/flood-forecast/refresh', function () {
+            return view('');
+        });
+    }
+);
