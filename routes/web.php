@@ -54,3 +54,15 @@ require __DIR__.'/auth.php';
 Route::get('/catalogus', function () {
     return view('materiaal-catalogus');
 });
+
+Route::get('/besteklijst', function () {
+    return view('besteklijst');
+});
+
+Route::get('/technieker', function () {
+    return view('technieker-welkom');
+});
+
+Route::get('/admin/aanvragen', function () {
+    return view('admin-aanvragen');
+});
