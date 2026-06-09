@@ -10,7 +10,6 @@ let evolutionChart;
 let mixedMode = false;
 let activeCharts = [];
 
-/* fallback data (used if no cache exists) */
 let predictionData = {
     labels: ['Ma', 'Di', 'Wo', 'Do', 'Vr', 'Za'],
     risk: [10, 20, 35, 40, 55, 65],
@@ -34,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     initializeApp();
-
 });
 
 /* =========================================================
@@ -45,13 +43,11 @@ function initializeApp() {
     setupTabs();
     setupMixedMode();
     renderAllCharts();
-
-    // SAVE TO CACHE (required by rubric)
     setCache(predictionData);
 }
 
 /* =========================================================
-   4. CACHE LOGIC
+   4. CACHE
 ========================================================= */
 
 function setCache(data) {
@@ -59,21 +55,37 @@ function setCache(data) {
 }
 
 /* =========================================================
-   5. STATES (EMPTY / ERROR)
+   5. STATES
 ========================================================= */
 
 function showEmptyState() {
     document.getElementById('trendContainer').innerHTML =
-        "Geen data beschikbaar";
+        `<div class="p-4 text-gray-500 bg-gray-100 rounded">Geen data beschikbaar</div>`;
 }
 
 function showErrorState() {
     document.getElementById('trendContainer').innerHTML =
-        "⚠️ Fout bij laden van data";
+        `<div class="p-4 text-red-600 bg-red-100 rounded">⚠️ Fout bij laden van data</div>`;
 }
 
 /* =========================================================
-   6. CHARTS
+   6. RISK LOGIC
+========================================================= */
+
+function isRiskMonth(value) {
+    return value >= 40;
+}
+
+function getRiskMonths() {
+    return predictionData.labels.filter((_, i) =>
+        predictionData.risk[i] >= 40
+    );
+}
+
+window.riskMonths = getRiskMonths;
+
+/* =========================================================
+   7. CHARTS
 ========================================================= */
 
 function renderTrendChart() {
@@ -86,7 +98,21 @@ function renderTrendChart() {
             labels: predictionData.labels,
             datasets: [{
                 label: 'Risico',
-                data: predictionData.risk
+                data: predictionData.risk,
+
+                pointBackgroundColor: predictionData.risk.map(v =>
+                    isRiskMonth(v) ? 'red' : 'blue'
+                ),
+
+                pointRadius: predictionData.risk.map(v =>
+                    isRiskMonth(v) ? 6 : 3
+                ),
+
+                borderColor: predictionData.risk.map(v =>
+                    isRiskMonth(v) ? 'red' : 'blue'
+                ),
+
+                borderWidth: 2
             }]
         },
         options: {
@@ -139,16 +165,30 @@ function renderAllCharts() {
 }
 
 /* =========================================================
-   7. TABS
+   8. TABS
 ========================================================= */
 
 function setupTabs() {
 
     document.getElementById('trendBtn')
-        .addEventListener('click', showTrendOnly);
+        .addEventListener('click', () => {
+            setActiveTab('trendBtn');
+            showTrendOnly();
+        });
 
     document.getElementById('evolutionBtn')
-        .addEventListener('click', showEvolutionOnly);
+        .addEventListener('click', () => {
+            setActiveTab('evolutionBtn');
+            showEvolutionOnly();
+        });
+}
+
+function setActiveTab(activeId) {
+
+    document.getElementById('trendBtn').classList.remove('bg-blue-700');
+    document.getElementById('evolutionBtn').classList.remove('bg-blue-700');
+
+    document.getElementById(activeId).classList.add('bg-blue-700');
 }
 
 function showTrendOnly() {
@@ -168,7 +208,7 @@ function showEvolutionOnly() {
 }
 
 /* =========================================================
-   8. MIXED MODE
+   9. MIXED MODE
 ========================================================= */
 
 function setupMixedMode() {
@@ -181,27 +221,52 @@ function toggleMixedMode(event) {
 
     mixedMode = event.target.checked;
 
-    if (mixedMode) {
-        enableMixedMode();
-    } else {
-        disableMixedMode();
-    }
+    styleMixedToggle();
+
+    if (mixedMode) enableMixedMode();
+    else disableMixedMode();
+}
+
+function styleMixedToggle() {
+
+    const el = document.getElementById('mixedMode');
+
+    el.parentElement.classList.toggle(
+        'text-green-600',
+        el.checked
+    );
 }
 
 function enableMixedMode() {
 
-    document.getElementById('combinedContainer')
-        .classList.remove('hidden');
+    document.getElementById('combinedContainer').classList.remove('hidden');
+
+    renderLegend();
 
     addChartToCombined('trend');
     addChartToCombined('evolution');
 }
 
+function renderLegend() {
+
+    const container = document.getElementById('combinedContainer');
+
+    const legend = document.createElement('div');
+
+    legend.className = "p-2 border mb-2 bg-gray-100";
+
+    legend.innerHTML = `
+        <strong>Legenda</strong><br>
+        🔵 Risico (Trend)<br>
+        🟢 Neerslag (Evolutie)
+    `;
+
+    container.prepend(legend);
+}
+
 function disableMixedMode() {
 
-    document.getElementById('combinedContainer')
-        .classList.add('hidden');
-
+    document.getElementById('combinedContainer').classList.add('hidden');
     document.getElementById('combinedContainer').innerHTML = '';
 
     activeCharts = [];
@@ -229,11 +294,10 @@ function removeChartFromCombined(type) {
 }
 
 /* =========================================================
-   9. FETCH (PLACEHOLDER - FRONTEND ONLY)
+   10. FETCH (PLACEHOLDER)
 ========================================================= */
 
 async function fetchPredictionData() {
-
     try {
         console.log('Prediction data loaded');
     } catch (error) {
