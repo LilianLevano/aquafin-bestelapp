@@ -339,3 +339,172 @@ table th {
     font-weight: 600;
     display: inline-block;
 }
+.weer-container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.weer-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #1e3a5f;
+}
+
+.weer-btn {
+    display: inline-block;
+    margin-top: 24px;
+    padding: 12px 28px;
+    background: #1e3a5f;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+.weer-btn:hover { background: #2d5282; }
+
+.weer-tab-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+.weer-tab {
+    padding: 9px 22px;
+    border: 2px solid #1e3a5f;
+    border-radius: 6px;
+    background: white;
+    color: #1e3a5f;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.weer-tab.active {
+    background: #1e3a5f;
+    color: white;
+}
+.weer-tab:hover:not(.active) {
+    background: #e8f0fe;
+}
+
+.weer-chart-selector {
+    display: flex;
+    gap: 8px;
+    margin: 28px 0 16px;
+}
+.chart-type-btn {
+    padding: 7px 18px;
+    border: 2px solid #6b7280;
+    border-radius: 6px;
+    background: white;
+    color: #374151;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.chart-type-btn.active {
+    background: #374151;
+    color: white;
+    border-color: #374151;
+}
+.chart-type-btn:hover:not(.active) {
+    background: #f3f4f6;
+}
+
+
+.weer-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 32px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+}
+.weer-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+.weer-table th,
+.weer-table td {
+    padding: 11px 14px;
+    border: 1px solid #e5e7eb;
+    text-align: center;
+    font-size: 0.92rem;
+}
+.weer-table th {
+    background: #1e3a5f;
+    color: white;
+    font-weight: 600;
+}
+.risk-row {
+    background: #fef2f2;
+}
+.risk-cell {
+    color: #dc2626;
+    font-weight: 700;
+}
+
+
+.weer-charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 8px;
+}
+.weer-chart-block {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.weer-chart-block h2 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 14px;
+}
+
+
+.weer-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 0;
+    color: #6b7280;
+    gap: 12px;
+}
+.weer-spinner {
+    width: 36px;
+    height: 36px;
+    border: 4px solid #e5e7eb;
+    border-top-color: #1e3a5f;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.weer-error {
+    padding: 16px 20px;
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    color: #dc2626;
+    border-radius: 8px;
+    margin: 20px 0;
+    font-weight: 500;
+}
+.weer-empty {
+    padding: 40px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    color: #6b7280;
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: center;
+    font-size: 1rem;
+}
+
+
+@media (max-width: 768px) {
+    .weer-charts-grid { grid-template-columns: 1fr; }
+}

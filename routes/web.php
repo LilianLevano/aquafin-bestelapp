@@ -65,4 +65,11 @@ Route::get('/technieker', function () {
 
 Route::get('/admin/aanvragen', function () {
     return view('admin-aanvragen');
+});Route::prefix('technieker')->name('technieker.')->middleware(\App\Http\Middleware\TechniekerMiddleware::class)->group(function () {
+    Route::resource('bestelling', \App\Http\Controllers\TechniekerBestellingController::class);
+
+    // ✅ ADD THIS LINE:
+    Route::get('/weersomstandigheden', function () {
+        return view('weersomstandigheden');
+    })->name('weersomstandigheden');
 });
