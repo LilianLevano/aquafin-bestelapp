@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Materiaal;
 use Illuminate\Http\Request;
 
@@ -22,7 +23,8 @@ class MateriaalController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        return view('materials.create', compact('categories'));
     }
 
     /**
@@ -30,7 +32,17 @@ class MateriaalController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => ['required', 'unique:materialen,name'],
+            'category_id' => ['required', 'exists:categories,id'],
+        ]);
+
+
+
+        Materiaal::create($validated);
+        return redirect()->route('admin.materials.index')->with('success', 'Materiaal is aangemaakt');
+
+
     }
 
     /**

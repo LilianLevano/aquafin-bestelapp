@@ -12,7 +12,7 @@ class Materiaal extends Model
     protected $table = 'materialen';
     protected $fillable = [
         'name',
-        'categorie_id',
+        'category_id',
     ];
 
     public function category(){
