@@ -6,7 +6,7 @@
                 <a href="{{ route('/') }}" class="flex items-center">
                     <img class="logo" src="{{ asset('images/Logo_Aquafin.png') }}" alt="Aquafin logo" title="Aquafin logo">
                 </a>
-                <div class="hidden space-x-6 sm:flex sm:ml-10">
+                <div class="space-x-6 sm:flex sm:ml-10">
                     @if(auth()->check())
                         {{-- Show navigation links based on user role --}}
                         <x-nav-link :href="route('/')" :active="request()->routeIs('/')">
@@ -17,41 +17,32 @@
                             $roleName = auth()->user()->role->name ?? null;
                         @endphp
 
-                        @if($roleName === 'admin' || $roleName === 'beheerder')
-                            <x-nav-link :href="route('technieker')" :active="request()->routeIs('technieker')">
-                                {{ __('Home') }}
-                            </x-nav-link>
-                            <x-nav-link :href="route('technieker.bestellen')" :active="request()->routeIs('technieker.bestellen')">
-                                {{ __('Bestellen') }}
-                            </x-nav-link>
-                            <x-nav-link :href="route('admin.category')" :active="request()->routeIs('admin.category')">
-                                {{ __('Category (admin)') }}
-                            </x-nav-link>
-                            <x-nav-link :href="route('admin.aanvragen')" :active="request()->routeIs('admin.aanvragen')">
-                                {{ __('Aanvragen') }}
-                            </x-nav-link>
-                            <x-nav-link :href="route('admin.accounts.index')" :active="request()->routeIs('admin.accounts.index')">
+                        @if($roleName === 'Admin' || $roleName === 'beheerder')
+
+                            <x-nav-link :href="route('admin.accounts.index')" :active="request()->routeIs('technieker')">
                                 {{ __('Accounts') }}
                             </x-nav-link>
-                            <x-nav-link :href="route('roles.index')" :active="request()->routeIs('roles.index')">
+
+                            <x-nav-link :href="route('admin.roles.index')" :active="request()->routeIs('technieker')">
                                 {{ __('Rollen') }}
                             </x-nav-link>
+
                             <x-nav-link href="#">
                                 {{ __('Hulpaanvraag') }}
                             </x-nav-link>
-                        @elseif($roleName === 'technieker')
-                            <x-nav-link :href="route('technieker')" :active="request()->routeIs('technieker')">
-                                {{ __('Home') }}
+                        @elseif($roleName === 'Technieker')
+
+
+                            <x-nav-link :href="route('orders.index')" :active="request()->routeIs('technieker.bestellen')">
+                                {{ __('Bestellingen') }}
                             </x-nav-link>
-                            <x-nav-link :href="route('technieker.bestellen')" :active="request()->routeIs('technieker.bestellen')">
+
+                            <x-nav-link :href="route('orders.create')" :active="request()->routeIs('technieker.bestellen')">
                                 {{ __('Bestellen') }}
                             </x-nav-link>
-                            <x-nav-link :href="route('category')" :active="request()->routeIs('category')">
-                                {{ __('Category (technieker)') }}
-                            </x-nav-link>
-                            <x-nav-link href="#">
-                                {{ __('Hulpaanvraag') }}
-                            </x-nav-link>
+
+
+
                         @endif
                     @endif
                 </div>
