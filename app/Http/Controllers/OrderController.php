@@ -15,9 +15,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $materialen = Materiaal::all();
-        $sites = Site::all();
-        return view('orders.index', compact('materialen', 'sites'));
+        $bestellingen = Bestelling::with(['user', 'site', 'materiaal'])->get();
+        return view('orders.index', compact('bestellingen'));
     }
 
     /**
@@ -25,7 +24,9 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
+        $materialen = Materiaal::all();
+        $sites = Site::all();
+        return view('orders.create', compact('materialen', 'sites'));
     }
 
     /**
@@ -55,7 +56,7 @@ class OrderController extends Controller
         $bestelling = Bestelling::create($validated);
 
         $bestelling->materiaal()->sync($pivotData);
-        return back()->with('status', 'Bestelling opgeslagen');
+        return redirect()->route('orders.index') ->with('status', 'Bestelling opgeslagen.');
     }
 
     /**

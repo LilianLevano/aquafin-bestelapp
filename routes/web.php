@@ -40,13 +40,11 @@ Route::middleware('auth')->group(function () {
 
     // Technician Routes
     Route::middleware('role:Technieker')->group(function () {
-        Route::get('/orders', function () {
-            return view('orders.index');
-        })->name('orders.index');
 
-        Route::get('/orders-create', function () {
-            return view('orders.create');
-        })->name('orders.create');
+        Route::prefix('technieker')->group(function () {
+            Route::resource('orders', \App\Http\Controllers\OrderController::class)->except(['show']);
+        });
+
     });
 
     // Profile

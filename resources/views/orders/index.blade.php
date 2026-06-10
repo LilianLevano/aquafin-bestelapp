@@ -28,6 +28,8 @@
         <button class="btn-primary">Filter</button>
     </div>
 
+    <button><a href="{{route('orders.create')}}">Plaats een nieuwe bestelling</a> </button>
+
     <table class="manager-table">
         <thead>
             <tr>
@@ -35,38 +37,27 @@
                 <th>Geplaatst door</th>
                 <th>Items</th>
                 <th>Leverplaats</th>
-                <th>Status</th>
                 <th>Datum</th>
             </tr>
         </thead>
 
+
         <tbody>
+
+
+        @foreach($bestellingen as $bestelling)
             <tr>
-                <td>1</td>
-                <td>Technieker Jan</td>
-                <td>Pomp, Buis</td>
-                <td>Brussel Noord</td>
-                <td>Open</td>
-                <td>12/06/2026</td>
+                <td>{{$bestelling->id}}</td>
+                <td>{{$bestelling->user->first_name . $bestelling->user->last_name  }}</td>
+                <td>
+                    {{ $bestelling->materiaal->take(3)->pluck('name')->implode(', ') . ($bestelling->materiaal->count() > 3 ? ', ...' : '') }}
+                </td>
+                <td>{{$bestelling->site->locatie}}</td>
+                <td>{{$bestelling->delivery_date}}</td>
             </tr>
 
-            <tr>
-                <td>2</td>
-                <td>Technieker Sara</td>
-                <td>Kabel</td>
-                <td>Antwerpen Zuid</td>
-                <td>Opgelost</td>
-                <td>15/06/2026</td>
-            </tr>
+        @endforeach
 
-            <tr>
-                <td>3</td>
-                <td>Technieker Ali</td>
-                <td>Filter</td>
-                <td>Gent</td>
-                <td>Open</td>
-                <td>18/06/2026</td>
-            </tr>
         </tbody>
     </table>
 
