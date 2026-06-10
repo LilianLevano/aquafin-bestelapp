@@ -10,6 +10,11 @@ class Role extends Model
     /** @use HasFactory<\Database\Factories\RoleFactory> */
     use HasFactory;
 
+    public const ADMIN = 'Admin';
+    public const TECHNIEKER = 'Technieker';
+    public const MANAGER = 'Manager';
+    public const MAGAZIJNIER = 'Magazijnier';
+
     protected $fillable = ['name'];
 
     public function users(){

@@ -30,7 +30,7 @@ class AuthenticatedSessionController extends Controller
             $request->session()->regenerate();
 
             return redirect()
-                ->intended(route('dashboard', absolute: false))
+                ->intended(route('/', absolute: false))
                 ->with('status', 'success');
         } catch (ValidationException $e) {
             return redirect()

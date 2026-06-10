@@ -9,7 +9,7 @@
                 <h5 class="fw-bold">Snelle links</h5>
                 <ul class="list-unstyled">
                     <li><a href="#" class="text-white"> Home</a></li>
-                    <li><a href="#" class="text-white"> Materiaal catalogus</a><li>
+                    <li><a href="#" class="text-white"> Materiaal category</a><li>
                     <li><a href="#" class="text-white"> Bestelformulier</a><li>
                 </ul>
             </div>

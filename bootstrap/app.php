@@ -1,16 +1,12 @@
 <?php
 
-use \App\Http\Middleware\AdminMiddleware;
-use \App\Http\Middleware\ManagerMiddleware;
-use \App\Http\Middleware\MagazijnierMiddleware;
-use \App\Http\Middleware\TechniekerMiddleware;
+use \App\Http\Middleware\RoleMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
-
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -25,10 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'guest' => RedirectIfAuthenticated::class,
 
             // Custom aliases
-            'admin' => AdminMiddleware::class,
-            'manager' => ManagerMiddleware::class,
-            'magazijnier' => MagazijnierMiddleware::class,
-            'technieker' => TechniekerMiddleware::class,
+            'role' => RoleMiddleware::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

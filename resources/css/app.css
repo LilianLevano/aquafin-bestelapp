@@ -133,6 +133,7 @@ a:hover { text-decoration: underline; }
 .navbar nav {
     display: flex !important;
     gap: 22px !important;
+    flex-direction: row;
 }
 
 .navbar a {

@@ -18,31 +18,11 @@
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
-        {{-- @include('layouts.navigation') --}}
-        <header class="navbar">
-            <h2 class="navbar-brand">AQUAFIN</h2>
-
-            <nav class="navbar-nav">
-                <a href="/technieker">Home</a>
-                <a href="/technieker/bestellen">Bestellen</a>
-                <a href="/admin/catalogus">Catalogus</a>
-                <a href="/admin/aanvragen">Aanvragen</a>
-                <a href="#">Accounts</a>
-                <a href="#">Rollen</a>
-                <a href="#">Hulpaanvraag</a>
-            </nav>
-
-            <button class="navbar-toggle" onclick="toggleNav()" aria-label="Menu">☰</button>
-        </header>
+        <!-- Page Navigation -->
+        @include('layouts.navigation')
 
         <!-- Page Heading -->
-        @isset($header)
-            <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
-        @endisset
+        @yield('header')
 
         <!-- Toast notifications -->
         @if(session('success'))
@@ -57,17 +37,12 @@
 
         <!-- Page Content -->
         <main class="manager-page">
-          @yield('content')
-          {{ $slot ?? '' }}
+            @yield('content')
         </main>
     </div>
 
     @include('partials.footer')
+    @stack('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-function toggleNav() {
-    document.querySelector('.navbar-nav').classList.toggle('open');
-}
-</script>
 </html>

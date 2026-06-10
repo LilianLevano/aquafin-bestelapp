@@ -1,59 +1,52 @@
 <?php
 
-use \App\Http\Middleware\AdminMiddleware;
-use \App\Http\Controllers\Admin\AdminAccountsController;
-use \App\Http\Controllers\Admin\AdminRollenController;
-use App\Http\Controllers\AanvraagController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AccountsController;
+use App\Http\Controllers\Admin\RolesController;
+use App\Http\Controllers\HelpRequestController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 require __DIR__.'/auth.php';
 
 // Guest Routes
-Route::post('/hulp', [AanvraagController::class, 'store'])->name('hulp.store');
-
-Route::get('/catalogus', function () {
-    return view('materiaal-catalogus');
-});
+Route::post('/hulp', [HelpRequestController::class, 'store'])->name('hulp.store');
 
 // Protected Routes
-// Dashboard (requires authentication + verification)
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
         return view('dashboard');
+    })->middleware('verified')->name('/');
+
+    Route::get('/categories', function () {
+        return view('categories.index');
+    })->name('categories');
+
+    // Admin Routes
+    Route::middleware('role:Admin')->group(function () {
+        Route::prefix('admin')
+            ->name('admin.')
+            ->group(function () {
+                Route::resource('accounts', AccountsController::class)->except(['show']);
+                Route::resource('roles', RolesController::class)->except(['show']);
+            });
+
+        Route::get('/materials', function () {
+            return view('materials.index');
+        })->name('materials');
+
+        Route::get('/help-requests', function () {
+            return view('help-requests.index');
+        })->name('help-requests');
     });
 
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->middleware('verified')->name('dashboard');
-});
+    // Technician Routes
+    Route::middleware('role:Technieker')->group(function () {
+        Route::get('/orders', function () {
+            return view('orders.index');
+        })->name('orders.index');
 
-// Admin Routes (requires authentication + admin middleware)
-Route::middleware('auth')->group(function () {
-    Route::prefix('admin')
-    ->name('admin.')
-    ->middleware(AdminMiddleware::class)
-    ->group(function () {
-        Route::resource('accounts', AdminAccountsController::class)->except(['show']);
-        Route::resource('rollen', AdminRollenController::class)->except(['show']);
-    });
-    Route::get('/admin/catalogus/materiaal', function () {
-        return view('admin-catalogus-materiaal');
-    });
-
-    Route::get('/admin/catalogus/materiaal', function () {
-        return view('admin-catalogus-materiaal');
-    });
-
-    Route::get('/besteklijst', function () {
-        return view('besteklijst');
-    });
-
-    Route::get('/technieker', function () {
-        return view('technieker-welkom');
-    });
-
-    Route::get('/admin/aanvragen', function () {
-        return view('admin-aanvragen');
+        Route::get('/orders-create', function () {
+            return view('orders.create');
+        })->name('orders.create');
     });
 
     // Profile
