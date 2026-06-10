@@ -16,7 +16,7 @@ class Bestelling extends Model
     }
 
     public function materiaal(){
-        return $this->belongsToMany(Materiaal::class, 'bestelling-materiaal', 'bestelling_id', 'materiaal_id' );
+        return $this->belongsToMany(Materiaal::class, 'bestelling-materiaal', 'bestelling_id', 'materiaal_id' )->withPivot('quantity');
     }
 
     public function site(){
