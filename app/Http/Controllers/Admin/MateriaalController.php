@@ -59,7 +59,9 @@ class MateriaalController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $materiaal = Materiaal::findOrFail($id);
+        $categories = Category::all();
+        return view('materials.edit', compact('materiaal', 'categories'));
     }
 
     /**
@@ -67,7 +69,14 @@ class MateriaalController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'name' => ['required', 'unique:materialen,name'],
+            'category_id' => ['required', 'exists:categories,id'],
+        ]);
+
+        $materiaal = Materiaal::findOrFail($id);
+        $materiaal->update($validated);
+        return redirect()->route('admin.materials.index')->with('success', 'Materiaal is aangepast');
     }
 
     /**
@@ -75,6 +84,8 @@ class MateriaalController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $materiaal = Materiaal::findOrFail($id);
+        $materiaal->delete();
+        return redirect()->route('admin.materials.index')->with('success', 'Materiaal is verwijderd');
     }
 }
