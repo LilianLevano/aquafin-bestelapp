@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AccountsController;
+use App\Http\Controllers\Admin\MateriaalController;
 use App\Http\Controllers\Admin\RolesController;
 use App\Http\Controllers\HelpRequestController;
 use App\Http\Controllers\ProfileController;
@@ -22,16 +23,11 @@ Route::middleware('auth')->group(function () {
 
     // Admin Routes
     Route::middleware('role:Admin')->group(function () {
-        Route::prefix('admin')
-            ->name('admin.')
-            ->group(function () {
+        Route::prefix('admin')->name('admin.')->group(function () {
                 Route::resource('accounts', AccountsController::class)->except(['show']);
                 Route::resource('roles', RolesController::class)->except(['show']);
+                Route::resource('materials', MateriaalController::class);
             });
-
-        Route::get('/materials', function () {
-            return view('materials.index');
-        })->name('materials');
 
         Route::get('/help-requests', function () {
             return view('help-requests.index');
@@ -52,3 +48,4 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+

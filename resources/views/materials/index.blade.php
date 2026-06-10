@@ -1,70 +1,30 @@
 @extends('layouts.app')
-
+@section('title', 'Materialen')
 @section('content')
-    <div style="padding: 40px; text-align: left;">
-        <h2 style="margin-bottom: 24px;">Materiaal Category</h2>
+    <h1>Materialen</h1>
 
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+    <table class="manager-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Naam</th>
+                <th>Categorie</th>
+                <th>Actie</th>
+            </tr>
+        </thead>
 
-            <!-- Product 1 -->
-            <div style="background:white; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); overflow:hidden;">
-                <div style="padding:20px;">
-                    <h5>🔧 Veiligheidshelm</h5>
-                    <p>Beschermhelm voor op de werf.</p>
-                    <span style="background:#198754; color:white; padding:4px 10px; border-radius:5px; font-size:13px;">Beschikbaar</span>
-                </div>
-                <div style="padding:12px 20px; border-top:1px solid #eee;">
-                    <a href="#" class="btn-primary" style="display:block; text-align:center;">Bestellen</a>
-                </div>
-            </div>
+        <tbody>
 
-            <!-- Product 2 -->
-            <div style="background:white; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); overflow:hidden;">
-                <div style="padding:20px;">
-                    <h5>Veiligheidsvest</h5>
-                    <p>Fluoriserend vest voor zichtbaarheid.</p>
-                    <span style="background:#198754; color:white; padding:4px 10px; border-radius:5px; font-size:13px;">Beschikbaar</span>
-                </div>
-                <div style="padding:12px 20px; border-top:1px solid #eee;">
-                    <a href="#" class="btn-primary" style="display:block; text-align:center;">Bestellen</a>
-                </div>
-            </div>
+            @foreach($materialen as $materiaal)
+                <tr>
+                    <td>{{$materiaal->id}}</td>
+                    <td>{{$materiaal->name}}</td>
+                    <td>{{$materiaal->category->name}}</td>
+                    <td><button class="btn-primary"><a href="{{route('admin.materials.show', $materiaal->id)}}">Meer details</a></button></td>
+                </tr>
 
-            <!-- Product 3 -->
-            <div style="background:white; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); overflow:hidden;">
-                <div style="padding:20px;">
-                    <h5>Werkhandschoenen</h5>
-                    <p>Stevige handschoenen voor zwaar werk.</p>
-                    <span style="background:#ffc107; color:#000; padding:4px 10px; border-radius:5px; font-size:13px;">Beperkte voorraad</span>
-                </div>
-                <div style="padding:12px 20px; border-top:1px solid #eee;">
-                    <a href="#" class="btn-primary" style="display:block; text-align:center;">Bestellen</a>
-                </div>
-            </div>
+            @endforeach
 
-            <!-- Product 4 -->
-            <div style="background:white; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); overflow:hidden;">
-                <div style="padding:20px;">
-                    <h5>Veiligheidsbril</h5>
-                    <p>Beschermt de ogen tegen spatten.</p>
-                    <span style="background:#198754; color:white; padding:4px 10px; border-radius:5px; font-size:13px;">Beschikbaar</span>
-                </div>
-                <div style="padding:12px 20px; border-top:1px solid #eee;">
-                    <a href="#" class="btn-primary" style="display:block; text-align:center;">Bestellen</a>
-                </div>
-            </div>
-
-            <!-- Product 5 -->
-            <div style="background:white; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); overflow:hidden;">
-                <div style="padding:20px;">
-                    <h5>Veiligheidsschoenen</h5>
-                    <p>Stevige schoenen met stalen neus.</p>
-                    <span style="background:#dc3545; color:white; padding:4px 10px; border-radius:5px; font-size:13px;">Niet beschikbaar</span>
-                </div>
-                <div style="padding:12px 20px; border-top:1px solid #eee;">
-                    <a href="#" class="btn-primary" style="display:block; text-align:center; opacity:0.6; pointer-events:none;">Bestellen</a>
-                </div>
-            </div>
-        </div>
-    </div>
+        </tbody>
+    </table>
 @endsection
