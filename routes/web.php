@@ -66,3 +66,17 @@ Route::get('/technieker', function () {
 Route::get('/admin/aanvragen', function () {
     return view('admin-aanvragen');
 });
+
+Route::get('/technieker/bestellen', function () {
+    $sites = \App\Models\Site::all();
+    $materialen = \App\Models\Materiaal::all();
+    return view('technieker-bestellen', compact('sites', 'materialen'));
+});
+
+Route::get('/admin/catalogus', function () {
+    return view('admin-catalogus');
+});
+
+Route::get('/catalogus/aanmaken', function () {
+    return view('admin-catalogus-materiaal');
+});
