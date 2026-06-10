@@ -1,3 +1,4 @@
+@use(App\Models\Role)
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -17,7 +18,7 @@
                             $roleName = auth()->user()->role->name ?? null;
                         @endphp
 
-                        @if($roleName === 'Admin' || $roleName === 'beheerder')
+                        @if($roleName === Role::ADMIN)
 
                             <x-nav-link :href="route('admin.accounts.index')" :active="request()->routeIs('technieker')">
                                 {{ __('Accounts') }}
@@ -30,7 +31,7 @@
                             <x-nav-link href="#">
                                 {{ __('Hulpaanvraag') }}
                             </x-nav-link>
-                        @elseif($roleName === 'Technieker')
+                        @elseif($roleName === Role::TECHNIEKER)
 
 
                             <x-nav-link :href="route('orders.index')" :active="request()->routeIs('technieker.bestellen')">
@@ -104,41 +105,30 @@
                     $roleName = auth()->user()->role->name ?? null;
                 @endphp
 
-                @if($roleName === 'admin' || $roleName === 'beheerder')
-                    <x-responsive-nav-link :href="route('technieker')" :active="request()->routeIs('technieker')">
-                        {{ __('Home') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('technieker.bestellen')" :active="request()->routeIs('technieker.bestellen')">
-                        {{ __('Bestellen') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('admin.category')" :active="request()->routeIs('admin.category')">
-                        {{ __('Category (admin)') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('admin.aanvragen')" :active="request()->routeIs('admin.aanvragen')">
-                        {{ __('Aanvragen') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('admin.accounts.index')" :active="request()->routeIs('admin.accounts.index')">
+                @if($roleName === Role::ADMIN)
+
+                    <x-responsive-nav-link :href="route('admin.accounts.index')" :active="request()->routeIs('technieker')">
                         {{ __('Accounts') }}
                     </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('roles.index')" :active="request()->routeIs('roles.index')">
+
+                    <x-responsive-nav-link :href="route('admin.roles.index')" :active="request()->routeIs('technieker')">
                         {{ __('Rollen') }}
                     </x-responsive-nav-link>
+
                     <x-responsive-nav-link href="#">
                         {{ __('Hulpaanvraag') }}
                     </x-responsive-nav-link>
-                @elseif($roleName === 'technieker')
-                    <x-responsive-nav-link :href="route('technieker')" :active="request()->routeIs('technieker')">
-                        {{ __('Home') }}
+                @elseif($roleName === Role::TECHNIEKER)
+
+
+                    <x-responsive-nav-link :href="route('orders.index')" :active="request()->routeIs('technieker.bestellen')">
+                        {{ __('Bestellingen') }}
                     </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('technieker.bestellen')" :active="request()->routeIs('technieker.bestellen')">
+
+                    <x-responsive-nav-link :href="route('orders.create')" :active="request()->routeIs('technieker.bestellen')">
                         {{ __('Bestellen') }}
                     </x-responsive-nav-link>
-                    <x-responsive-nav-link :href="route('category')" :active="request()->routeIs('category')">
-                        {{ __('Category (technieker)') }}
-                    </x-responsive-nav-link>
-                    <x-responsive-nav-link href="#">
-                        {{ __('Hulpaanvraag') }}
-                    </x-responsive-nav-link>
+
                 @endif
             @endif
         </div>
