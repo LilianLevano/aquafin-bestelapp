@@ -15,7 +15,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $bestellingen = Bestelling::with(['user', 'site', 'materiaal'])->get();
+        $bestellingen = Bestelling::with(['user', 'materiaal', 'site'])->get();
         return view('orders.index', compact('bestellingen'));
     }
 
@@ -24,8 +24,8 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $materialen = Materiaal::all();
-        $sites = Site::all();
+        $materialen = Materiaal::select('id', 'name', 'category_id')->with('category:id,name')->get();
+        $sites = Site::select('id', 'locatie')->get();
         return view('orders.create', compact('materialen', 'sites'));
     }
 

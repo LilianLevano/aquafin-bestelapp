@@ -37,7 +37,8 @@
                 <th>Geplaatst door</th>
                 <th>Items</th>
                 <th>Leverplaats</th>
-                <th>Datum</th>
+                <th>Leverdatum</th>
+                <th>Status</th>
             </tr>
         </thead>
 
@@ -48,12 +49,13 @@
         @foreach($bestellingen as $bestelling)
             <tr>
                 <td>{{$bestelling->id}}</td>
-                <td>{{$bestelling->user->first_name . $bestelling->user->last_name  }}</td>
+                <td>{{$bestelling->user->first_name . ' ' . $bestelling->user->last_name  }}</td>
                 <td>
-                    {{ $bestelling->materiaal->take(3)->pluck('name')->implode(', ') . ($bestelling->materiaal->count() > 3 ? ', ...' : '') }}
+                    {{ $bestelling->materiaal->take(3)->map(fn($m) => $m->name . ' (x' . $m->quantity . ')')->implode(', ') . ($bestelling->materiaal->count() > 3 ? ', ...' : '') }}
                 </td>
                 <td>{{$bestelling->site->locatie}}</td>
                 <td>{{$bestelling->delivery_date}}</td>
+                <td>{{ \Carbon\Carbon::parse($bestelling->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>
             </tr>
 
         @endforeach
@@ -61,7 +63,7 @@
         </tbody>
     </table>
 
-    <p class="empty-message">Geen data om te tonen</p>
+    <p class="empty-message">Geen data om te tonen.</p>
 @endsection
 
 @push('scripts')
