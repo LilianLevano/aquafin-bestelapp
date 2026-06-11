@@ -27,10 +27,6 @@ h2 {
     transition: transform 0.2s;
 }
 
-.card:hover {
-    transform: scale(1.03);
-}
-
 /* Formulier */
 .form-control:focus {
     border-color: #005b99;

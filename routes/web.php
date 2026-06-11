@@ -1,50 +1,53 @@
 <?php
 
+use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\MaterialController;
+use App\Http\Controllers\HelpRequestController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
+require __DIR__.'/auth.php';
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AanvraagController;
+// Guest Routes
+Route::post('/hulp', [HelpRequestController::class, 'store'])->name('hulp.store');
 
-
-
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-
-
-
+// Protected Routes
 Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return view('dashboard');
+    })->middleware('verified')->name('/');
 
-    Route::prefix('admin')->name('admin.')->middleware(\App\Http\Middleware\AdminMiddleware::class)->group(function () {
-        Route::resource('accounts', \App\Http\Controllers\Admin\AdminAccountsController::class);
-        Route::resource('rollen', \App\Http\Controllers\Admin\AdminRollenController::class);
+    Route::get('/categories', function () {
+        return view('categories.index');
+    })->name('categories');
+
+    // Admin Routes
+    Route::middleware('role:Admin')->group(function () {
+        Route::prefix('admin')
+            ->name('admin.')
+            ->group(function () {
+                Route::resource('accounts', AccountController::class)->except(['show']);
+                Route::resource('roles', RoleController::class)->except(['show']);
+                Route::resource('materials', MaterialController::class);
+            });
+
+        Route::get('/help-requests', function () {
+            return view('help-requests.index');
+        })->name('help-requests');
     });
 
-});
-Route::get('/', function () {
-    return view('welcome');
-});
+    // Technician Routes
+    Route::middleware('role:Technieker')->group(function () {
+        Route::prefix('technieker')->group(function () {
+            Route::resource('orders', OrderController::class)->except(['show']);
+        });
+    });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/admin/catalogus/materiaal', function () {
-    return view('admin-catalogus-materiaal');
-});
-
-Route::middleware('auth')->group(function () {
+    // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-require __DIR__.'/auth.php';
-
-Route::get('/catalogus', function () {
-    return view('materiaal-catalogus');
 });
 
 Route::prefix('api')->name('api.')

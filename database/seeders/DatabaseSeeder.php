@@ -2,57 +2,274 @@
 
 namespace Database\Seeders;
 
-use App\Models\Aanvraag;
-use App\Models\Bestelling;
+use App\Models\HelpRequest;
+use App\Models\Order;
 use App\Models\Category;
-use App\Models\Materiaal;
+use App\Models\Material;
 use App\Models\Role;
 use App\Models\Site;
 use App\Models\User;
-
+use App\Models\Address;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use function Laravel\Prompts\table;
 
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
     /**
-     * Seed the application's database.
+     * Seed the application's database with initial data for all models.
      */
     public function run(): void
     {
+        // Create Roles
+        $roleNames = [
+            'Admin',
+            'Technieker',
+            'Manager',
+            'Magazijnier'
+        ];
 
+        $roles = [];
+        Role::factory(count($roleNames))
+            ->makeMany()
+            ->each(function ($role, $i) use ($roleNames, &$roles) {
+                $name = $roleNames[$i];
+                $role->name = $name;
+                $role->save();
+                $roles[$name] = $role->id;
+            });
 
-        Role::factory()->sequence(
+        // Create Addresses
+        $addressData = [
+            [
+                'type' => 'worksite',
+                'house_number' => '8',
+                'street' => 'Dijkstraat',
+                'postal_code' => '2630',
+                'city' => 'Aartselaar',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '2',
+                'street' => 'Spuimeersenweg',
+                'postal_code' => '9308',
+                'city' => 'Aalst',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '31',
+                'street' => 'Blarenberglaan',
+                'postal_code' => '2800',
+                'city' => 'Mechelen',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '5',
+                'street' => 'Kielsbroek',
+                'postal_code' => '2020',
+                'city' => 'Antwerpen',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '1002',
+                'street' => 'Boomsesteenweg',
+                'postal_code' => '2610',
+                'city' => 'Antwerpen',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '20',
+                'street' => 'Burchtse Weel',
+                'postal_code' => '2070',
+                'city' => 'Beveren-Kruibeke-Zwijndrecht',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '21',
+                'street' => 'Handelaar',
+                'postal_code' => '2920',
+                'city' => 'Kalmthout',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '254',
+                'street' => 'Drongensesteenweg',
+                'postal_code' => '9000',
+                'city' => 'Gent',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '1',
+                'street' => 'Westbekesluis',
+                'postal_code' => '9940',
+                'city' => 'Evergem',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '47',
+                'street' => 'Brug-Zuid',
+                'postal_code' => '9880',
+                'city' => 'Aalter',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '45',
+                'street' => 'Pathoekeweg',
+                'postal_code' => '8000',
+                'city' => 'Brugge',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '308',
+                'street' => 'Kortrijksesteenweg',
+                'postal_code' => '8530',
+                'city' => 'Harelbeke',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '14',
+                'street' => 'Langeleedstraat',
+                'postal_code' => '8670',
+                'city' => 'Koksijde',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '35',
+                'street' => 'Nijverheidszone Begijnenmeers',
+                'postal_code' => '1770',
+                'city' => 'Liedekerke',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '41',
+                'street' => 'Grootstraat',
+                'postal_code' => '3500',
+                'city' => 'Hasselt',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '2097',
+                'street' => 'Centrum-Zuid',
+                'postal_code' => '3530',
+                'city' => 'Houthalen-Helchteren',
+                'country_iso' => "BE"
+            ],
+            [
+                'type' => 'worksite',
+                'house_number' => '12',
+                'street' => 'Diepenbekerbos',
+                'postal_code' => '3600',
+                'city' => 'Genk',
+                'country_iso' => "BE"
+            ]
+        ];
 
-            ['name'=>'Admin'],
-            ['name'=>'Technieker'],
-            ['name'=>'Manager'],
-            ['name'=>'Magazijnier'],
+        $addressIds = Address::factory(count($addressData))
+            ->createMany($addressData)
+            ->pluck('id')
+            ->toArray();
 
-        )->count(4)->create();
+        // Create Sites
+        $siteDescriptions = [
+            'Aquafin',
+            'Aquafin Labo Aalst',
+            'Aquafin RWZI Mechelen-Noord',
+            'Aquafin RWZI Antwerpen-Zuid',
+            'Aquafin RWZI Aartselaar',
+            'Aquafin RWZI Burcht',
+            'Aquafin RWZI Kalmthout',
+            'Aquafin RWZI Gent',
+            'Aquafin RWZI Evergem',
+            'Aquafin RWZI Aalter',
+            'Aquafin RWZI Brugge',
+            'Aquafin rioolwaterzuiveringsinstallatie Harelbeke',
+            'Aquafin',
+            'Aquafin RWZI Liedekerke',
+            'Aquafin RWZI Wimmertingen',
+            'Aquafin RWZI Houthalen-Helchteren',
+            'Aquafin RWZI Genk'
+        ];
 
+        $addressCount = count($addressIds);
+        $siteAttributes = array_map(
+            function ($description, $i) use ($addressIds, $addressCount) {
+                return [
+                    'description' => $description,
+                    'address_id' => $addressIds[$i % $addressCount],
+                ];
+            },
+            $siteDescriptions,
+            array_keys($siteDescriptions)
+        );
 
+        $siteIds = Site::factory(count($siteDescriptions))
+            ->createMany($siteAttributes)
+            ->pluck('id')
+            ->toArray();
 
-        User::factory()->create([
-            'first_name' => 'Test',
-            'last_name' => 'User',
-            'email' => 'test@example.com',
-            'role_id' => 1,
-            'password' => bcrypt('password'),
+        // Create Users
+        $userData = [
+            [
+                'email' => 'admin@aquawerf.com',
+                'role_id' => $roles['Admin'] ?? 1
+            ],
+            [
+                'email' => 'technieker@aquawerf.com',
+                'role_id' => $roles['Technieker'] ?? 1
+            ],
+            [
+                'email' => 'manager@aquawerf.com',
+                'role_id' => $roles['Manager'] ?? 1
+            ],
+            [
+                'email' => 'magazijnier@aquawerf.com',
+                'role_id' => $roles['Magazijnier'] ?? 1
+            ]
+        ];
 
-        ]);
+        $userIds = User::factory(count($userData))
+            ->makeMany($userData)
+            ->each(function ($user) use ($siteIds) {
+                $user->site_id = $siteIds[array_rand($siteIds)];
+                $user->save();
+            })
+            ->pluck('id')
+            ->toArray();
 
-        User::factory()->count(4)->create();
+        // Create HelpRequests
+        $helpRequestIds = HelpRequest::factory(10)
+            ->make()
+            ->each(function ($helpRequest) use ($userIds) {
+                $helpRequest->user_id = $userIds[array_rand($userIds)];
+                $helpRequest->save();
+            })
+            ->pluck('id')
+            ->toArray();
 
-        Aanvraag::factory()->count(10)->create();
+        // Create Categories
+        $categoryIds = Category::factory(6)
+            ->create()
+            ->pluck('id')
+            ->toArray();
 
-        Category::factory()->count(6)->create();
-
-        Materiaal::factory()->sequence(
+        // Create Materials
+        $materialData = [
             ['name' => 'Bouten M6', 'category_id' => 1],
             ['name' => 'Bouten M8', 'category_id' => 1],
             ['name' => 'Bouten M10', 'category_id' => 1],
@@ -150,39 +367,23 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Plakband (duct tape, isolatietape)', 'category_id' => 6],
             ['name' => 'Batterijen / accu’s', 'category_id' => 6],
             ['name' => 'Reserveonderdelen (motoren, PLC-onderdelen, relais)', 'category_id' => 6],
-            ['name' => 'Flessen met perslucht / gas', 'category_id' => 6],
-        )->count(98)->create();
+            ['name' => 'Flessen met perslucht / gas', 'category_id' => 6]
+        ];
 
-        Site::factory()->sequence(
+        $materialIds = Material::factory(count($materialData))
+            ->createMany($materialData)
+            ->pluck('id')
+            ->toArray();
 
-                ['locatie' => 'Aquafin', 'adres' => 'Dijkstraat 8, 2630 Aartselaar'],
-                ['locatie' => 'Aquafin Labo Aalst', 'adres' => 'Spuimeersenweg 2, 9308 Aalst'],
-                ['locatie' => 'Aquafin RWZI Mechelen-Noord', 'adres' => 'Blarenberglaan 31, 2800 Mechelen'],
-                ['locatie' => 'Aquafin RWZI Antwerpen-Zuid', 'adres' => 'Kielsbroek 5, 2020 Antwerpen'],
-                ['locatie' => 'Aquafin RWZI Aartselaar', 'adres' => 'Boomsesteenweg 1002, 2610 Antwerpen'],
-                ['locatie' => 'Aquafin RWZI Burcht', 'adres' => 'Burchtse Weel 20, 2070 Beveren-Kruibeke-Zwijndrecht'],
-                ['locatie' => 'Aquafin RWZI Kalmthout', 'adres' => 'Handelaar 21, 2920 Kalmthout'],
-                ['locatie' => 'Aquafin RWZI Gent', 'adres' => 'Drongensesteenweg 254, 9000 Gent'],
-                ['locatie' => 'Aquafin RWZI Evergem', 'adres' => 'Westbekesluis 1, 9940 Evergem'],
-                ['locatie' => 'Aquafin RWZI Aalter', 'adres' => 'Brug-Zuid 47, 9880 Aalter'],
-                ['locatie' => 'Aquafin RWZI Brugge', 'adres' => 'Pathoekeweg 45, 8000 Brugge'],
-                ['locatie' => 'Aquafin rioolwaterzuiveringsinstallatie Harelbeke', 'adres' => 'Kortrijksesteenweg 308, 8530 Harelbeke'],
-                ['locatie' => 'Aquafin', 'adres' => 'Langeleedstraat 14, 8670 Koksijde'],
-                ['locatie' => 'Aquafin RWZI Liedekerke', 'adres' => 'Nijverheidszone Begijnenmeers 35, 1770 Liedekerke'],
-                ['locatie' => 'Aquafin RWZI Wimmertingen', 'adres' => 'Grootstraat 41, 3500 Hasselt'],
-                ['locatie' => 'Aquafin RWZI Houthalen-Helchteren', 'adres' => 'Centrum-Zuid 2097, 3530 Houthalen-Helchteren'],
-                ['locatie' => 'Aquafin RWZI Genk', 'adres' => 'Diepenbekerbos 12, 3600 Genk'],
-
-        )->count(17)->create();
-
-        Bestelling::factory()->count(10)->create();
-
-        DB::table('bestelling-materiaal')->insert([
-
-            ['bestelling_id' => 1, 'materiaal_id' => 1],
-            ['bestelling_id' => 1, 'materiaal_id' => 2],
-
-        ]);
-
+        // Create Orders
+        $orderIds = Order::factory(10)
+            ->make()
+            ->each(function ($order) use ($userIds, $siteIds) {
+                $order->user_id = $userIds[array_rand($userIds)];
+                $order->site_id = $siteIds[array_rand($siteIds)];
+                $order->save();
+            })
+            ->pluck('id')
+            ->toArray();
     }
 }
