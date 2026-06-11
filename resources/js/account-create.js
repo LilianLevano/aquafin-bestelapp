@@ -21,35 +21,46 @@ function setValidity(input, valid, message) {
     }
 }
 
-document.getElementById('mail').addEventListener('blur', function() {
+function showToast(message, type) {
+    var el = document.createElement('div');
+    el.className = 'alert ' + (type === 'success' ? 'alert-success' : 'alert-error');
+    el.textContent = message;
+    var card = document.querySelector('.card');
+    card.insertBefore(el, card.firstChild);
+    setTimeout(function () { el.remove(); }, 4000);
+}
+
+document.getElementById('email').addEventListener('blur', function () {
     var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim());
-    setValidity(this, ok, 'Invalid email address.');
+    setValidity(this, ok, 'Ongeldig emailadres.');
 });
 
-document.getElementById('first_name').addEventListener('blur', function() {
+document.getElementById('first_name').addEventListener('blur', function () {
     var ok = /^[A-Za-zÀ-ÿ\s\-']{2,}$/.test(this.value.trim());
-    setValidity(this, ok, 'Min. 2 characters, letters only.');
+    setValidity(this, ok, 'Min. 2 tekens, alleen letters.');
 });
 
-document.getElementById('last_name').addEventListener('blur', function() {
+document.getElementById('last_name').addEventListener('blur', function () {
     var ok = /^[A-Za-zÀ-ÿ\s\-']{2,}$/.test(this.value.trim());
-    setValidity(this, ok, 'Min. 2 characters, letters only.');
+    setValidity(this, ok, 'Min. 2 tekens, alleen letters.');
 });
 
-document.getElementById('password').addEventListener('blur', function() {
+document.getElementById('password').addEventListener('blur', function () {
     var v = this.value;
     var ok = v.length >= 8 && /[A-Z]/.test(v) && /[a-z]/.test(v) && /[0-9]/.test(v);
-    setValidity(this, ok, 'Min. 8 characters, 1 uppercase, 1 lowercase, 1 number.');
+    setValidity(this, ok, 'Min. 8 tekens, 1 hoofdletter, 1 kleine letter, 1 cijfer.');
 });
 
-document.getElementById('password_confirmation').addEventListener('blur', function() {
+document.getElementById('password_confirmation').addEventListener('blur', function () {
     var ok = this.value === document.getElementById('password').value;
-    setValidity(this, ok, 'Passwords do not match.');
+    setValidity(this, ok, 'Wachtwoorden komen niet overeen.');
 });
 
-document.getElementById('create-form').addEventListener('submit', function(e) {
+document.getElementById('create-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+
     var valid = true;
-    this.querySelectorAll('[required]').forEach(function(input) {
+    this.querySelectorAll('[required]').forEach(function (input) {
         if (!input.value.trim()) {
             input.classList.add('is-invalid');
             valid = false;
@@ -61,17 +72,47 @@ document.getElementById('create-form').addEventListener('submit', function(e) {
         document.getElementById('password_confirmation').classList.add('is-invalid');
         valid = false;
     }
-    if (!valid) { e.preventDefault(); return; }
-    var btn = document.getElementById('submit-btn');
-    btn.disabled = true;
-    btn.dataset.original = btn.textContent;
-    btn.textContent = btn.textContent + '…';
-});
+    if (!valid) return;
 
-window.addEventListener('pageshow', function(e) {
-    if (e.persisted) {
-        var btn = document.getElementById('submit-btn');
-        btn.disabled = false;
-        if (btn.dataset.original) btn.textContent = btn.dataset.original;
-    }
+    var btn = document.getElementById('submit-btn');
+    var form = this;
+    var originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = originalText + '…';
+
+    fetch(form.action, {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+        },
+        body: new FormData(form),
+    })
+        .then(function (response) {
+            return response.json().then(function (json) {
+                return { status: response.status, body: json };
+            });
+        })
+        .then(function (result) {
+            btn.disabled = false;
+            btn.textContent = originalText;
+
+            if (result.status === 200 || result.status === 201) {
+                showToast('Gebruiker aangemaakt.', 'success');
+                form.reset();
+            } else if (result.status === 422) {
+                var errors = result.body.errors || {};
+                Object.keys(errors).forEach(function (field) {
+                    var input = document.getElementById(field);
+                    if (input) setValidity(input, false, errors[field][0]);
+                });
+            } else {
+                showToast('Er ging iets mis met het aanmaken...', 'error');
+            }
+        })
+        .catch(function () {
+            btn.disabled = false;
+            btn.textContent = originalText;
+            showToast('Er ging iets mis met het versturen...', 'error');
+        });
 });

@@ -52,9 +52,15 @@ class AccountController extends Controller
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
+        unset($validated['password_confirmation']);
 
-        User::create($validated);
-        return redirect()->route('admin.accounts.index')->with('status', 'Gebruiker aangemaakt!');
+        try {
+            User::create($validated);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Er ging iets mis met het aanmaken...'], 500);
+        }
+
+        return response()->json(['message' => 'Gebruiker aangemaakt.']);
     }
 
     /**
