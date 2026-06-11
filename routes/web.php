@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Route;
 require __DIR__.'/auth.php';
 
 // Guest Routes
-Route::post('/hulp', [HelpRequestController::class, 'store'])->name('hulp.store');
 
+Route::resource('help-request', HelpRequestController::class)->names('help-request');
 // Protected Routes
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {

@@ -243,20 +243,25 @@ class DatabaseSeeder extends Seeder
             ]
         ];
 
-        $userIds = User::factory(count($userData))
+        $users = User::factory(count($userData))
             ->makeMany($userData)
             ->each(function ($user) use ($siteIds) {
                 $user->site_id = $siteIds[array_rand($siteIds)];
                 $user->save();
-            })
+            });
+
+        $userIds = $users
             ->pluck('id')
             ->toArray();
 
         // Create HelpRequests
         $helpRequestIds = HelpRequest::factory(10)
             ->make()
-            ->each(function ($helpRequest) use ($userIds) {
-                $helpRequest->user_id = $userIds[array_rand($userIds)];
+            ->each(function ($helpRequest) use ($users) {
+                $randomUser = $users->random();
+                $helpRequest->email = 'test@mail.com';
+                $helpRequest->first_name = $randomUser->first_name;
+                $helpRequest->last_name = $randomUser->last_name;
                 $helpRequest->save();
             })
             ->pluck('id')

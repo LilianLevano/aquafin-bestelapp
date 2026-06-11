@@ -31,17 +31,13 @@ class AuthenticatedSessionController extends Controller
 
             return redirect()
                 ->intended(route('/', absolute: false))
-                ->with('status', 'success');
+                ->with('status', 'Je bent ingelogd!');
         } catch (ValidationException $e) {
-            return redirect()
-                ->intended(route('login', absolute: false))
-                ->with('status', 'fail')
-                ->with('message', 'Foutieve login gegevens');
+            return redirect()->route('login')->with('error', 'Foutieve loging gegevens');
+
         } catch (\Exception $e) {
-            return redirect()
-                ->intended(route('login', absolute: false))
-                ->with('status', 'error')
-                ->with('message', 'Er ging iets mis met het verzoeken voor autorisatie...');
+            return redirect()->route('login')->with('error', 'Er ging iets mis met het verzoeken voor autorisatie...');
+
         }
     }
 
