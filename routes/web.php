@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
         Route::prefix('admin')
             ->name('admin.')
             ->group(function () {
-                Route::resource('accounts', AccountController::class)->except(['show']);
+                Route::resource('accounts', AccountController::class);
                 Route::resource('roles', RoleController::class)->except(['show']);
                 Route::resource('materials', MaterialController::class);
             });

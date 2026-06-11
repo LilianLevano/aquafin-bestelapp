@@ -45,10 +45,10 @@
                         <td>{{ $a->last_name }}</td>
                         <td class="extra-information">{{ $a->email }}</td>
                         <td class="extra-information">{{ $a->role->name ?? '—' }}</td>
-                        <td class="extra-information">{{ $a->site->locatie }}</td>
+                        <td class="extra-information">{{ $a->site->description }}</td>
                         <td class="right">
-                                {{--{{route('admin.accounts.show', $a->id)}}--}}
-                            <a href="#" class="show" >Meer details</a>
+
+                            <a href="{{route('admin.accounts.show', $a->id)}}" class="show" >Meer details</a>
 
                             <a href="{{route('admin.accounts.edit', $a->id)}}" class="link">Edit</a>
 
