@@ -15,7 +15,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with(['user', 'material', 'site'])->get();
+        $orders = Order::with(['user', 'materials', 'site'])->get();
         return view('orders.index', compact('orders'));
     }
 
@@ -25,7 +25,7 @@ class OrderController extends Controller
     public function create()
     {
         $materials = Material::select('id', 'name', 'category_id')->with('category:id,name')->get();
-        $sites = Site::select('id', 'locatie')->get();
+        $sites = Site::select('id', 'description')->get();
         return view('orders.create', compact('materials', 'sites'));
     }
 
@@ -55,7 +55,7 @@ class OrderController extends Controller
         $validated['user_id'] = Auth::user()->id ?? 1;
         $order = Order::create($validated);
 
-        $order->material()->sync($pivotData);
+        $order->materials()->sync($pivotData);
         return back()->with('status', 'Order saved');
     }
 

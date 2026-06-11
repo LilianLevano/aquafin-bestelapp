@@ -35,7 +35,7 @@
 
             <select name="site_id" id="site_id">
                 @foreach($sites as $site)
-                    <option value="{{$site->id}}" @selected($site->id == auth()->user()->site->id)>{{$site->locatie}} </option>
+                    <option value="{{$site->id}}" @selected($site->id == auth()->user()->site->id)>{{$site->description}} </option>
                 @endforeach
             </select>
 

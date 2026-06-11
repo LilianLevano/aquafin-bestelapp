@@ -28,6 +28,10 @@
                                 {{ __('Rollen') }}
                             </x-nav-link>
 
+                            <x-nav-link :href="route('admin.materials.index')" :active="request()->routeIs('technieker')">
+                                {{ __('Materialen') }}
+                            </x-nav-link>
+
                             <x-nav-link href="#">
                                 {{ __('Hulpaanvraag') }}
                             </x-nav-link>

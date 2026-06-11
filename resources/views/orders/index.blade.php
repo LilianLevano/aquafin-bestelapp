@@ -46,16 +46,16 @@
         <tbody>
 
 
-        @foreach($bestellingen as $bestelling)
+        @foreach($orders as $order)
             <tr>
-                <td>{{$bestelling->id}}</td>
-                <td>{{$bestelling->user->first_name . ' ' . $bestelling->user->last_name  }}</td>
+                <td>{{$order->id}}</td>
+                <td>{{$order->user->first_name . ' ' . $order->user->last_name  }}</td>
                 <td>
-                    {{ $bestelling->material->take(3)->map(fn($m) => $m->name . ' (x' . $m->pivot->quantity . ')')->implode(', ') . ($bestelling->materiaal->count() > 3 ? ', ...' : '') }}
+                    {{ $order->materials->take(3)->map(fn($m) => $m->name . ' (x' . $m->pivot->quantity . ')')->implode(', ') . ($order->materials->count() > 3 ? ', ...' : '') }}
                 </td>
-                <td>{{$bestelling->site->locatie}}</td>
-                <td>{{$bestelling->delivery_date}}</td>
-                <td>{{ \Carbon\Carbon::parse($bestelling->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>
+                <td>{{$order->site->description}}</td>
+                <td>{{$order->delivery_date}}</td>
+                <td>{{ \Carbon\Carbon::parse($order->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>
             </tr>
 
         @endforeach
