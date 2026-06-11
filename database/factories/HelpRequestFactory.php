@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Bestelling;
+use App\Models\HelpRequest;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Bestelling>
+ * @extends Factory<HelpRequest>
  */
-class BestellingFactory extends Factory
+class HelpRequestFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,9 +18,9 @@ class BestellingFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => $this->faker->numberBetween(1,5),
-            'delivery_date' => $this->faker->date(),
-            'site_id' => $this->faker->numberBetween(1,17),
+            'title' => $this->faker->sentence(),
+            'description' => $this->faker->paragraph(),
+            'is_completed' => $this->faker->boolean(),
         ];
     }
 }

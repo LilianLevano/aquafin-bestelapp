@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('bestellings', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
-            $table->date('delivery_date')->nullable();
-            $table->foreignId('site_id')->nullable()->constrained('sites')->nullOnDelete();
+            $table->foreignId('user_id')->nullable(false)->constrained()->noActionOnDelete();
+            $table->foreignId('site_id')->nullable(false)->constrained()->noActionOnDelete();
+            $table->dateTime('delivery_date')->nullable(false);
             $table->timestamps();
+            $table->softDeletes('deleted_at', precision: 0);
         });
     }
 
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('bestellings');
+        Schema::dropIfExists('orders');
     }
 };

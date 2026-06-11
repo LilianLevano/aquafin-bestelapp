@@ -190,7 +190,7 @@ table th {
 }
 
 .form-card,
-.aanvraag-card,
+.help-request-card,
 .filter-zone {
     background: white;
     max-width: 850px;
@@ -283,7 +283,7 @@ table th {
     background-color: #004f82;
 }
 
-.aanvraag-card {
+.help-request-card {
     max-width: 850px;
     margin: 0 auto;
     background: white;
@@ -292,19 +292,19 @@ table th {
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
-.aanvraag-header {
+.help-request-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: 20px;
 }
 
-.aanvraag-title {
+.help-request-title {
     flex: 1;
 }
 
-.aanvraag-title label,
-.aanvraag-description label {
+.help-request-title label,
+.help-request-description label {
     display: block;
     font-weight: 600;
     margin-bottom: 8px;
@@ -325,11 +325,11 @@ table th {
     resize: none;
 }
 
-.aanvraag-description {
+.help-request-description {
     margin-top: 20px;
 }
 
-.aanvraag-footer {
+.help-request-footer {
     display: flex;
     gap: 32px;
     margin-top: 20px;

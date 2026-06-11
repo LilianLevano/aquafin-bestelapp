@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Bestelling;
-use App\Models\Materiaal;
+use App\Models\Order;
+use App\Models\Material;
 use App\Models\Site;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,8 +15,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $bestellingen = Bestelling::with(['user', 'materiaal', 'site'])->get();
-        return view('orders.index', compact('bestellingen'));
+        $orders = Order::with(['user', 'materiaal', 'site'])->get();
+        return view('orders.index', compact('orders'));
     }
 
     /**
@@ -24,9 +24,9 @@ class OrderController extends Controller
      */
     public function create()
     {
-        $materialen = Materiaal::select('id', 'name', 'category_id')->with('category:id,name')->get();
+        $materials = Material::select('id', 'name', 'category_id')->with('category:id,name')->get();
         $sites = Site::select('id', 'locatie')->get();
-        return view('orders.create', compact('materialen', 'sites'));
+        return view('orders.create', compact('materials', 'sites'));
     }
 
     /**
@@ -35,7 +35,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'materialen' => ['nullable','array'],
+            'materials' => ['nullable','array'],
             'quantity' => ['nullable','array'],
             'delivery_date' => ['required', 'date', 'after:today'],
             'site_id' => ['required', 'exists:sites,id'],
@@ -43,20 +43,20 @@ class OrderController extends Controller
 
         $pivotData = [];
 
-        foreach ($request->materialen ?? [] as $materiaalId) {
-            $pivotData[$materiaalId] = [
-                'quantity' => $request->quantity[$materiaalId]
+        foreach ($request->materials ?? [] as $materialId) {
+            $pivotData[$materialId] = [
+                'quantity' => $request->quantity[$materialId]
             ];
         }
 
-        unset($validated['materialen']);
+        unset($validated['materials']);
         unset($validated['quantity']);
 
         $validated['user_id'] = Auth::user()->id ?? 1;
-        $bestelling = Bestelling::create($validated);
+        $order = Order::create($validated);
 
-        $bestelling->materiaal()->sync($pivotData);
-        return redirect()->route('orders.index') ->with('status', 'Bestelling opgeslagen.');
+        $order->material()->sync($pivotData);
+        return back()->with('status', 'Order saved');
     }
 
     /**

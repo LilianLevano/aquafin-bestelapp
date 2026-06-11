@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Materiaal;
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Materiaal>
+ * @extends Factory<Order>
  */
-class MateriaalFactory extends Factory
+class OrderFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,8 +18,7 @@ class MateriaalFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word(),
-            'category_id' => $this->faker->numberBetween(1, 6),
+            'delivery_date' => $this->faker->date()
         ];
     }
 }

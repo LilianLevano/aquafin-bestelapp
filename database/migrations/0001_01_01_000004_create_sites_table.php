@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-
-        Schema::create('bestelling-materiaal', function (Blueprint $table) {
+        Schema::create('sites', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('materiaal_id')->constrained('materialen');
-            $table->foreignId('bestelling_id')->constrained();
-            $table->integer('quantity');
+            $table->string('description')->nullable(false);
+            $table->decimal('longitude')->nullable(false);
+            $table->decimal('latitude')->nullable(false);
             $table->timestamps();
+            $table->softDeletes('deleted_at', precision: 0);
         });
-
     }
 
     /**
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('sites');
     }
 };

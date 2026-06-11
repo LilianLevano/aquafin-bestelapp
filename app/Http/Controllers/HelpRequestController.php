@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Aanvraag;
+use App\Models\HelpRequest;
 use Carbon\Carbon;
 
 class HelpRequestController extends Controller
@@ -18,7 +18,7 @@ class HelpRequestController extends Controller
                 'description' => 'required'
             ]);
 
-            Aanvraag::create([
+            HelpRequest::create([
                 'name' => $validated['name'],
                 'email' => $validated['email'],
                 'title' => $validated['title'],

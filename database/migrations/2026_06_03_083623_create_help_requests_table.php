@@ -11,16 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('aanvraagen', function (Blueprint $table) {
+        Schema::create('help_requests', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email');
-            $table->string('title');
-            $table->text('description');
+            $table->foreignId('user_id')->nullable(false)->constrained()->noActionOnDelete();
+            $table->string('title')->nullable(false);
+            $table->text('description')->nullable(false);
             $table->text('answer')->nullable();
-            $table->date('posted_on');
-            $table->boolean('is_completed');
+            $table->boolean('is_completed')->nullable();
             $table->timestamps();
+            $table->softDeletes('deleted_at', precision: 0);
         });
     }
 
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('aanvraagen');
+        Schema::dropIfExists('help_requests');
     }
 };

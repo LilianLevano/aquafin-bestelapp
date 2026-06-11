@@ -1,10 +1,13 @@
 <?php
 
-use App\Http\Controllers\Admin\AccountsController;
-use App\Http\Controllers\Admin\RolesController;
+use App\Http\Middleware\RoleMiddleware;
+use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\HelpRequestController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 require __DIR__.'/auth.php';
 
 // Guest Routes
@@ -25,8 +28,8 @@ Route::middleware('auth')->group(function () {
         Route::prefix('admin')
             ->name('admin.')
             ->group(function () {
-                Route::resource('accounts', AccountsController::class)->except(['show']);
-                Route::resource('roles', RolesController::class)->except(['show']);
+                Route::resource('accounts', AccountController::class)->except(['show']);
+                Route::resource('roles', RoleController::class)->except(['show']);
             });
 
         Route::get('/materials', function () {
@@ -40,11 +43,9 @@ Route::middleware('auth')->group(function () {
 
     // Technician Routes
     Route::middleware('role:Technieker')->group(function () {
-
         Route::prefix('technieker')->group(function () {
-            Route::resource('orders', \App\Http\Controllers\OrderController::class)->except(['show']);
+            Route::resource('orders', OrderController::class)->except(['show']);
         });
-
     });
 
     // Profile

@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Models\Site;
+use App\Models\Material;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Site>
+ * @extends Factory<Material>
  */
-class SiteFactory extends Factory
+class MaterialFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,9 +18,7 @@ class SiteFactory extends Factory
     public function definition(): array
     {
         return [
-            'description' => $this->faker->paragraph(),
-            'longitude' => $this->faker->longitude(),
-            'latitude' => $this->faker->latitude()
+            'name' => $this->faker->word()
         ];
     }
 }

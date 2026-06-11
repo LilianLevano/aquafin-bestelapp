@@ -50,13 +50,13 @@
             </thead>
 
             <tbody>
-                @foreach($materialen as $materiaal)
+                @foreach($materials as $material)
                     <tr>
-                        <td>{{$materiaal->id}}</td>
-                        <td>{{$materiaal->name}}</td>
-                        <td>{{$materiaal->category->name}}</td>
-                        <td><input type="number" value="0" min="0" name="quantity[{{ $materiaal->id }}]"></td>
-                        <td><input type="checkbox" name="materialen[]" value="{{$materiaal->id}}"></td>
+                        <td>{{$material->id}}</td>
+                        <td>{{$material->name}}</td>
+                        <td>{{$material->category->name}}</td>
+                        <td><input type="number" value="0" min="0" name="quantity[{{ $material->id }}]"></td>
+                        <td><input type="checkbox" name="materials[]" value="{{$material->id}}"></td>
                     </tr>
                 @endforeach
             </tbody>
