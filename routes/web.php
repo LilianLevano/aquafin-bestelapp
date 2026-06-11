@@ -1,13 +1,12 @@
 <?php
 
-use App\Http\Middleware\RoleMiddleware;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\MaterialController;
 use App\Http\Controllers\HelpRequestController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 require __DIR__.'/auth.php';
 
 // Guest Routes
@@ -30,11 +29,8 @@ Route::middleware('auth')->group(function () {
             ->group(function () {
                 Route::resource('accounts', AccountController::class)->except(['show']);
                 Route::resource('roles', RoleController::class)->except(['show']);
+                Route::resource('materials', MaterialController::class);
             });
-
-        Route::get('/materials', function () {
-            return view('materials.index');
-        })->name('materials');
 
         Route::get('/help-requests', function () {
             return view('help-requests.index');
@@ -53,3 +49,4 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
