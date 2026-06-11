@@ -17,6 +17,15 @@
                 @error('email') <p class="error">{{ $message }}</p> @enderror
             </div>
 
+            <div class="field">
+                <label for="phone_number">Telefoonnummer</label>
+                <input id="phone_number" type="tel" name="phone_number"
+                       value="{{ old('phone_number', $account->phone_number) }}" required
+                       data-original="{{ $account->phone_number }}"
+                       class="{{ $errors->has('phone_number') ? 'is-invalid' : '' }}">
+                @error('phone_number') <p class="error">{{ $message }}</p> @enderror
+            </div>
+
             <div class="grid-2">
                 <div class="field">
                     <label for="first_name">First Name</label>
