@@ -1,6 +1,6 @@
 // Taak 1 : Validatie naam (onblur)
 function validateNaam() {
-    const naamInput = document.getElementById('materiaalNaam');
+    const naamInput = document.getElementById('materialNaam');
     const errorElement = document.getElementById('naamError');
 
     if (naamInput.value.length < 3) {
@@ -16,7 +16,7 @@ function validateNaam() {
 
 //  Taak 2 : Validatie categorie (onblur)
 function validateCategorie() {
-    const categorieInput = document.getElementById('materiaalCategorie');
+    const categorieInput = document.getElementById('materialCategorie');
     const errorElement = document.getElementById('categorieError');
 
     if (categorieInput.value === '') {

@@ -38,5 +38,5 @@ function filterTabel() {
         }
     });
 
-    document.getElementById('geenMateriaal').style.display = zichtbaar === 0 ? 'block' : 'none';
+    document.getElementById('geenMaterial').style.display = zichtbaar === 0 ? 'block' : 'none';
 }

@@ -15,13 +15,13 @@
 
             <h2 style="font-size: 18px; font-weight: 500; color: #111827; margin: 0 0 1.5rem;">Materiaal bewerken</h2>
 
-            <form action="{{ route('admin.materials.update', $materiaal->id) }}" method="POST">
+            <form action="{{ route('admin.materials.update', $material->id) }}" method="POST">
                 @csrf @method('PUT')
 
                 {{-- Naam --}}
                 <div style="margin-bottom: 1rem;">
                     <label style="display: block; font-size: 13px; color: #374151; margin-bottom: 4px;">Naam</label>
-                    <input type="text" name="name" value="{{ old('name', $materiaal->name) }}"
+                    <input type="text" name="name" value="{{ old('name', $material->name) }}"
                            style="width: 100%; padding: 10px 12px; font-size: 14px; border: 1px solid #d1d5db; border-radius: 8px; box-sizing: border-box; outline: none;">
                     @error('name')
                     <span style="font-size: 12px; color: #dc2626;">{{ $message }}</span>
@@ -34,7 +34,7 @@
                     <select name="category_id"
                             style="width: 100%; padding: 10px 12px; font-size: 14px; border: 1px solid #d1d5db; border-radius: 8px; box-sizing: border-box; background: #fff; outline: none;">
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ $materiaal->category_id == $category->id ? 'selected' : '' }}>
+                            <option value="{{ $category->id }}" {{ $material->category_id == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
                             </option>
                         @endforeach
@@ -51,7 +51,7 @@
                         <span style="color: #9ca3af;">(optioneel)</span>
                     </label>
                     <textarea name="beschrijving" rows="4"
-                              style="width: 100%; padding: 10px 12px; font-size: 14px; border: 1px solid #d1d5db; border-radius: 8px; box-sizing: border-box; resize: vertical; outline: none;">{{ old('beschrijving', $materiaal->beschrijving ?? '') }}</textarea>
+                              style="width: 100%; padding: 10px 12px; font-size: 14px; border: 1px solid #d1d5db; border-radius: 8px; box-sizing: border-box; resize: vertical; outline: none;">{{ old('beschrijving', $material->beschrijving ?? '') }}</textarea>
                     @error('beschrijving')
                     <span style="font-size: 12px; color: #dc2626;">{{ $message }}</span>
                     @enderror

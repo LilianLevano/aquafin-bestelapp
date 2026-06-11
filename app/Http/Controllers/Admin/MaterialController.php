@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
-use App\Models\Materiaal;
+use App\Models\Material;
 use Illuminate\Http\Request;
 
 class MaterialController extends Controller
@@ -14,8 +14,8 @@ class MaterialController extends Controller
      */
     public function index()
     {
-        $materialen = Materiaal::with('category')->get();
-        return view('materials.index', compact('materialen'));
+        $materials = Material::with('category')->get();
+        return view('materials.index', compact('materials'));
     }
 
     /**
@@ -33,16 +33,12 @@ class MaterialController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => ['required', 'unique:materialen,name'],
+            'name' => ['required', 'unique:materials,name'],
             'category_id' => ['required', 'exists:categories,id'],
         ]);
 
-
-
-        Materiaal::create($validated);
+        Material::create($validated);
         return redirect()->route('admin.materials.index')->with('success', 'Materiaal is aangemaakt');
-
-
     }
 
     /**
@@ -50,8 +46,8 @@ class MaterialController extends Controller
      */
     public function show(string $id)
     {
-        $materiaal = Materiaal::findOrFail($id);
-        return view('materials.show', compact('materiaal'));
+        $material = Material::findOrFail($id);
+        return view('materials.show', compact('material'));
     }
 
     /**
@@ -59,9 +55,9 @@ class MaterialController extends Controller
      */
     public function edit(string $id)
     {
-        $materiaal = Materiaal::findOrFail($id);
+        $material = Material::findOrFail($id);
         $categories = Category::all();
-        return view('materials.edit', compact('materiaal', 'categories'));
+        return view('materials.edit', compact('material', 'categories'));
     }
 
     /**
@@ -74,8 +70,8 @@ class MaterialController extends Controller
             'category_id' => ['required', 'exists:categories,id'],
         ]);
 
-        $materiaal = Materiaal::findOrFail($id);
-        $materiaal->update($validated);
+        $material = Material::findOrFail($id);
+        $material->update($validated);
         return redirect()->route('admin.materials.index')->with('success', 'Materiaal is aangepast');
     }
 
@@ -84,8 +80,8 @@ class MaterialController extends Controller
      */
     public function destroy(string $id)
     {
-        $materiaal = Materiaal::findOrFail($id);
-        $materiaal->delete();
+        $material = Material::findOrFail($id);
+        $material->delete();
         return redirect()->route('admin.materials.index')->with('success', 'Materiaal is verwijderd');
     }
 }
