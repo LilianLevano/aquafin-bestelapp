@@ -32,6 +32,7 @@
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th class="extra-information">Email</th>
+                        <th class="extra-information">Phone Number</th>
                         <th class="extra-information">Role</th>
                         <th class="extra-information">Site</th>
                         <th class="right">Actions</th>
@@ -44,6 +45,7 @@
                         <td>{{ $a->first_name }}</td>
                         <td>{{ $a->last_name }}</td>
                         <td class="extra-information">{{ $a->email }}</td>
+                        <td class="extra-information">{{ $a->phone_number }}</td>
                         <td class="extra-information">{{ $a->role->name ?? '—' }}</td>
                         <td class="extra-information">{{ $a->site->description }}</td>
                         <td class="right">
@@ -85,13 +87,13 @@
         }
     }
 
-    @media screen and (min-width: 844px ){
+    @media screen and (min-width: 956px ){
         .show{
             display: none;
         }
     }
 
-    @media screen and (max-width:844px ){
+    @media screen and (max-width:956px ){
         .extra-information{
             display: none;
         }
