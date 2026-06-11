@@ -1,16 +1,14 @@
 @extends('layouts.app')
 @section('title', 'Login')
 
-@php
-    $showHulp = $errors->hasAny(['first_name', 'last_name', 'title', 'description']) || old('_form') === 'hulp';
-@endphp
-
 @section('content')
+    <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+
     <div class="centered">
         <div class="card" style="max-width:520px;width:100%;">
 
             {{-- LOGIN FORM --}}
-            <div id="section-login" @if($showHulp) style="display:none" @endif>
+            <div id="section-login">
                 <h1 class="h1">Login</h1>
 
                 @if(session('status'))
@@ -24,81 +22,67 @@
                         <label for="email">Email</label>
                         <input id="email" type="email" name="email"
                             value="{{ old('email') }}" required autofocus
-                            class="{{ $errors->has('email') && !$showHulp ? 'is-invalid' : '' }}">
-                        @if(!$showHulp)
-                            @error('email') <p class="error">{{ $message }}</p> @enderror
-                        @endif
+                            class="{{ $errors->has('email') ? 'is-invalid' : '' }}">
+                        @error('email') <p class="error">{{ $message }}</p> @enderror
                     </div>
 
                     <div class="field">
-                        <label for="password">Password</label>
+                        <label for="password">Wachtwoord</label>
                         <input id="password" type="password" name="password" required
-                            class="{{ $errors->has('password') && !$showHulp ? 'is-invalid' : '' }}">
-                        @if(!$showHulp)
-                            @error('password') <p class="error">{{ $message }}</p> @enderror
-                        @endif
+                            class="{{ $errors->has('password') ? 'is-invalid' : '' }}">
+                        @error('password') <p class="error">{{ $message }}</p> @enderror
                     </div>
 
                     <div class="row-between">
-                        <button type="button" class="link" onclick="toggleHulp(true)">Need help?</button>
+                        <button type="button" class="link" onclick="toggleHulp(true)">Hulp nodig?</button>
                         <button type="submit" class="btn btn-primary">Login</button>
                     </div>
                 </form>
             </div>
 
-            {{-- HELP FORM --}}
-            <div id="section-hulp" @if(!$showHulp) style="display:none" @endif>
-                <button type="button" class="back-link" onclick="toggleHulp(false)">← Back to login</button>
-                <h1 class="h1">Request Help</h1>
+            {{-- HULP FORM --}}
+            <div id="section-hulp" style="display:none">
+                <button type="button" class="back-link" onclick="toggleHulp(false)">← Keer terug naar het login formulier</button>
+                <h1 class="h1">Hulp aanvragen</h1>
 
-                <form method="POST" action="{{ route('hulp.store') }}" class="form">
+                <form id="form-hulp" method="POST" action="{{ route('hulp.store') }}" class="form">
                     @csrf
-                    <input type="hidden" name="_form" value="hulp">
 
                     <div class="field">
-                        <label for="hulp-mail">Email</label>
-                        <input id="hulp-mail" type="email" name="email"
-                            value="{{ old('mail') }}" required
-                            class="{{ $errors->has('mail') && $showHulp ? 'is-invalid' : '' }}">
-                        @if($showHulp)
-                            @error('mail') <p class="error">{{ $message }}</p> @enderror
-                        @endif
+                        <label for="hulp-email">Email</label>
+                        <input id="hulp-email" type="email" name="email" required>
                     </div>
 
                     <div class="grid-2">
                         <div class="field">
-                            <label for="hulp-first_name">First Name</label>
-                            <input id="hulp-first_name" name="first_name"
-                                value="{{ old('first_name') }}" required
-                                class="{{ $errors->has('first_name') ? 'is-invalid' : '' }}">
-                            @error('first_name') <p class="error">{{ $message }}</p> @enderror
+                            <label for="hulp-first_name">Voornaam</label>
+                            <input id="hulp-first_name" name="first_name" required>
                         </div>
                         <div class="field">
-                            <label for="hulp-last_name">Last Name</label>
-                            <input id="hulp-last_name" name="last_name"
-                                value="{{ old('last_name') }}" required
-                                class="{{ $errors->has('last_name') ? 'is-invalid' : '' }}">
-                            @error('last_name') <p class="error">{{ $message }}</p> @enderror
+                            <label for="hulp-last_name">Familienaam</label>
+                            <input id="hulp-last_name" name="last_name" required>
                         </div>
                     </div>
 
                     <div class="field">
-                        <label for="hulp-title">Title</label>
-                        <input id="hulp-title" name="title"
-                            value="{{ old('title') }}" required
-                            class="{{ $errors->has('title') ? 'is-invalid' : '' }}">
-                        @error('title') <p class="error">{{ $message }}</p> @enderror
+                        <label for="hulp-category">Probleemcategorie</label>
+                        <select id="hulp-category" name="category" required>
+                            <option value="" disabled selected>Kies een categorie…</option>
+                            <option value="loginprobleem">Loginprobleem</option>
+                            <option value="accountbeheer">Accountbeheer</option>
+                            <option value="bestelling">Bestelling / Levering</option>
+                            <option value="technisch">Technisch probleem</option>
+                            <option value="overig">Overig</option>
+                        </select>
                     </div>
 
                     <div class="field">
-                        <label for="hulp-description">Description</label>
-                        <textarea id="hulp-description" name="description" rows="4" required
-                                class="{{ $errors->has('description') ? 'is-invalid' : '' }}">{{ old('description') }}</textarea>
-                        @error('description') <p class="error">{{ $message }}</p> @enderror
+                        <label for="hulp-description">Beschrijving</label>
+                        <textarea id="hulp-description" name="description" rows="4" required></textarea>
                     </div>
 
                     <div class="row-end">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Stuur verzoek</button>
                     </div>
                 </form>
             </div>

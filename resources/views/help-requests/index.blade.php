@@ -18,8 +18,8 @@
             <div class="aanvraag-card" data-status="{{ $aanvraag->status ?? 'open' }}">
                 <div class="aanvraag-header">
                     <div class="aanvraag-title">
-                        <label>Titel</label>
-                        <input type="text" class="text-field" value="{{ $aanvraag->title ?? '' }}" readonly>
+                        <label>Categorie</label>
+                        <input type="text" class="text-field" value="{{ $aanvraag->category ?? $aanvraag->title ?? '—' }}" readonly>
                     </div>
                     <a href="/admin/antwoord/{{ $aanvraag->id ?? '' }}" class="btn-primary">Answer</a>
                 </div>

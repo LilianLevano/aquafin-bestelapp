@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['user_id', 'title', 'description', 'answer', 'is_completed'])]
+#[Fillable(['user_id', 'name', 'email', 'category', 'title', 'description', 'answer', 'is_completed'])]
 #[Table('help_requests')]
 class HelpRequest extends Model
 {
