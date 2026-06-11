@@ -23,8 +23,8 @@ class AddressFactory extends Factory
             'house_number' => $this->faker->numberBetween(1, 5000),
             'city' => $this->faker->city(),
             'postal_code' => $this->faker->numberBetween(1000, 9999),
-            'country_iso' => $this->faker-> $this->faker->randomLetter() + $this->faker->randomLetter(),
-            'unit_number' => $this->faker->randomLetter() + $this->faker->randomLetter()
+            'country_iso' => $this->faker->randomLetter() . $this->faker->randomLetter(),
+            'unit_number' => $this->faker->randomLetter() . $this->faker->randomLetter()
         ];
     }
 }
