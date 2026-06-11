@@ -13,11 +13,36 @@
         <form id="create-form" method="POST" action="{{ route('admin.accounts.store') }}" class="form">
             @csrf
 
+
+            <div class="grid-2">
+                <div class="field">
+                    <label for="first_name">First Name</label>
+                    <input id="first_name" name="first_name" value="{{ old('first_name') }}" required
+                           class="{{ $errors->has('first_name') ? 'is-invalid' : '' }}">
+                    @error('first_name') <p class="error">{{ $message }}</p> @enderror
+                </div>
+                <div class="field">
+                    <label for="last_name">Last Name</label>
+                    <input id="last_name" name="last_name" value="{{ old('last_name') }}" required
+                           class="{{ $errors->has('last_name') ? 'is-invalid' : '' }}">
+                    @error('last_name') <p class="error">{{ $message }}</p> @enderror
+                </div>
+            </div>
+
             <div class="field">
                 <label for="email">Email</label>
                 <input id="email" type="email" name="email" value="{{ old('email') }}" required
                     class="{{ $errors->has('email') ? 'is-invalid' : '' }}">
                 @error('email') <p class="error">{{ $message }}</p> @enderror
+            </div>
+
+            <div class="field">
+                <label for="phone_number">Telefoonnummer</label>
+                <input id="phone_number" type="tel" name="phone_number"
+                       value="{{ old('phone_number') }}" required
+
+                       class="{{ $errors->has('phone_number') ? 'is-invalid' : '' }}">
+                @error('phone_number') <p class="error">{{ $message }}</p> @enderror
             </div>
 
             <div class="field">
@@ -39,20 +64,6 @@
                 </div>
             </div>
 
-            <div class="grid-2">
-                <div class="field">
-                    <label for="first_name">First Name</label>
-                    <input id="first_name" name="first_name" value="{{ old('first_name') }}" required
-                        class="{{ $errors->has('first_name') ? 'is-invalid' : '' }}">
-                    @error('first_name') <p class="error">{{ $message }}</p> @enderror
-                </div>
-                <div class="field">
-                    <label for="last_name">Last Name</label>
-                    <input id="last_name" name="last_name" value="{{ old('last_name') }}" required
-                        class="{{ $errors->has('last_name') ? 'is-invalid' : '' }}">
-                    @error('last_name') <p class="error">{{ $message }}</p> @enderror
-                </div>
-            </div>
 
             <div class="field">
                 <label for="role_id">Role</label>
