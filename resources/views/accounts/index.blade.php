@@ -28,31 +28,34 @@
             <table class="table" id="accounts-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th class="id-account">ID</th>
                         <th>First Name</th>
                         <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Site</th>
+                        <th class="extra-information">Email</th>
+                        <th class="extra-information">Role</th>
+                        <th class="extra-information">Site</th>
                         <th class="right">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="accounts-tbody">
                     @forelse($accounts as $a)
                     <tr>
-                        <td>{{ $a->id }}</td>
+                        <td class="id-account">{{ $a->id }}</td>
                         <td>{{ $a->first_name }}</td>
                         <td>{{ $a->last_name }}</td>
-                        <td>{{ $a->email }}</td>
-                        <td>{{ $a->role->name ?? '—' }}</td>
-                        <td>{{ $a->site->locatie }}</td>
+                        <td class="extra-information">{{ $a->email }}</td>
+                        <td class="extra-information">{{ $a->role->name ?? '—' }}</td>
+                        <td class="extra-information">{{ $a->site->locatie }}</td>
                         <td class="right">
+                                {{--{{route('admin.accounts.show', $a->id)}}--}}
+                            <a href="#" class="show" >Meer details</a>
+
                             <a href="{{route('admin.accounts.edit', $a->id)}}" class="link">Edit</a>
 
                             <form method="POST" action="{{ route('admin.accounts.destroy', $a) }}" style="display:inline"
                                 onsubmit="return confirm('Delete this account?');">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="link link-danger">Delete</button>
+                                <button type="submit"  class="link link-danger">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -65,6 +68,61 @@
         </div>
     </div>
 @endsection
+
+
+<style>
+
+
+    @media screen and (max-width: 1015px){
+        .table, th{
+            color: red; !important;
+        }
+
+        #accounts-table{
+            td{
+                padding: 5px;
+            }
+        }
+    }
+
+    @media screen and (min-width: 844px ){
+        .show{
+            display: none;
+        }
+    }
+
+    @media screen and (max-width:844px ){
+        .extra-information{
+            display: none;
+        }
+
+        .link{
+            display: none;
+        }
+    }
+
+
+    @media screen and (max-width: 454px ){
+        #accounts-table{
+            td{
+                width: fit-content;
+                padding: 2px;
+            }
+        }
+
+        .id-account{
+            display: none;
+        }
+    }
+
+    @media screen and  (max-width: 412px){
+
+    }
+
+
+
+
+</style>
 
 @push('scripts')
     @vite('resources/js/account-index.js')
