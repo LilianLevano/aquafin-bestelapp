@@ -66,7 +66,7 @@ class MaterialController extends Controller
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
-            'name' => ['required', 'unique:materialen,name'],
+            'name' => ['required', 'unique:materials,name'],
             'category_id' => ['required', 'exists:categories,id'],
         ]);
 
