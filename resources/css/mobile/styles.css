@@ -19,7 +19,7 @@
     scale: 1.50;
 }
 
-@media screen and (max-width: 666px){
+@media screen and (max-width: 692px){
     .manager-table th,
     .manager-table td,
     table th,
@@ -74,4 +74,20 @@
     }
 }
 
+@media screen and (min-width: 650px) {
+    .actie{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 624px ){
+    .extra-information-order{
+        display: none;
+    }
+}
+@media screen and (max-width: 640px){
+    .leverdatum{
+        display: none;
+    }
+}
 

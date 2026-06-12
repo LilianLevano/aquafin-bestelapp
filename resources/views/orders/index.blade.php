@@ -34,11 +34,12 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Geplaatst door</th>
-                <th>Items</th>
+                <th  class="extra-information-order">Geplaatst door</th>
+                <th class="extra-information-order">Items</th>
                 <th>Leverplaats</th>
-                <th>Leverdatum</th>
-                <th>Status</th>
+                <th class="leverdatum">Leverdatum</th>
+                <th class="actie">Actie</th>
+                <th class="extra-information-order">Status</th>
             </tr>
         </thead>
 
@@ -49,13 +50,14 @@
         @foreach($orders as $order)
             <tr>
                 <td>{{$order->id}}</td>
-                <td>{{$order->user->first_name . ' ' . $order->user->last_name  }}</td>
-                <td>
+                <td  class="extra-information-order">{{$order->user->first_name . ' ' . $order->user->last_name  }}</td>
+                <td class="extra-information-order">
                     {{ $order->materials->take(3)->map(fn($m) => $m->name . ' (x' . $m->pivot->quantity . ')')->implode(', ') . ($order->materials->count() > 3 ? ', ...' : '') }}
                 </td>
                 <td>{{$order->site->description}}</td>
-                <td>{{$order->delivery_date}}</td>
-                <td>{{ \Carbon\Carbon::parse($order->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>
+                <td  class="leverdatum">{{$order->delivery_date}}</td>
+                <td class="actie"><a href="#">Meer details</a></td>
+                <td class="extra-information-order">{{ \Carbon\Carbon::parse($order->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>
             </tr>
 
         @endforeach
