@@ -18,21 +18,37 @@
         @method('patch')
 
         <div>
-            <x-input-label for="first_name" :value="__('First name')" />
-            <x-text-input id="first_name" name="first_name" type="text" class="mt-1 block w-full" :value="old('first_name', $user->first_name)" required autofocus autocomplete="first_name" />
-            <x-input-error class="mt-2" :messages="$errors->get('first_name')" />
+            <div class="field">
+                <label for="first_name">First Name</label>
+                <input id="first_name" name="first_name"
+                       value="{{ old('first_name', $user->first_name) }}" required
+                       data-original="{{ $user->first_name }}"
+                       class="{{ $errors->has('first_name') ? 'is-invalid' : '' }}">
+                @error('first_name') <p class="error">{{ $message }}</p> @enderror
+            </div>
+
         </div>
 
         <div>
-            <x-input-label for="last_name" :value="__('Last name')" />
-            <x-text-input id="last_name" name="last_name" type="text" class="mt-1 block w-full" :value="old('last_name', $user->last_name)" required autofocus autocomplete="last_name" />
-            <x-input-error class="mt-2" :messages="$errors->get('last_name')" />
+            <div class="field">
+                <label for="last_name">Last Name</label>
+                <input id="last_name" name="last_name"
+                       value="{{ old('last_name', $user->last_name) }}" required
+                       data-original="{{ $user->last_name }}"
+                       class="{{ $errors->has('last_name') ? 'is-invalid' : '' }}">
+                @error('last_name') <p class="error">{{ $message }}</p> @enderror
+            </div>
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+            <div class="field">
+                <label for="email">Mail</label>
+                <input id="email" type="email" name="email"
+                       value="{{ old('email', $user->email) }}" required
+                       data-original="{{ $user->email }}"
+                       class="{{ $errors->has('email') ? 'is-invalid' : '' }}">
+                @error('email') <p class="error">{{ $message }}</p> @enderror
+            </div>
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
                 <div>
@@ -53,8 +69,20 @@
             @endif
         </div>
 
+
+        <div class="field">
+            <label for="phone_number">Telefoonnummer</label>
+            <input id="phone_number" type="tel" name="phone_number"
+                   value="{{ old('phone_number', $user->phone_number) }}" required
+                   data-original="{{ $user->phone_number }}"
+                   class="{{ $errors->has('phone_number') ? 'is-invalid' : '' }}">
+            @error('phone_number') <p class="error">{{ $message }}</p> @enderror
+        </div>
+
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+
+            <button type="submit" class="btn-primary">Save</button>
+
 
             @if (session('status') === 'profile-updated')
                 <p
