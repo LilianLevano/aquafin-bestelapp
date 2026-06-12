@@ -71,61 +71,6 @@
     </div>
 @endsection
 
-
-<style>
-
-
-    @media screen and (max-width: 1015px){
-        .table, th{
-            color: red; !important;
-        }
-
-        #accounts-table{
-            td{
-                padding: 5px;
-            }
-        }
-    }
-
-    @media screen and (min-width: 956px ){
-        .show{
-            display: none;
-        }
-    }
-
-    @media screen and (max-width:956px ){
-        .extra-information{
-            display: none;
-        }
-
-        .link{
-            display: none;
-        }
-    }
-
-
-    @media screen and (max-width: 454px ){
-        #accounts-table{
-            td{
-                width: fit-content;
-                padding: 2px;
-            }
-        }
-
-        .id-account{
-            display: none;
-        }
-    }
-
-    @media screen and  (max-width: 412px){
-
-    }
-
-
-
-
-</style>
-
 @push('scripts')
     @vite('resources/js/account-index.js')
 @endpush

@@ -1,0 +1,26 @@
+@import url("./colors.css");
+@import url("./font.css");
+
+.weer-charts-grid {
+    grid-template-columns: 1fr;
+}
+
+@media screen and (max-width: 408px) {
+    .manager-page {
+        min-height: 70vh;
+        padding: 20px;
+    }
+}
+
+@media screen and (max-width: 454px) {
+    #accounts-table {
+        td {
+            width: fit-content;
+            padding: 2px;
+        }
+    }
+
+    .id-account {
+        display: none;
+    }
+}

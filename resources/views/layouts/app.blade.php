@@ -41,18 +41,6 @@
         </main>
     </div>
 
-    <style>
-
-        @media screen and (max-width: 408px){
-            .manager-page {
-                min-height: 70vh !important;
-                padding: 20px !important;
-                text-align: center !important;
-                background-color: #f4f8fb !important;
-            }
-        }
-    </style>
-
     @include('partials.footer')
     @stack('scripts')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
