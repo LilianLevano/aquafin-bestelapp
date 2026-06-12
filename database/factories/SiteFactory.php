@@ -18,7 +18,9 @@ class SiteFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'description' => $this->faker->paragraph(),
+            'longitude' => $this->faker->longitude(),
+            'latitude' => $this->faker->latitude()
         ];
     }
 }

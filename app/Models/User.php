@@ -5,14 +5,15 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['first_name', 'last_name', 'email', 'password', 'role_id'])]
+#[Fillable(['first_name', 'last_name', 'email', 'password', 'phone_number', 'role_id', 'site_id'])]
 #[Hidden(['password', 'remember_token'])]
+#[Table('users')]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
@@ -31,13 +32,18 @@ class User extends Authenticatable
         ];
     }
 
-    public function role(){
-        return $this->belongsTo(Role::class, 'role_id', 'id'); // M:1 Many to One relation
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
-    public function bestelling(){
-        return $this->hasMany(Bestelling::class, 'user_id', 'id');
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'user_id');
     }
 
-
+    public function site()
+    {
+        return $this->belongsTo(Site::class, 'site_id');
+    }
 }

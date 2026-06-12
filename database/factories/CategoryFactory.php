@@ -18,12 +18,14 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->randomElement(["Bevestigingsmateriaal",
+            'name' => $this->faker->unique()->randomElement([
+                "Bevestigingsmateriaal",
                 "Persoonlijke beschermingsmiddelen (PBM)",
                 "Gereedschap (manueel & elektrisch)",
                 "Technische onderhoudsmaterialen",
                 "Specifieke Aquafin/riolering gerelateerde tools",
-                "Diversen / Verbruiksgoederen"  ]),
+                "Diversen / Verbruiksgoederen"
+            ]),
         ];
     }
 }
