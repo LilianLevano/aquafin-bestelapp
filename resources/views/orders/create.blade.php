@@ -31,19 +31,25 @@
 
         <table class="manager-table">
             <button class="btn-primary">Plaats</button>
-            <input type="date" id="delivery_date" name="delivery_date" required>
 
-            <select name="site_id" id="site_id">
-                @foreach($sites as $site)
-                    <option value="{{$site->id}}" @selected($site->id == auth()->user()->site->id)>{{$site->description}} </option>
-                @endforeach
-            </select>
+
+            <div class="max-w-[550px] flex flex-col items-center gap-2 mx-auto my-4">
+                <input type="date" id="delivery_date" name="delivery_date" required>
+
+                <select name="site_id" id="site_id">
+                    @foreach($sites as $site)
+                        <option value="{{$site->id}}" @selected($site->id == auth()->user()->site->id)>{{$site->description}} </option>
+                    @endforeach
+                </select>
+            </div>
+
+
 
             <thead>
             <tr>
-                <th>ID</th>
+                <th class="extra-information" >ID</th>
                 <th>Materiaal</th>
-                <th>Categorie</th>
+                <th class="extra-information">Categorie</th>
                 <th>Quantity</th>
                 <th>Actie</th>
             </tr>
@@ -52,10 +58,10 @@
             <tbody>
                 @foreach($materials as $material)
                     <tr>
-                        <td>{{$material->id}}</td>
-                        <td>{{$material->name}}</td>
-                        <td>{{$material->category->name}}</td>
-                        <td><input type="number" value="0" min="0" name="quantity[{{ $material->id }}]"></td>
+                        <td class="extra-information">{{$material->id}}</td>
+                        <td ><a href="{{route('materials.show', $material->id)}}">{{$material->name}}</a> </td>
+                        <td class="extra-information">{{$material->category->name}}</td>
+                        <td><input class="quantity" type="number" value="0" min="0" name="quantity[{{ $material->id }}]"></td>
                         <td><input type="checkbox" name="materials[]" value="{{$material->id}}"></td>
                     </tr>
                 @endforeach
@@ -66,4 +72,32 @@
     <div class="center-button">
         <button class="btn-primary">Toon alles</button>
     </div>
+
+    <style>
+        .quantity{
+            width: 70%;
+        }
+
+        #site_id{
+            width: 90%;
+        }
+
+        @media screen and (max-width: 666px){
+            .manager-table th,
+            .manager-table td,
+            table th,
+            table td{
+                padding: 5px;
+            }
+        }
+
+        @media screen and (max-width: 562px){
+          .extra-information{
+              display: none;
+          }
+        }
+
+
+
+    </style>
 @endsection
