@@ -20,11 +20,11 @@ class HelpRequestController extends Controller
     {
         try {
             $validated = $request->validate([
-                'first_name' => 'required',
-                'last_name' => 'required',
-                'email' => 'required|email',
-                'title' => 'required',
-                'description' => 'required'
+                'first_name' => ['required', 'min:2'],
+                'last_name' => ['required', 'min:2'],
+                'email' => ['required','email',],
+                'title' => ['required', 'max:50'],
+                'description' => ['required', 'max:400'],
             ]);
 
             HelpRequest::create($validated);
