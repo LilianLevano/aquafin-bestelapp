@@ -5,6 +5,14 @@
         <h1 class="text-3xl font-bold mb-6">
             Overstromingsvoorspelling
         </h1>
+        @isset($data)
+            <p>Status: {{ $data['status'] }}</p>
+            <p>Message: {{ $data['message'] }}</p>
+            <p>Weather data: {{ print_r($data['weatherData']) }}</p>
+            <p>User data: {{ print_r($data['user']) }}</p>
+        @else
+            <p>No data acquired from the controller.</p>
+        @endisset
 
         <!-- Tabs -->
         <div class="flex gap-4 mb-4">
@@ -54,5 +62,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/flood-prediction.js')
+    @vite('resources/js/flood-forecast.js')
 @endpush

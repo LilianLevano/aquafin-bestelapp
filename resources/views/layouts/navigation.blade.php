@@ -34,12 +34,16 @@
                         @elseif($roleName === Role::TECHNIEKER)
 
 
-                            <x-nav-link :href="route('orders.index')" :active="request()->routeIs('technieker.bestellen')">
+                            <x-nav-link :href="route('orders.index')" :active="request()->routeIs('orders.index')">
                                 {{ __('Bestellingen') }}
                             </x-nav-link>
 
-                            <x-nav-link :href="route('orders.create')" :active="request()->routeIs('technieker.bestellen')">
+                            <x-nav-link :href="route('orders.create')" :active="request()->routeIs('orders.create')">
                                 {{ __('Bestellen') }}
+                            </x-nav-link>
+
+                            <x-nav-link :href="route('flood-forecast')" :active="request()->routeIs('flood-forecast')">
+                                {{ __('Floed voorspelling') }}
                             </x-nav-link>
 
 

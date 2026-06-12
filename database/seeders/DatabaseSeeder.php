@@ -186,39 +186,109 @@ class DatabaseSeeder extends Seeder
             ->toArray();
 
         // Create Sites
-        $siteDescriptions = [
-            'Aquafin',
-            'Aquafin Labo Aalst',
-            'Aquafin RWZI Mechelen-Noord',
-            'Aquafin RWZI Antwerpen-Zuid',
-            'Aquafin RWZI Aartselaar',
-            'Aquafin RWZI Burcht',
-            'Aquafin RWZI Kalmthout',
-            'Aquafin RWZI Gent',
-            'Aquafin RWZI Evergem',
-            'Aquafin RWZI Aalter',
-            'Aquafin RWZI Brugge',
-            'Aquafin rioolwaterzuiveringsinstallatie Harelbeke',
-            'Aquafin',
-            'Aquafin RWZI Liedekerke',
-            'Aquafin RWZI Wimmertingen',
-            'Aquafin RWZI Houthalen-Helchteren',
-            'Aquafin RWZI Genk'
+        $siteData = [
+            [
+                'description' => 'Aquafin',
+                'latitude' => 51.148252,
+                'longitude' => 4.394707
+            ],
+            [
+                'description' => 'Aquafin Labo Aalst',
+                'latitude' => 50.969517,
+                'longitude' => 4.047821
+            ],
+            [
+                'description' => 'Aquafin RWZI Mechelen-Noord',
+                'latitude' => 51.046898,
+                'longitude' => 4.451807
+            ],
+            [
+                'description' => 'Aquafin RWZI Antwerpen-Zuid',
+                'latitude' => 51.194228,
+                'longitude' => 4.369694
+            ],
+            [
+                'description' => 'Aquafin RWZI Aartselaar',
+                'latitude' => 51.168343,
+                'longitude' => 4.387087
+            ],
+            [
+                'description' => 'Aquafin RWZI Burcht',
+                'latitude' => 51.212097,
+                'longitude' => 4.348676
+            ],
+            [
+                'description' => 'Aquafin RWZI Kalmthout',
+                'latitude' => 51.405091,
+                'longitude' => 4.480633
+            ],
+            [
+                'description' => 'Aquafin RWZI Gent',
+                'latitude' => 51.055573,
+                'longitude' => 3.684368
+            ],
+            [
+                'description' => 'Aquafin RWZI Evergem',
+                'latitude' => 51.090203,
+                'longitude' => 3.669291
+            ],
+            [
+                'description' => 'Aquafin RWZI Aalter',
+                'latitude' => 51.104797,
+                'longitude' => 3.428029
+            ],
+            [
+                'description' => 'Aquafin RWZI Brugge',
+                'latitude' => 51.254882,
+                'longitude' => 3.210019
+            ],
+            [
+                'description' => 'Aquafin rioolwaterzuiveringsinstallatie Harelbeke',
+                'latitude' => 50.844995,
+                'longitude' => 3.291752
+            ],
+            [
+                'description' => 'Aquafin',
+                'latitude' => 51.096773,
+                'longitude' => 2.680020
+            ],
+            [
+                'description' => 'Aquafin RWZI Liedekerke',
+                'latitude' => 51.096778,
+                'longitude' => 2.680028
+            ],
+            [
+                'description' => 'Aquafin RWZI Wimmertingen',
+                'latitude' => 50.882558,
+                'longitude' => 5.347048
+            ],
+            [
+                'description' => 'Aquafin RWZI Houthalen-Helchteren',
+                'latitude' => 51.014561,
+                'longitude' => 5.353965
+            ],
+            [
+                'description' => 'Aquafin RWZI Genk',
+                'latitude' => 50.944468,
+                'longitude' => 5.447698
+            ]
         ];
 
         $addressCount = count($addressIds);
         $siteAttributes = array_map(
-            function ($description, $i) use ($addressIds, $addressCount) {
+            function ($site, $i) use ($addressIds, $addressCount) {
                 return [
-                    'description' => $description,
+                    'description' => $site['description'],
                     'address_id' => $addressIds[$i % $addressCount],
+                    'latitude' => $site['latitude'],
+                    'longitude' => $site['longitude']
                 ];
             },
-            $siteDescriptions,
-            array_keys($siteDescriptions)
+            $siteData,
+            array_keys($siteData)
         );
 
-        $siteIds = Site::factory(count($siteDescriptions))
+        $siteIds = Site::factory(count($siteData))
             ->createMany($siteAttributes)
             ->pluck('id')
             ->toArray();

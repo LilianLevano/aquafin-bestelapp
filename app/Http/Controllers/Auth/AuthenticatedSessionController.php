@@ -15,7 +15,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function index(): View
     {
         return view('auth.login');
     }
@@ -29,9 +29,16 @@ class AuthenticatedSessionController extends Controller
             $request->authenticate();
             $request->session()->regenerate();
 
+            // if ($request->user) {
+            // 	// Create a new token with a specific name (e.g., device name)
+            // 	$token = $request->user->createToken('auth-token')->plainTextToken;
+            // }
+
             return redirect()
                 ->intended(route('/', absolute: false))
                 ->with('status', 'success');
+                // ->with('access_token', $token)
+                // ->with('token_type', 'Bearer');
         } catch (ValidationException $e) {
             return redirect()
                 ->intended(route('login', absolute: false))
