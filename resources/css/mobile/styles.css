@@ -1,6 +1,6 @@
 @import url("./colors.css");
 @import url("./font.css");
-
+@import url("../pc/styles.css");
 .weer-charts-grid {
     grid-template-columns: 1fr;
 }
@@ -24,3 +24,5 @@
         display: none;
     }
 }
+
+
