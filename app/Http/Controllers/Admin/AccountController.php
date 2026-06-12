@@ -44,7 +44,7 @@ class AccountController extends Controller
             $validated = $request->validate([
                 'first_name' => ['required', 'max:40'],
                 'last_name' => ['required', 'max:40'],
-                'email' => ['required','email','unique:users'],
+                'email' => ['required','email','unique:users,email'],
                 'phone_number' => ['required','numeric','unique:users','regex:/^(\+32|0)[0-9]{8,9}$/'],
                 'role_id' => ['required', 'exists:roles,id'],
                 'site_id' => ['required', 'exists:sites,id'],
