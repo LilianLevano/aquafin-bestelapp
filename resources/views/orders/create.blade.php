@@ -62,7 +62,7 @@
                         <td ><a href="{{route('materials.show', $material->id)}}">{{$material->name}}</a> </td>
                         <td class="extra-information">{{$material->category->name}}</td>
                         <td><input class="quantity" type="number" value="0" min="0" name="quantity[{{ $material->id }}]"></td>
-                        <td><input type="checkbox" name="materials[]" value="{{$material->id}}"></td>
+                        <td><input class="checkbox-materials" type="checkbox" name="materials[]" value="{{$material->id}}"></td>
                     </tr>
                 @endforeach
             </tbody>
@@ -72,32 +72,4 @@
     <div class="center-button">
         <button class="btn-primary">Toon alles</button>
     </div>
-
-    <style>
-        .quantity{
-            width: 70%;
-        }
-
-        #site_id{
-            width: 90%;
-        }
-
-        @media screen and (max-width: 666px){
-            .manager-table th,
-            .manager-table td,
-            table th,
-            table td{
-                padding: 5px;
-            }
-        }
-
-        @media screen and (max-width: 562px){
-          .extra-information{
-              display: none;
-          }
-        }
-
-
-
-    </style>
 @endsection

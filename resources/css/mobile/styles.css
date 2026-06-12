@@ -5,6 +5,35 @@
     grid-template-columns: 1fr;
 }
 
+
+
+.quantity{
+    width: 70%;
+}
+
+#site_id{
+    width: 90%;
+}
+
+.checkbox-materials{
+    scale: 1.50;
+}
+
+@media screen and (max-width: 666px){
+    .manager-table th,
+    .manager-table td,
+    table th,
+    table td{
+        padding: 5px;
+    }
+}
+
+@media screen and (max-width: 562px){
+    .extra-information{
+        display: none;
+    }
+}
+
 @media screen and (max-width: 408px) {
     .manager-page {
         min-height: 70vh;
@@ -21,6 +50,26 @@
     }
 
     .id-account {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 650px){
+    #main-nav-bar{
+        display: none;
+    }
+
+    #mobile-nav-bar{
+        display: block;
+    }
+}
+
+@media screen and (min-width: 650px){
+    #main-nav-bar{
+        display: block;
+    }
+
+    #mobile-nav-bar{
         display: none;
     }
 }
