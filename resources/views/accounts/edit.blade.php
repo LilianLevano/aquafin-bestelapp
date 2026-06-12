@@ -63,7 +63,7 @@
                         class="{{ $errors->has('site_id') ? 'is-invalid' : '' }}">
                     <option value="">— Select locatie —</option>
                     @foreach($sites as $s)
-                        <option value="{{ $s->id }}" @selected(old('site_id', $account->site_id) == $s->id)>{{ $s->locatie }}</option>
+                        <option value="{{ $s->id }}" @selected(old('site_id', $account->site_id) == $s->id)>{{ $s->description }}</option>
                     @endforeach
                 </select>
                 @error('site_id') <p class="error">{{ $message }}</p> @enderror
@@ -74,7 +74,14 @@
                 <div class="input-group">
                     <input id="password" type="password" name="password"
                         class="{{ $errors->has('password') ? 'is-invalid' : '' }}">
-                    <button type="button" class="btn-toggle-pw" onclick="togglePw('password', this)">Show</button>
+                    <button type="button" class="btn-toggle-pw" onclick="togglePw('password', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <span>Show</span>
+                    </button>
                 </div>
                 @error('password') <p class="error">{{ $message }}</p> @enderror
             </div>
@@ -83,7 +90,14 @@
                 <label for="password_confirmation">Confirm Password</label>
                 <div class="input-group">
                     <input id="password_confirmation" type="password" name="password_confirmation">
-                    <button type="button" class="btn-toggle-pw" onclick="togglePw('password_confirmation', this)">Show</button>
+                    <button type="button" class="btn-toggle-pw" onclick="togglePw('password_confirmation', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <span>Show</span>
+                    </button>
                 </div>
                 @error('password_confirmation') <p class="error">{{ $message }}</p> @enderror
             </div>

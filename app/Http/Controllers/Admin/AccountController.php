@@ -40,20 +40,25 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'first_name' => ['required', 'max:40'],
-            'last_name' => ['required', 'max:40'],
-            'email' => ['required','email','unique:users'],
-            'phone_number' => ['required','numeric','unique:users'],
-            'role_id' => ['required', 'exists:roles,id'],
-            'site_id' => ['required', 'exists:sites,id'],
-            'password' => ['required','min:8'],
-            'password_confirmation' => ['required','same:password'],
-        ]);
+        try{
+            $validated = $request->validate([
+                'first_name' => ['required', 'max:40'],
+                'last_name' => ['required', 'max:40'],
+                'email' => ['required','email','unique:users'],
+                'phone_number' => ['required','numeric','unique:users','regex:/^(\+32|0)[0-9]{8,9}$/'],
+                'role_id' => ['required', 'exists:roles,id'],
+                'site_id' => ['required', 'exists:sites,id'],
+                'password' => ['required','min:8'],
+                'password_confirmation' => ['required','same:password'],
+            ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+            $validated['password'] = Hash::make($validated['password']);
 
-        User::create($validated);
+            User::create($validated);
+        }catch (\Exception $exception){
+            return back()->with('error', $exception->getMessage());
+        }
+
         return redirect()->route('admin.accounts.index')->with('status', 'Gebruiker aangemaakt!');
     }
 
