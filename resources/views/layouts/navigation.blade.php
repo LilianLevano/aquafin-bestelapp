@@ -112,7 +112,7 @@
                         Rollen
                     </x-responsive-nav-link>
 
-                    <x-responsive-nav-link :href="route('admin.roles.index')" :active="request()->routeIs('technieker')">
+                    <x-responsive-nav-link :href="route('admin.materials.index')" :active="request()->routeIs('technieker')">
                       Materialen
                     </x-responsive-nav-link>
 

@@ -770,32 +770,205 @@ table td {
     border-color: #dc2626;
 }
 
-@media screen and (max-width:386px){
-    .order-info-card{
-        grid-template-columns: repeat(2, 1fr);
+.materials-container {
+    padding: 1.5rem 0;
+}
+
+.materials-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.materials-title {
+    font-size: 22px;
+    font-weight: 500;
+    margin: 0;
+}
+
+.btn-new {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    padding: 7px 16px;
+    background: #111;
+    color: #fff;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+
+.btn-new:hover {
+    background: #333;
+}
+
+.materials-table-wrapper {
+    background: #fff;
+    border: 0.5px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.materials-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.materials-table thead tr {
+    background: #f9fafb;
+    border-bottom: 0.5px solid #e5e7eb;
+}
+
+.materials-table th {
+    padding: 10px 16px;
+    text-align: left;
+    font-weight: 500;
+    color: #6b7280;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.materials-table th.col-action {
+    text-align: right;
+}
+
+.materials-table tbody tr {
+    border-bottom: 0.5px solid #e5e7eb;
+}
+
+.materials-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.materials-table tbody tr:hover {
+    background: #f9fafb;
+}
+
+.materials-table td {
+    padding: 12px 16px;
+    color: #111;
+}
+
+.materials-table td.col-id {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.materials-table td.col-name {
+    font-weight: 500;
+}
+
+.materials-table td.col-action {
+    text-align: right;
+}
+
+.category-badge {
+    display: inline-block;
+    font-size: 12px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    background: #eff6ff;
+    color: #1d4ed8;
+}
+
+.category-badge.no-category {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.table-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-details {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    padding: 6px 14px;
+    background: #fff;
+    color: #111;
+    border: 0.5px solid #d1d5db;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+
+.btn-details:hover {
+    background: #f3f4f6;
+}
+
+.btn-edit {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    padding: 6px 14px;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+
+.btn-edit:hover {
+    background: #333;
+}
+
+.btn-delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    padding: 6px 14px;
+    background: #fff;
+    color: #dc2626;
+    border: 0.5px solid #fca5a5;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+}
+
+.btn-delete:hover {
+    background: #fef2f2;
+    border-color: #dc2626;
+}
+
+.btn-delete form {
+    margin: 0;
+}
+
+@media screen and (max-width: 968px){
+    .text-button{
+        display: none;
     }
 }
 
-@media screen and (max-width: 1015px) {
-    #accounts-table {
-        td {
+@media screen and (max-width: 747px){
+    .table-actions{
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 659px){
+    .materials-table{
+        th, td{
             padding: 5px;
+            font-size: 10px;
         }
     }
-}
 
-@media screen and (min-width: 956px) {
-    .show {
+    .category-badge, .category-col{
         display: none;
     }
 }
 
-@media screen and (max-width:956px) {
-    .extra-information {
-        display: none;
-    }
-
-    .link {
-        display: none;
-    }
-}

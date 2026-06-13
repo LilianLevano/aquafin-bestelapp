@@ -91,3 +91,33 @@
     }
 }
 
+@media screen and (max-width:386px){
+    .order-info-card{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 1015px) {
+    #accounts-table {
+        td {
+            padding: 5px;
+        }
+    }
+}
+
+@media screen and (min-width: 956px) {
+    .show {
+        display: none;
+    }
+}
+
+@media screen and (max-width:956px) {
+    .extra-information {
+        display: none;
+    }
+
+    #accounts-tbody .link {
+        display: none;
+    }
+}
+

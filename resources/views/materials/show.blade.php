@@ -20,7 +20,7 @@
                 <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px;">
                     <span style="font-size: 16px; font-weight: 500; color: #111827;">{{ $material->name }}</span>
                     <span style="flex-shrink: 0; background: #eff6ff; color: #1d4ed8; font-size: 11px; padding: 2px 8px; border-radius: 6px;">
-          {{ $material->categorie->name ?? 'Geen categorie' }}
+          {{ $material->category->name ?? 'Geen categorie' }}
         </span>
                 </div>
 
@@ -31,7 +31,7 @@
                 <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 0.75rem; margin-top: 0.875rem;">
                     <p style="font-size: 11px; color: #6b7280; margin: 0 0 4px;">Beschrijving</p>
                     <p style="font-size: 13px; color: #9ca3af; margin: 0; font-style: italic;">
-                        {{ $material->beschrijving ?? 'Geen beschrijving beschikbaar.' }}
+                        {{ $material->description ?? 'Geen beschrijving beschikbaar.' }}
                     </p>
                 </div>
 
