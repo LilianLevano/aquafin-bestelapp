@@ -80,7 +80,7 @@
     }
 }
 
-@media screen and (max-width: 624px ){
+@media screen and (max-width: 795px ){
     .extra-information-order{
         display: none;
     }

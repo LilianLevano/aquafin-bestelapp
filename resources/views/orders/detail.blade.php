@@ -22,6 +22,10 @@
                 <p class="info-label">Leverdatum</p>
                 <p class="info-value">{{ $order->delivery_date }}</p>
             </div>
+            <div>
+                <p class="info-label">Status</p>
+                <td class="info-value">{{ \Carbon\Carbon::parse($order->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>
+            </div>
         </div>
 
         <p class="materials-section-label">Bestelde materialen</p>
