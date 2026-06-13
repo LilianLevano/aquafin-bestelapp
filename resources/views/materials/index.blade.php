@@ -9,6 +9,13 @@
             + Nieuw materiaal
         </a>
     </div>
+
+    <div class="mb">
+        <input type="text" id="search-materials" placeholder="Zoek rol..." autocomplete="off"
+               style="margin-bottom: 0; padding: .5rem; width: 100%; position: relative;">
+        <ul id="search-suggestions" style=" list-style: none; margin-bottom: 10px; padding: 0; border: 1px solid #ccc; border-top: none; position: absolute; background: white; width: 40%; z-index: 100; display: none; "></ul>
+    </div>
+
     <table class="manager-table">
         <thead>
             <tr>
@@ -19,10 +26,10 @@
             </tr>
         </thead>
 
-        <tbody>
+        <tbody id="materials-tbody">
 
             @foreach($materials as $material)
-                <tr>
+                <tr data-id="{{ $material->id }}" data-name="{{ $material->name }}">
                     <td>{{$material->id}}</td>
                     <td>{{$material->name}}</td>
                     <td>{{$material->category->name ?? 'Geen categorie'}}</td>
@@ -54,3 +61,7 @@
         </tbody>
     </table>
 @endsection
+
+@push('scripts')
+    @vite('resources/js/materials-index.js')
+@endpush

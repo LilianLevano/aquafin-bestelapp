@@ -2,12 +2,12 @@ import Fuse from 'fuse.js'
 
 /**
  * @param {object} options
- * @param {string} options.inputId        - id de l'input
- * @param {string} options.suggestionsId  - id du <ul> suggestions
- * @param {string} options.tbodyId        - id du <tbody>
- * @param {string[]} options.keys         - champs data-* à chercher ex: ['name', 'email']
- * @param {number} [options.threshold]    - tolérance fautes (défaut 0.4)
- * @param {number} [options.maxSuggestions] - nb max suggestions (défaut 5)
+ * @param {string} options.inputId        - id input
+ * @param {string} options.suggestionsId  - id <ul> suggesties
+ * @param {string} options.tbodyId        - id  <tbody>
+ * @param {string[]} options.keys         - data-* dat we willen opzoeken ex: ['name', 'email']
+ * @param {number} [options.threshold]    - tolerantie op fouten (défaut 0.4)
+ * @param {number} [options.maxSuggestions] - aantal max suggesties (défaut 5)
  */
 export function initFuzzySearch({ inputId, suggestionsId, tbodyId, keys, threshold = 0.4, maxSuggestions = 5 }) {
     const input       = document.getElementById(inputId)
