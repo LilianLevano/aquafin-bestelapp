@@ -37,6 +37,7 @@
                     <th>ID</th>
                     <th>Naam</th>
                     <th>Categorie</th>
+                    <th>Quantity</th>
 
                 </tr>
                 </thead>
@@ -51,6 +52,9 @@
                             @else
                                 <span class="category-badge no-category">Geen categorie</span>
                             @endif
+                        </td>
+                        <td>
+                            {{$material->pivot->quantity}}
                         </td>
 
                     </tr>

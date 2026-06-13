@@ -121,3 +121,30 @@
     }
 }
 
+
+@media screen and (max-width: 968px){
+    .text-button{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 747px){
+    .table-actions{
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 659px){
+    .materials-table{
+        th, td{
+            padding: 5px;
+            font-size: 10px;
+        }
+    }
+
+    .category-badge, .category-col{
+        display: none;
+    }
+}
+
