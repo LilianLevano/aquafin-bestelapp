@@ -64,7 +64,8 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $order = Order::with(['materials', 'site'])->find($id);
+        return view('orders.detail', compact('order'));
     }
 
     /**
