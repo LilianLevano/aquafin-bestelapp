@@ -12,6 +12,18 @@
             Accounts
         </a>
 
+        <div class="account-actions">
+            <a href="{{ route('admin.accounts.edit', $account) }}" class="btn btn-sm">
+                <i class="ti ti-edit"></i> Bewerken
+            </a>
+            <form method="POST" action="{{ route('admin.accounts.destroy', $account) }}">
+                @csrf @method('DELETE')
+                <button type="submit" class="btn btn-sm btn-danger">
+                    <i class="ti ti-trash"></i> Verwijderen
+                </button>
+            </form>
+        </div>
+    </div>
 
 
         <div class="account-card">
