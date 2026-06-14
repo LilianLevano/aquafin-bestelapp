@@ -39,9 +39,14 @@ function setValidity(input, valid, message) {
     }
 }
 
-document.getElementById('mail').addEventListener('blur', function() {
+document.getElementById('email').addEventListener('blur', function() {
     var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim());
     setValidity(this, ok, 'Invalid email address.');
+});
+
+document.getElementById('phone_number').addEventListener('blur', function() {
+    var ok = /^(\+32|0)[0-9]{8,9}$/.test(this.value.trim());
+    setValidity(this, ok, 'Ongeldig telefoonnummer.');
 });
 
 document.getElementById('first_name').addEventListener('blur', function() {
@@ -108,3 +113,20 @@ window.addEventListener('pageshow', function(e) {
         if (btn.dataset.original) btn.textContent = btn.dataset.original;
     }
 });
+
+function checkChanged(input) {
+    if (input.value !== input.dataset.original) {
+        input.style.borderColor = '#f59e0b'; // orange
+        input.style.backgroundColor = '#fffbeb';
+    } else {
+        input.style.borderColor = '';
+        input.style.backgroundColor = '';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-original]').forEach(input => {
+        input.addEventListener('input', () => checkChanged(input));
+    });
+});
+
