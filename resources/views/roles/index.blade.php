@@ -1,22 +1,26 @@
 @extends('layouts.app')
-@section('title', 'Roles')
+@section('title', 'Rollen')
 
 @section('content')
     <div class="card">
         <div class="tabs">
-            <button type="button" class="tab tab-active">Current</button>
-            <a href="{{ route('admin.roles.create') }}" class="tab">New</a>
+
+            <a href="{{ route('admin.roles.create') }}" class="tab">Nieuw</a>
         </div>
 
         {{-- TABLE --}}
         <div id="section-table">
             <div class="row-between mb">
-                <h1 class="h1">Roles</h1>
-                <button type="button" class="btn btn-outline btn-sm" onclick="location.reload()">↺ Refresh</button>
+                <h1 class="h1">Rollen</h1>
+                <button type="button" class="btn btn-outline btn-sm" onclick="location.reload()">↺ Herlaadt</button>
             </div>
 
             @if(session('status'))
                 <div class="alert alert-success">{{ session('status') }}</div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-error">{{ session('error') }}</div>
             @endif
 
             <div class="mb">
@@ -29,9 +33,9 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Name</th>
+                        <th>Naam</th>
 
-                        <th class="right">Actions</th>
+                        <th class="right">Actie</th>
                     </tr>
                 </thead>
                 <tbody id="roles-tbody">
@@ -41,20 +45,20 @@
                         <td>{{ $r->name }}</td>
 
                         <td class="right">
-                            <button type="button" class="link"><a href="{{route('admin.roles.edit', $r->id)}}">Edit</a> </button>
+                            <button type="button" class="link"><a href="{{route('admin.roles.edit', $r->id)}}">Bewerk</a> </button>
                             <form method="POST" action="{{ route('admin.roles.destroy', $r) }}" style="display:inline"
                                 onsubmit="return confirm('Delete this role?');">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="link link-danger">Delete</button>
+                                <button type="submit" class="link link-danger">Verwijder</button>
                             </form>
                         </td>
                     </tr>
                     @empty
-                    <tr id="empty-row"><td colspan="4" class="muted center">No roles found.</td></tr>
+                    <tr id="empty-row"><td colspan="4" class="muted center">Geen rollen gevonden.</td></tr>
                     @endforelse
                 </tbody>
             </table>
-            <p id="no-results" class="muted center" style="display:none;padding:16px;">No results found.</p>
+            <p id="no-results" class="muted center" style="display:none;padding:16px;">Geen resultaat gevonden.</p>
         </div>
     </div>
 @endsection

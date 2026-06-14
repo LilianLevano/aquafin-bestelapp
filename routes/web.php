@@ -40,7 +40,7 @@ Route::middleware('auth')->group(function () {
     // Technician Routes
     Route::middleware('role:Technieker')->group(function () {
         Route::prefix('technieker')->group(function () {
-            Route::resource('orders', OrderController::class)->except(['show']);
+            Route::resource('orders', OrderController::class);
             Route::resource('materials', MaterialController::class)->only('show');
         });
     });

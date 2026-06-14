@@ -1,5 +1,8 @@
 @import url("./colors.css");
 @import url("./font.css");
+@import url("./materials-index.css");
+@import url("./accounts-show.css");
+@import url("./orders-show.css");
 
 * {
     box-sizing: border-box;
@@ -541,26 +544,12 @@ table td {
     margin: 20px 0;
 }
 
-@media screen and (max-width: 1015px) {
-    #accounts-table {
-        td {
-            padding: 5px;
-        }
-    }
-}
 
-@media screen and (min-width: 956px) {
-    .show {
-        display: none;
-    }
-}
 
-@media screen and (max-width:956px) {
-    .extra-information {
-        display: none;
-    }
 
-    .link {
-        display: none;
-    }
-}
+
+
+
+
+
+

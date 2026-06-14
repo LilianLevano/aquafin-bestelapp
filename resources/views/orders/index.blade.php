@@ -38,7 +38,7 @@
                 <th class="extra-information-order">Items</th>
                 <th>Leverplaats</th>
                 <th class="leverdatum">Leverdatum</th>
-                <th class="actie">Actie</th>
+                <th>Actie</th>
                 <th class="extra-information-order">Status</th>
             </tr>
         </thead>
@@ -56,7 +56,7 @@
                 </td>
                 <td>{{$order->site->description}}</td>
                 <td  class="leverdatum">{{$order->delivery_date}}</td>
-                <td class="actie"><a href="#">Meer details</a></td>
+                <td><a href="{{route('orders.show', $order->id)}}">Meer details</a></td>
                 <td class="extra-information-order">{{ \Carbon\Carbon::parse($order->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>
             </tr>
 
