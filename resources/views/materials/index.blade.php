@@ -20,6 +20,9 @@
         <a href="{{route('admin.materials.create')}}" class="btn-primary">
             + Materiaal
         </a>
+        <div class="row-between mb">
+            <button type="button" class="btn btn-outline btn-sm" onclick="location.reload()">↺ Refresh</button>
+        </div>
         <div class="materials-table-wrapper">
             <table class="materials-table">
                 <thead>
@@ -31,7 +34,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($materials as $material)
+                @forelse($materials as $material)
                     <tr>
                         <td class="col-id">#{{ $material->id }}</td>
                         <td class="col-name">{{ $material->name }}</td>
@@ -64,7 +67,9 @@
                             </div>
                         </td>
                     </tr>
-                @endforeach
+                @empty
+                    <p>Er zijn geen materialen beschikbaar.</p>
+                @endforelse
                 </tbody>
             </table>
         </div>
