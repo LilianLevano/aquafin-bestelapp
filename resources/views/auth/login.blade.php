@@ -22,9 +22,9 @@
                     <div class="alert alert-error">{{ session('error') }}</div>
                 @endif
 
-                <form method="POST" action="{{ route('login') }}" class="form">
+                <form x-data="{ sent: false }"   @submit.prevent="sent = true; $el.submit()" method="POST" action="{{ route('login') }}" class="form">
                     @csrf
-
+                    <fieldset :disabled="sent">
                     <div class="field">
                         <label for="email">Email</label>
                         <input id="email" type="email" name="email"
@@ -51,6 +51,7 @@
                         <button type="button" class="link" onclick="toggleHulp(true)"><a href="{{route('help-request.create')}}"> Problemen met autorisatie?</a></button>
                         <button type="submit" class="btn btn-primary">Login</button>
                     </div>
+                    </fieldset>
                 </form>
             </div>
 
