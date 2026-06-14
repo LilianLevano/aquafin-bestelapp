@@ -5,12 +5,13 @@
     <div class="card" style="max-width:560px;margin:0 auto;">
         <h1 class="h1">Edit Account</h1>
 
-        <form id="edit-form" method="POST" action="{{ route('admin.accounts.update', $account) }}" class="form">
+        <form x-data="{ sent: false }" @submit.prevent="sent = true; $el.submit()" id="edit-form" method="POST" action="{{ route('admin.accounts.update', $account) }}" class="form">
             @csrf @method('PUT')
 
+            <fieldset :disabled="sent">
             <div class="field">
                 <label for="email">Mail</label>
-                <input id="email" type="email" name="email"
+                <input  id="email" type="email" name="email"
                     value="{{ old('email', $account->email) }}" required
                     data-original="{{ $account->email }}"
                     class="{{ $errors->has('email') ? 'is-invalid' : '' }}">
@@ -59,7 +60,7 @@
 
             <div class="field">
                 <label for="site_id">Locatie: </label>
-                <select id="site_id" name="site_id" required
+                <select id="site_id" name="site_id" required data-original="{{ $account->site->id }}"
                         class="{{ $errors->has('site_id') ? 'is-invalid' : '' }}">
                     <option value="">— Select locatie —</option>
                     @foreach($sites as $s)
@@ -106,6 +107,7 @@
                 <a href="{{ route('admin.accounts.index') }}" class="btn btn-outline">Cancel</a>
                 <button id="submit-btn" type="submit" class="btn btn-primary">Edit User</button>
             </div>
+            </fieldset>
         </form>
     </div>
 @endsection
