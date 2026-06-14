@@ -32,7 +32,7 @@ export function checkMinLength(inputId, errorId, minLength) {
 
     if (!input || !message) return;
 
-    input.addEventListener('input', () => {
+    input.addEventListener('blur', () => {
         message.style.display = input.value.length < minLength ? 'block' : 'none';
     });
 }

@@ -32,6 +32,10 @@
                                  Materialen
                             </x-nav-link>
 
+                            <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('technieker')">
+                                Categorieën
+                            </x-nav-link>
+
                             <x-nav-link href="#">
                                 Hulpaanvraag
                             </x-nav-link>
@@ -114,6 +118,10 @@
 
                     <x-responsive-nav-link :href="route('admin.materials.index')" :active="request()->routeIs('technieker')">
                       Materialen
+                    </x-responsive-nav-link>
+
+                    <x-responsive-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('technieker')">
+                        Categorieën
                     </x-responsive-nav-link>
 
                     <x-responsive-nav-link href="#">
