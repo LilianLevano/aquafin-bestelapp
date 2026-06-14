@@ -5,7 +5,9 @@
     <div class="card">
         <div class="tabs">
 
-            <a href="{{ route('admin.roles.create') }}" class="tab">Nieuw</a>
+            <a href="{{route('admin.roles.create')}}" class="btn-primary">
+                + Rol
+            </a>
         </div>
 
         {{-- TABLE --}}

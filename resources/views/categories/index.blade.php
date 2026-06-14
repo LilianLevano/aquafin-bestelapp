@@ -1,11 +1,12 @@
 @extends('layouts.app')
+@section('title', 'Categorieën')
 
 @section('content')
     <div class="page-header">
-        <h1>Admin Category</h1>
+        <h1>Admin Categorieën</h1>
 
         <a href="{{route('admin.categories.create')}}" class="btn-primary">
-            + Materiaal
+            + Categorie
         </a>
     </div>
 

@@ -5,7 +5,7 @@
     <div class="card" style="max-width:640px;margin:0 auto;">
         <div class="tabs">
             <a href="{{ route('admin.accounts.index') }}" class="tab">Overview</a>
-            <a href="{{ route('admin.accounts.create') }}" class="tab tab-active">New</a>
+
         </div>
 
         <h1 class="h1">New Account</h1>

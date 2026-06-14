@@ -4,8 +4,9 @@
 @section('content')
     <div class="card">
         <div class="tabs">
-            <button type="button" class="tab tab-active">Current</button>
-            <a href="{{ route('admin.accounts.create') }}" class="tab">New</a>
+            <a href="{{route('admin.accounts.create')}}" class="btn-primary">
+                + Account
+            </a>
         </div>
 
         {{-- TABLE --}}
