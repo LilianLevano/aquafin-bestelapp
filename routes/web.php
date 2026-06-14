@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\Admin\AccountController;
-use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\MaterialController;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\HelpRequestController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+
 require __DIR__.'/auth.php';
 
 // Guest Routes
@@ -30,6 +32,7 @@ Route::middleware('auth')->group(function () {
                 Route::resource('accounts', AccountController::class);
                 Route::resource('roles', RoleController::class)->except(['show']);
                 Route::resource('materials', MaterialController::class);
+                Route::resource('categories', CategoryController::class)->except(['show']);
             });
 
         Route::get('/help-requests', function () {
