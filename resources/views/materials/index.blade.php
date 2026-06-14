@@ -8,7 +8,7 @@
             <h1 class="materials-title">Materialen</h1>
 
         </div>
-        <a href="{{route('admin.categories.create')}}" class="btn-primary">
+        <a href="{{route('admin.materials.create')}}" class="btn-primary">
             + Materiaal
         </a>
         <div class="materials-table-wrapper">
