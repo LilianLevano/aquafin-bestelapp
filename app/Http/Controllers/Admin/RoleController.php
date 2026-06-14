@@ -36,7 +36,7 @@ class RoleController extends Controller
 
         try{
             Role::create($validated);
-            return redirect()->route('admin.roles.index')->with('status', 'Rol aangemaakt!');
+            return redirect()->route('admin.roles.index')->with('success', 'Rol aangemaakt!');
         }catch (\Exception $exception){
             return redirect()->route('admin.roles.create')->with('error', $exception->getMessage());
         }
@@ -63,9 +63,9 @@ class RoleController extends Controller
         try{
             $role = Role::findOrFail($id);
             $role->update($validated);
-            return redirect()->route('admin.roles.index')->with('status', 'Rol bijgewerkt!');
+            return redirect()->route('admin.roles.index')->with('success', 'Rol bijgewerkt!');
         } catch (\Exception $exception){
-            return redirect()->route('admin.roles.edit')->with('status', $exception->getMessage());
+            return redirect()->route('admin.roles.edit')->with('error', $exception->getMessage());
         }
     }
 
@@ -77,9 +77,9 @@ class RoleController extends Controller
         try{
             $role = Role::findOrFail($id);
             $role->delete();
-            return redirect()->route('admin.roles.index')->with('status', 'Rol verwijderd!');
+            return redirect()->route('admin.roles.index')->with('success', 'Rol verwijderd!');
         }catch (\Exception $exception){
-            return redirect()->route('admin.roles.index')->with('status', $exception->getMessage());
+            return redirect()->route('admin.roles.index')->with('error', $exception->getMessage());
         }
     }
 }
