@@ -5,13 +5,21 @@
         <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden;">
 
             {{-- Placeholder image --}}
-            <div style="background: #f3f4f6; border-bottom: 1px solid #e5e7eb; height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: #9ca3af;">
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2"/>
-                    <circle cx="8.5" cy="8.5" r="1.5"/>
-                    <path d="M21 15l-5-5L5 21"/>
-                </svg>
-                <span style="font-size: 12px;">Afbeelding niet beschikbaar</span>
+            <div style="background: #f3f4f6; border-bottom: 1px solid #e5e7eb; height: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: #9ca3af; overflow: hidden;">
+
+                @if($material->image_path)
+                    <img src="{{ asset('storage/pictures-materials/' . $material->image_path) }}"
+                         alt="{{ $material->name }}"
+                         style="width: 100%; height: 100%; object-fit: contain;">
+                @else
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <path d="M21 15l-5-5L5 21"/>
+                    </svg>
+                    <span style="font-size: 12px;">Afbeelding niet beschikbaar</span>
+                @endif
+
             </div>
 
             <div style="padding: 1rem;">
