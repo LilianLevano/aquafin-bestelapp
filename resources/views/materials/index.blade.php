@@ -8,6 +8,15 @@
             <h1 class="materials-title">Materialen</h1>
 
         </div>
+
+        @if(session('success'))
+            <p class="alert alert-success">{{session('success')}}</p>
+        @endif
+
+        @if(session('error'))
+            <p class="alert alert-error">{{session('error')}}</p>
+        @endif
+
         <a href="{{route('admin.materials.create')}}" class="btn-primary">
             + Materiaal
         </a>
