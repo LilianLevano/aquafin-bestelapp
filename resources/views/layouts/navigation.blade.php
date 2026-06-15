@@ -36,7 +36,7 @@
                                 Categorieën
                             </x-nav-link>
 
-                            <x-nav-link href="#">
+                            <x-nav-link href="{{route('admin.help-requests.index', 'all')}}"  :active="request()->routeIs('technieker')">
                                 Hulpaanvraag
                             </x-nav-link>
                         @elseif($roleName === Role::TECHNIEKER)

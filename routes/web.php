@@ -13,7 +13,7 @@ require __DIR__.'/auth.php';
 
 // Guest Routes
 
-Route::resource('help-request', HelpRequestController::class)->names('help-request');
+Route::resource('help-request', HelpRequestController::class)->names('help-request')->only(['create', 'store']);
 // Protected Routes
 Route::middleware('auth')->group(function () {
     Route::get('/', function () {
@@ -33,11 +33,11 @@ Route::middleware('auth')->group(function () {
                 Route::resource('roles', RoleController::class)->except(['show']);
                 Route::resource('materials', MaterialController::class);
                 Route::resource('categories', CategoryController::class)->except(['show']);
-            });
+                Route::get('/help-requests/{is_completed}', [HelpRequestController::class, 'index'])->name('help-requests.index');
+                Route::get('/help-requests/show/{id}', [HelpRequestController::class, 'show'])->name('help-requests.show');
+                Route::resource('help-requests', HelpRequestController::class)->except(['index']);
 
-        Route::get('/help-requests', function () {
-            return view('help-requests.index');
-        })->name('help-requests');
+            });
     });
 
     // Technician Routes

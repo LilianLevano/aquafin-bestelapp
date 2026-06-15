@@ -314,6 +314,7 @@ table td {
     max-width: 850px;
     margin: 0 auto;
     padding: 32px;
+    margin-bottom: 5px;
 }
 
 .aanvraag-header {

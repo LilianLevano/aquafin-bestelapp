@@ -1,13 +1,16 @@
 @extends('layouts.app')
-
+@section('title', 'Hulp aanvragen')
 @section('content')
     <h1>Aanvragen</h1>
 
     <div class="status-tabs">
-        <button class="tab active" onclick="filterStatus('open', this)">Open</button>
-        <button class="tab" onclick="filterStatus('opgelost', this)">Opgelost</button>
-        <button class="tab" onclick="filterStatus('alle', this)">Alle</button>
+      <a class="btn-primary" href="{{route('admin.help-requests.index', 'open')}}">Open</a>
+       <a class="btn-primary" href="{{route('admin.help-requests.index', 'completed')}}">Gesloten</a>
+        <a class="btn-primary" href="{{route('admin.help-requests.index', 'all')}}">Alle</a>
+
     </div>
+
+
 
     <div id="aanvragen-list">
         @if (count($requests) === 0)
@@ -21,7 +24,7 @@
                         <label>Titel</label>
                         <input type="text" class="text-field" value="{{ $request->title ?? '' }}" readonly>
                     </div>
-                    <a href="/admin/antwoord/{{ $request->id ?? '' }}" class="btn-primary">Answer</a>
+
                 </div>
 
                 <div class="aanvraag-description">
@@ -32,8 +35,12 @@
                 <div class="aanvraag-footer">
                     <p><strong>Posted:</strong> {{ isset($request->created_at) ? $request->created_at->format('d/m/Y') : '—' }}</p>
                     <p><strong>Time:</strong> {{ isset($request->created_at) ? $request->created_at->format('H:i') : '—' }}</p>
-                    <p><strong>Status:</strong> <span class="status-badge status-{{ $request->status ?? 'open' }}">{{ ucfirst($request->status ?? 'open') }}</span></p>
+                    <p><strong>Status:</strong> <span class="status-badge">@if($request->is_completed) Gesloten @else Open @endif</span></p>
                 </div>
+
+                @if(!$request->is_completed)<a href="{{route('admin.help-requests.edit',$request->id )}}" class="btn-primary">Answer</a> @endif
+                <a class="btn-primary" href="{{route('admin.help-requests.show', $request->id)}}">Meer details</a>
+
             </div>
         @endforeach
         @endif

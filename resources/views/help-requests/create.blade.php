@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Hulp aanvraag')
+@section('title', 'Hulp aanvraag aanmaken')
 @php
     $showHulp = $errors->hasAny(['first_name', 'last_name', 'title', 'description']) || old('_form') === 'hulp';
 @endphp
