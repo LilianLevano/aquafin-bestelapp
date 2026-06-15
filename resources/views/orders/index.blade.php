@@ -26,7 +26,9 @@
                         <th>Locatie</th>
                         <th>Leverdatum</th>
                         <th>Status</th>
+                        <th>Actie</th>
                     </tr>
+                    
                 </thead>
                 <tbody>
                     @forelse($orders as $order)
@@ -39,13 +41,27 @@
                                 {{ $order->materials->take(3)->map(fn($m) => $m->name . ' (x' . $m->pivot->quantity . ')')->implode(', ') }}
                                 {{ $order->materials->count() > 3 ? ', …' : '' }}
                             </td>
-                            <td>{{ $order->site->locatie ?? '—' }}</td>
+                            <td>{{  $order->site->description ?? '—' }}</td>
                             <td>{{ \Carbon\Carbon::parse($order->delivery_date)->format('d/m/Y') }}</td>
-                            <td>
+                           <td>
                                 @if(\Carbon\Carbon::parse($order->delivery_date)->isPast())
                                     <span class="badge bg-success">Geleverd</span>
                                 @else
                                     <span class="badge bg-warning text-dark">Aan het leveren</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if(!\Carbon\Carbon::parse($order->delivery_date)->isPast())
+                                    <form action="{{ route('orders.destroy', $order->id) }}" method="POST"
+                                          onsubmit="return confirm('Bent u zeker dat u bestelling #{{ $order->id }} wilt annuleren?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            Annuleren
+                                        </button>
+                                    </form>
+                                @else
+                                    <span class="text-muted small">—</span>
                                 @endif
                             </td>
                         </tr>
