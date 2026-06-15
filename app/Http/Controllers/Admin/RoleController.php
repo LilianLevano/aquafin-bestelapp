@@ -31,14 +31,14 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|unique:roles|max:255',
+            'name' => 'required|unique:roles,name|max:255|min:2',
         ]);
 
         try{
             Role::create($validated);
-            return redirect()->route('admin.roles.index')->with('status', 'Rol aangemaakt!');
+            return redirect()->route('admin.roles.index')->with('success', 'Rol aangemaakt!');
         }catch (\Exception $exception){
-            return redirect()->route('admin.roles.create')->with('status', $exception->getMessage());
+            return redirect()->route('admin.roles.create')->with('error', $exception->getMessage());
         }
     }
 
@@ -57,15 +57,15 @@ class RoleController extends Controller
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
-            'name' => 'required|unique:roles|max:255',
+            'name' => 'required|unique:roles,name|max:255|min:2',
         ]);
 
         try{
             $role = Role::findOrFail($id);
             $role->update($validated);
-            return redirect()->route('admin.roles.index')->with('status', 'Rol bijgewerkt!');
+            return redirect()->route('admin.roles.index')->with('success', 'Rol bijgewerkt!');
         } catch (\Exception $exception){
-            return redirect()->route('admin.roles.edit')->with('status', $exception->getMessage());
+            return redirect()->route('admin.roles.edit')->with('error', $exception->getMessage());
         }
     }
 
@@ -77,9 +77,9 @@ class RoleController extends Controller
         try{
             $role = Role::findOrFail($id);
             $role->delete();
-            return redirect()->route('admin.roles.index')->with('status', 'Rol verwijderd!');
+            return redirect()->route('admin.roles.index')->with('success', 'Rol verwijderd!');
         }catch (\Exception $exception){
-            return redirect()->route('admin.roles.index')->with('status', $exception->getMessage());
+            return redirect()->route('admin.roles.index')->with('error', $exception->getMessage());
         }
     }
 }

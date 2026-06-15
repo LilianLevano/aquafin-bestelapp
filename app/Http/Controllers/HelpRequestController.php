@@ -8,34 +8,63 @@ use Carbon\Carbon;
 
 class HelpRequestController extends Controller
 {
+    public function index(string $is_completed){
+
+        if($is_completed == 'completed'){
+            $requests = HelpRequest::where('is_completed', 1)->orderBy('created_at', 'desc')->get();
+        }else if ($is_completed == 'open'){
+            $requests = HelpRequest::where('is_completed', 0)->orderBy('created_at', 'desc')->get();
+        }else {
+            $requests = HelpRequest::all();
+        }
+
+        return view('help-requests.index', compact('requests'));
+    }
+
+    public function create(){
+        return view('help-requests.create');
+    }
     public function store(Request $request)
     {
         try {
             $validated = $request->validate([
-                'name' => 'required',
-                'email' => 'required|email',
-                'title' => 'required',
-                'description' => 'required'
+                'first_name' => ['required', 'min:2'],
+                'last_name' => ['required', 'min:2'],
+                'email' => ['required','email',],
+                'title' => ['required', 'max:50'],
+                'description' => ['required', 'max:400'],
             ]);
 
-            HelpRequest::create([
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-                'title' => $validated['title'],
-                'description' => $validated['description'],
-                'posted_on' => Carbon::now(),
-                'is_completed' => false
-            ]);
+            HelpRequest::create($validated);
+            return redirect()->route('login')->with('status', 'Jouw aanvraag werd gestuurd!');
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Verzoek verstuurd.'
-            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Er ging iets mis met het verzoeken voor hulp, neem contact op met de IT-dienst.'
-            ], 500);
+            return redirect()->route('login')->with('status', 'Jouw aanvraag werd niet doorgestuurd, probeer het opnieuw later.');
         }
+    }
+    public function edit($id){
+        $request = HelpRequest::findOrFail($id);
+        return view('help-requests.partials.answer', compact('request'));
+    }
+
+    public function update(Request $request, $id){
+        try{
+            $validated = $request->validate([
+                'answer' => ['required'],
+            ]);
+
+            $helpRequest = HelpRequest::findOrFail($id);
+
+            $helpRequest->is_completed = 1;
+            $helpRequest->update($validated);
+            return redirect()->route('admin.help-requests.index', "all")->with('success', 'Jouw aanvraag werd gestuurd!');
+        }catch (\Exception $e){
+            return redirect()->route('admin.help-requests.index', "all")->with('error', $e->getMessage());
+        }
+    }
+
+    public function show($id){
+        $request = HelpRequest::findOrFail($id);
+        return view('help-requests.show', compact('request'));
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-#[Fillable(['category_id', 'name'])]
+#[Fillable(['category_id', 'name', 'description', 'image_path'])]
 #[Table('materials')]
 class Material extends Model
 {

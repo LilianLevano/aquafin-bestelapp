@@ -1,10 +1,7 @@
 @extends('layouts.app')
-@section('title', 'Bestelling plaatsen')
 
 @section('content')
-<div style="padding: 2rem; max-width: 1100px; margin: 0 auto;">
-
-    <h1 class="h1 mb-4">Bestelling plaatsen</h1>
+    <h1>Bestelling plaatsen</h1>
 
     @if(session('status'))
         <div class="alert alert-success mb-4">{{ session('status') }}</div>
@@ -174,7 +171,12 @@
         </div>
 
     </div>
-</div>
+
+
+@push('scripts')
+    @vite('resources/js/orders/orders-create.js')
+@endpush
+
 
 <script>
 const basket = {};

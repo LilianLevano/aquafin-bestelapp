@@ -30,11 +30,12 @@ class OrderController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-   public function create()
-{
-    $materials = Material::select('id', 'name', 'category_id')->with('category:id,name')->get();
-    return view('orders.create', compact('materials'));
-}
+    public function create()
+    {
+        $materials = Material::select('id', 'name', 'category_id')->with('category:id,name')->get();
+        $sites = Site::select('id', 'description')->get();
+        return view('orders.create', compact('materials', 'sites'));
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -45,16 +46,20 @@ class OrderController extends Controller
         'materials'     => ['nullable', 'array'],
         'quantity'      => ['nullable', 'array'],
         'delivery_date' => ['required', 'date', 'after:today'],
-         'site_id'       => ['required', 'in:1,2,3,4'], 
+         'site_id'       => ['required', 'in:1,2,3,4'],
     ]);
 
-    $pivotData = [];
-    foreach ($request->materials ?? [] as $materialId) {
-        $pivotData[$materialId] = [
-            'quantity' => $request->quantity[$materialId] ?? 0
-        
-        ];
-    }
+        $pivotData = [];
+
+        foreach ($request->materials ?? [] as $materialId) {
+            $qty = $request->quantity[$materialId] ?? 0;
+
+            if ($qty <= 0) continue;
+
+            $pivotData[$materialId] = [
+                'quantity' => $qty
+            ];
+        }
 
     unset($validated['materials'], $validated['quantity']);
     $validated['user_id'] = Auth::id();
@@ -62,7 +67,7 @@ class OrderController extends Controller
     $order = Order::create($validated);
     $order->materials()->sync($pivotData);  // ← was material(), now materials()
 
-    return redirect()->route('orders.index')->with('status', 'Bestelling geplaatst!');
+        return back()->with('status', 'Order saved');
 }
 
     /**
@@ -70,7 +75,8 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $order = Order::with(['materials', 'site'])->find($id);
+        return view('orders.detail', compact('order'));
     }
 
     /**
