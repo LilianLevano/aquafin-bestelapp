@@ -93,11 +93,17 @@ class OrderController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
-    {
-        //
+{
+    $order = Order::findOrFail($id);
+
+    // Technieker can only cancel their own orders
+    if (Auth::user()->role->name === 'Technieker' && $order->user_id !== Auth::id()) {
+        return redirect()->route('orders.index')->with('error', 'U heeft geen toegang om deze bestelling te annuleren.');
     }
+
+    $order->delete(); // soft delete because the migration has softDeletes
+
+    return redirect()->back()->with('status', 'Bestelling geannuleerd.');
+}
 }

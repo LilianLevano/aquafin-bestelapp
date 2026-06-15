@@ -129,10 +129,16 @@ function renderTabel(bestellingen, datum) {
             <td class="text-muted small" style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
                 title="${esc(b.items)}">${esc(b.items)}</td>
             <td class="text-muted small">${formatDatumTijd(b.datum)}</td>
-            <td>
+           <td class="d-flex gap-2">
                 <a href="/bestellingen/${b.id}" class="btn btn-sm btn-outline-primary">
                     Meer details →
                 </a>
+                <form action="/bestellingen/${b.id}/annuleer" method="POST" style="display:inline;"
+                      onsubmit="return confirm('Bent u zeker dat u bestelling #${b.id} wilt annuleren?')">
+                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">Annuleren</button>
+                </form>
             </td>
         `;
         body.appendChild(tr);
