@@ -18,7 +18,7 @@
         <ul id="search-suggestions" style=" list-style: none; margin-bottom: 10px; padding: 0; border: 1px solid #ccc; border-top: none; position: absolute; background: white; width: 40%; z-index: 100; display: none; "></ul>
     </div>
 
-       
+
 
         @if(session('success'))
             <p class="alert alert-success">{{session('success')}}</p>
@@ -42,9 +42,9 @@
                     <th class="col-action">Actie</th>
                 </tr>
                 </thead>
-                <tbody>
+                <tbody id="materials-tbody">
                 @forelse($materials as $material)
-                    <tr>
+                    <tr data-id="{{ $material->id }}" data-name="{{ $material->name }}">
                         <td class="col-id">#{{ $material->id }}</td>
                         <td class="col-name">{{ $material->name }}</td>
                         <td class="category-col">
