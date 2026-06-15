@@ -5,12 +5,13 @@
     <div class="card" style="max-width:560px;margin:0 auto;">
         <h1 class="h1">Edit Account</h1>
 
-        <form id="edit-form" method="POST" action="{{ route('admin.accounts.update', $account) }}" class="form">
+        <form x-data="{ sent: false }" @submit.prevent="sent = true; $el.submit()" id="edit-form" method="POST" action="{{ route('admin.accounts.update', $account) }}" class="form">
             @csrf @method('PUT')
 
+            <fieldset :disabled="sent">
             <div class="field">
                 <label for="email">Mail</label>
-                <input id="email" type="email" name="email"
+                <input  id="email" type="email" name="email"
                     value="{{ old('email', $account->email) }}" required
                     data-original="{{ $account->email }}"
                     class="{{ $errors->has('email') ? 'is-invalid' : '' }}">
@@ -59,11 +60,11 @@
 
             <div class="field">
                 <label for="site_id">Locatie: </label>
-                <select id="site_id" name="site_id" required
+                <select id="site_id" name="site_id" required data-original="{{ $account->site->id }}"
                         class="{{ $errors->has('site_id') ? 'is-invalid' : '' }}">
                     <option value="">— Select locatie —</option>
                     @foreach($sites as $s)
-                        <option value="{{ $s->id }}" @selected(old('site_id', $account->site_id) == $s->id)>{{ $s->locatie }}</option>
+                        <option value="{{ $s->id }}" @selected(old('site_id', $account->site_id) == $s->id)>{{ $s->description }}</option>
                     @endforeach
                 </select>
                 @error('site_id') <p class="error">{{ $message }}</p> @enderror
@@ -74,7 +75,14 @@
                 <div class="input-group">
                     <input id="password" type="password" name="password"
                         class="{{ $errors->has('password') ? 'is-invalid' : '' }}">
-                    <button type="button" class="btn-toggle-pw" onclick="togglePw('password', this)">Show</button>
+                    <button type="button" class="btn-toggle-pw" onclick="togglePw('password', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <span>Show</span>
+                    </button>
                 </div>
                 @error('password') <p class="error">{{ $message }}</p> @enderror
             </div>
@@ -83,7 +91,14 @@
                 <label for="password_confirmation">Confirm Password</label>
                 <div class="input-group">
                     <input id="password_confirmation" type="password" name="password_confirmation">
-                    <button type="button" class="btn-toggle-pw" onclick="togglePw('password_confirmation', this)">Show</button>
+                    <button type="button" class="btn-toggle-pw" onclick="togglePw('password_confirmation', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <span>Show</span>
+                    </button>
                 </div>
                 @error('password_confirmation') <p class="error">{{ $message }}</p> @enderror
             </div>
@@ -92,6 +107,7 @@
                 <a href="{{ route('admin.accounts.index') }}" class="btn btn-outline">Cancel</a>
                 <button id="submit-btn" type="submit" class="btn btn-primary">Edit User</button>
             </div>
+            </fieldset>
         </form>
     </div>
 @endsection

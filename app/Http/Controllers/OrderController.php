@@ -44,8 +44,12 @@ class OrderController extends Controller
         $pivotData = [];
 
         foreach ($request->materials ?? [] as $materialId) {
+            $qty = $request->quantity[$materialId] ?? 0;
+
+            if ($qty <= 0) continue;
+
             $pivotData[$materialId] = [
-                'quantity' => $request->quantity[$materialId]
+                'quantity' => $qty
             ];
         }
 
@@ -64,7 +68,8 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $order = Order::with(['materials', 'site'])->find($id);
+        return view('orders.detail', compact('order'));
     }
 
     /**

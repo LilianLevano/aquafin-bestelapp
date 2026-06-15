@@ -4,8 +4,9 @@
 @section('content')
     <div class="card">
         <div class="tabs">
-            <button type="button" class="tab tab-active">Current</button>
-            <a href="{{ route('admin.accounts.create') }}" class="tab">New</a>
+            <a href="{{route('admin.accounts.create')}}" class="btn-primary">
+                + Account
+            </a>
         </div>
 
         {{-- TABLE --}}
@@ -52,12 +53,12 @@
 
                             <a href="{{route('admin.accounts.show', $a->id)}}" class="show" >Meer details</a>
 
-                            <a href="{{route('admin.accounts.edit', $a->id)}}" class="link">Edit</a>
+                            <a href="{{route('admin.accounts.edit', $a->id)}}" class="link">Bewerken</a>
 
                             <form method="POST" action="{{ route('admin.accounts.destroy', $a) }}" style="display:inline"
                                 onsubmit="return confirm('Delete this account?');">
                                 @csrf @method('DELETE')
-                                <button type="submit"  class="link link-danger">Delete</button>
+                                <button type="submit"  class="link link-danger">Verwijderen</button>
                             </form>
                         </td>
                     </tr>

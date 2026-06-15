@@ -15,14 +15,16 @@
 
             <h2 style="font-size: 18px; font-weight: 500; color: #111827; margin: 0 0 1.5rem;">Materiaal bewerken</h2>
 
-            <form action="{{ route('admin.materials.update', $material->id) }}" method="POST">
+            <form action="{{ route('admin.materials.update', $material->id) }}" method="POST" enctype="multipart/form-data"  x-data="{ sent: false }" @submit.prevent="sent = true; $el.submit()">
                 @csrf @method('PUT')
-
+                <fieldset :disabled="sent">
                 {{-- Naam --}}
                 <div style="margin-bottom: 1rem;">
                     <label style="display: block; font-size: 13px; color: #374151; margin-bottom: 4px;">Naam</label>
-                    <input type="text" name="name" value="{{ old('name', $material->name) }}"
-                           style="width: 100%; padding: 10px 12px; font-size: 14px; border: 1px solid #d1d5db; border-radius: 8px; box-sizing: border-box; outline: none;">
+                    <input data-original="{{ $material->name }}" type="text" name="name" id="name"  value="{{ old('name', $material->name) }}" style="width: 100%; padding: 10px 12px; font-size: 14px; border: 1px solid #d1d5db; border-radius: 8px; box-sizing: border-box; outline: none;">
+                    <p id="name-error" style="display:none; color:red; font-size:14px;">
+                        Materiaalnaam moet minstens 3 tekens bevatten.
+                    </p>
                     @error('name')
                     <span style="font-size: 12px; color: #dc2626;">{{ $message }}</span>
                     @enderror
@@ -31,7 +33,7 @@
                 {{-- Categorie --}}
                 <div style="margin-bottom: 1rem;">
                     <label style="display: block; font-size: 13px; color: #374151; margin-bottom: 4px;">Categorie</label>
-                    <select name="category_id"
+                    <select name="category_id" data-original="{{ $material->category->id }}"
                             style="width: 100%; padding: 10px 12px; font-size: 14px; border: 1px solid #d1d5db; border-radius: 8px; box-sizing: border-box; background: #fff; outline: none;">
                         @foreach($categories as $category)
                             <option value="{{ $category->id }}" {{ $material->category_id == $category->id ? 'selected' : '' }}>
@@ -50,9 +52,34 @@
                         Beschrijving
                         <span style="color: #9ca3af;">(optioneel)</span>
                     </label>
-                    <textarea name="beschrijving" rows="4"
-                              style="width: 100%; padding: 10px 12px; font-size: 14px; border: 1px solid #d1d5db; border-radius: 8px; box-sizing: border-box; resize: vertical; outline: none;">{{ old('beschrijving', $material->beschrijving ?? '') }}</textarea>
-                    @error('beschrijving')
+                    <textarea name="description" rows="4" id="description" data-original="{{ $material->description }}"
+                              style="width: 100%; padding: 10px 12px; font-size: 14px; border: 1px solid #d1d5db; border-radius: 8px; box-sizing: border-box; resize: vertical; outline: none;">{{ old('beschrijving', $material->description ?? '') }}</textarea>
+                    <p id="description-error" style="display:none; color:red; font-size:14px;">
+                        Materiaalnaam moet minstens 5 tekens bevatten.
+                    </p>
+                    @error('description')
+                    <span style="font-size: 12px; color: #dc2626;">{{ $message }}</span>
+                    @enderror
+                </div>
+
+                {{-- Afbeelding --}}
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-size: 13px; color: #374151; margin-bottom: 8px;">
+                        Afbeelding
+                        <span style="color: #9ca3af;">(optioneel)</span>
+                    </label>
+
+                    @if($material->image_path)
+                        <div style="margin-bottom: 10px; background: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 8px; height: 140px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                            <img src="{{ asset('storage/pictures-materials/' . $material->image_path) }}"
+                                 alt="{{ $material->name }}"
+                                 style="width: 100%; height: 100%; object-fit: contain;">
+                        </div>
+                    @endif
+
+                    <input type="file" name="image" accept="image/*"
+                           style="width: 100%; font-size: 13px; color: #374151;">
+                    @error('image')
                     <span style="font-size: 12px; color: #dc2626;">{{ $message }}</span>
                     @enderror
                 </div>
@@ -68,8 +95,13 @@
                         Opslaan
                     </button>
                 </div>
-
+                </fieldset>
             </form>
         </div>
     </div>
 @endsection
+
+
+@push('scripts')
+    @vite('resources/js/materials-edit.js')
+@endpush

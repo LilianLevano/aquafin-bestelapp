@@ -5,15 +5,15 @@
     <div class="card" style="max-width:640px;margin:0 auto;">
         <div class="tabs">
             <a href="{{ route('admin.accounts.index') }}" class="tab">Overview</a>
-            <a href="{{ route('admin.accounts.create') }}" class="tab tab-active">New</a>
+
         </div>
 
         <h1 class="h1">New Account</h1>
 
-        <form id="create-form" method="POST" action="{{ route('admin.accounts.store') }}" class="form">
+        <form x-data="{ sent: false }" @submit.prevent="sent = true; $el.submit()" id="create-form" method="POST" action="{{ route('admin.accounts.store') }}" class="form">
             @csrf
 
-
+            <fieldset :disabled="sent">
             <div class="grid-2">
                 <div class="field">
                     <label for="first_name">First Name</label>
@@ -50,7 +50,14 @@
                 <div class="input-group">
                     <input id="password" type="password" name="password" required
                         class="{{ $errors->has('password') ? 'is-invalid' : '' }}">
-                    <button type="button" class="btn-toggle-pw" onclick="togglePw('password', this)">Show</button>
+                    <button type="button" class="btn-toggle-pw" onclick="togglePw('password', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <span>Show</span>
+                    </button>
                 </div>
                 @error('password') <p class="error">{{ $message }}</p> @enderror
             </div>
@@ -60,7 +67,14 @@
                 <div class="input-group">
                     <input id="password_confirmation" type="password" name="password_confirmation" required
                         class="{{ $errors->has('password_confirmation') ? 'is-invalid' : '' }}">
-                    <button type="button" class="btn-toggle-pw" onclick="togglePw('password_confirmation', this)">Show</button>
+                    <button type="button" class="btn-toggle-pw" onclick="togglePw('password_confirmation', this)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <span>Show</span>
+                    </button>
                 </div>
             </div>
 
@@ -83,7 +97,7 @@
                         class="{{ $errors->has('site_id') ? 'is-invalid' : '' }}">
                     <option value="">— Select role —</option>
                     @foreach($sites as $s)
-                        <option value="{{ $s->id }}" @selected(old('site_id') == $s->id)>{{ $s->locatie }}</option>
+                        <option value="{{ $s->id }}" @selected(old('site_id') == $s->id)>{{ $s->description }}</option>
                     @endforeach
                 </select>
                 @error('site_id') <p class="error">{{ $message }}</p> @enderror
@@ -93,6 +107,7 @@
                 <a href="{{ route('admin.accounts.index') }}" class="btn btn-outline">Cancel</a>
                 <button id="submit-btn" type="submit" class="btn btn-primary">Create User</button>
             </div>
+            </fieldset>
         </form>
     </div>
 @endsection
