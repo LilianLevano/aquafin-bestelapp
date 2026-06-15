@@ -22,8 +22,6 @@
                     What would you like to manage?
                 </p>
 
-
-
                 @if($roleName === Role::ADMIN)
                     <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
                         <a href="{{ route('admin.accounts.index') }}" class="btn btn-primary">Manage Accounts</a>
@@ -37,6 +35,13 @@
                         <a href="{{ route('orders.create') }}" class="btn btn-outline">Plaats een bestelling</a>
                     </div>
                 @endif
+
+                @if($roleName === Role::MANAGER)
+                    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+                        <a href="{{ route('bestellingen.index') }}" class="btn btn-primary">Bekijk alle bestellingen</a>
+                    </div>
+                @endif
+
             </div>
         </div>
     </div>

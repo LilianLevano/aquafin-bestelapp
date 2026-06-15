@@ -1,75 +1,65 @@
 @extends('layouts.app')
+@section('title', 'Mijn Bestellingen')
 
 @section('content')
-    <h1>Bestellingen Overzicht</h1>
+<div style="padding: 2rem; max-width: 1100px; margin: 0 auto;">
 
-    <div class="filter-zone">
-
-        <div class="filter-item">
-            <label>Datum</label>
-            <input type="date">
-        </div>
-
-        <div class="filter-item">
-            <label>Regio</label>
-            <select>
-                <option>Alle regio's</option>
-                <option>Brussel</option>
-                <option>Antwerpen</option>
-                <option>Gent</option>
-                <option>Leuven</option>
-            </select>
-        </div>
-
-        <button class="btn-primary">Filter</button>
+ 
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h1 mb-0">Mijn Bestellingen</h1>
+        <a href="{{ route('orders.create') }}" class="btn btn-primary">
+            + Nieuwe bestelling
+        </a>
     </div>
 
-    <div class="mb">
-        <input type="text" id="search-order" placeholder="Zoek een bestelling op leverplaats of gebruikersnaam..." autocomplete="off"
-               style="margin-bottom: 0; padding: .5rem; width: 100%; position: relative;">
-        <ul id="search-suggestions" style=" list-style: none; margin-bottom: 10px; padding: 0; border: 1px solid #ccc; border-top: none; position: absolute; background: white; width: 40%; z-index: 100; display: none; "></ul>
+    @if(session('status'))
+        <div class="alert alert-success mb-4">{{ session('status') }}</div>
+    @endif
+
+    <div class="card">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Geplaatst door</th>
+                        <th>Items</th>
+                        <th>Locatie</th>
+                        <th>Leverdatum</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($orders as $order)
+                        <tr>
+                            <td class="font-monospace text-muted small">#{{ $order->id }}</td>
+                            <td class="fw-medium">
+                                {{ ($order->user->first_name ?? '') . ' ' . ($order->user->last_name ?? '') }}
+                            </td>
+                            <td class="text-muted small">
+                                {{ $order->materials->take(3)->map(fn($m) => $m->name . ' (x' . $m->pivot->quantity . ')')->implode(', ') }}
+                                {{ $order->materials->count() > 3 ? ', …' : '' }}
+                            </td>
+                            <td>{{ $order->site->locatie ?? '—' }}</td>
+                            <td>{{ \Carbon\Carbon::parse($order->delivery_date)->format('d/m/Y') }}</td>
+                            <td>
+                                @if(\Carbon\Carbon::parse($order->delivery_date)->isPast())
+                                    <span class="badge bg-success">Geleverd</span>
+                                @else
+                                    <span class="badge bg-warning text-dark">Aan het leveren</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center text-muted fst-italic py-5">
+                                U heeft nog geen bestellingen geplaatst.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
-
-    <button><a href="{{route('orders.create')}}">Plaats een nieuwe bestelling</a> </button>
-
-    <table class="manager-table" id="orders-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th  class="extra-information-order">Geplaatst door</th>
-                <th class="extra-information-order">Items</th>
-                <th>Leverplaats</th>
-                <th class="leverdatum">Leverdatum</th>
-                <th>Actie</th>
-                <th class="extra-information-order">Status</th>
-            </tr>
-        </thead>
-
-
-        <tbody id="orders-tbody">
-
-
-        @foreach($orders as $order)
-            <tr data-id="{{ $order->id }}" data-firstname="{{ $order->user->first_name }}" data-lastname="{{ $order->user->last_name }}" data-deliverysite="{{$order->site->description}}">
-                <td >{{$order->id}}</td>
-                <td  class="extra-information-order">{{$order->user->first_name . ' ' . $order->user->last_name  }}</td>
-                <td class="extra-information-order">
-                    {{ $order->materials->take(3)->map(fn($m) => $m->name . ' (x' . $m->pivot->quantity . ')')->implode(', ') . ($order->materials->count() > 3 ? ', ...' : '') }}
-                </td>
-                <td>{{$order->site->description}}</td>
-                <td  class="leverdatum">{{$order->delivery_date}}</td>
-                <td><a href="{{route('orders.show', $order->id)}}">Meer details</a></td>
-                <td class="extra-information-order">{{ \Carbon\Carbon::parse($order->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>
-            </tr>
-
-        @endforeach
-
-        </tbody>
-    </table>
-
-    <p class="empty-message">Geen data om te tonen.</p>
+</div>
 @endsection
-
-@push('scripts')
-    @vite('resources/js/orders/orders-index.js')
-@endpush

@@ -8,16 +8,24 @@ use App\Models\Site;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+
 class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $orders = Order::with(['user', 'materials', 'site'])->get();
-        return view('orders.index', compact('orders'));
-    }
+{
+    $orders = Order::with(['user', 'materials', 'site'])
+        ->where('user_id', Auth::id())
+        ->orderByDesc('created_at')
+        ->get();
+
+    return view('orders.index', compact('orders'));
+}
 
     /**
      * Show the form for creating a new resource.
@@ -33,15 +41,13 @@ class OrderController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'materials' => ['nullable','array'],
-            'quantity' => ['nullable','array'],
-            'delivery_date' => ['required', 'date', 'after:today'],
-            'site_id' => ['required', 'exists:sites,id'],
-        ]);
-
-        $pivotData = [];
+{
+    $validated = $request->validate([
+        'materials'     => ['nullable', 'array'],
+        'quantity'      => ['nullable', 'array'],
+        'delivery_date' => ['required', 'date', 'after:today'],
+         'site_id'       => ['required', 'in:1,2,3,4'], 
+    ]);
 
         foreach ($request->materials ?? [] as $materialId) {
             $qty = $request->quantity[$materialId] ?? 0;
@@ -53,15 +59,14 @@ class OrderController extends Controller
             ];
         }
 
-        unset($validated['materials']);
-        unset($validated['quantity']);
+    unset($validated['materials'], $validated['quantity']);
+    $validated['user_id'] = Auth::id();
 
-        $validated['user_id'] = Auth::user()->id ?? 1;
-        $order = Order::create($validated);
+    $order = Order::create($validated);
+    $order->materials()->sync($pivotData);  // ← was material(), now materials()
 
-        $order->materials()->sync($pivotData);
         return back()->with('status', 'Order saved');
-    }
+}
 
     /**
      * Display the specified resource.

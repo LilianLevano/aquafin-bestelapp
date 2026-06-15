@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\HelpRequestController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BestellingController;
 use Illuminate\Support\Facades\Route;
 
 require __DIR__.'/auth.php';
@@ -15,16 +16,18 @@ require __DIR__.'/auth.php';
 
 Route::resource('help-request', HelpRequestController::class)->names('help-request')->only(['create', 'store']);
 // Protected Routes
+
+// ── Beveiligde routes ─────────────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('dashboard');
-    })->middleware('verified')->name('/');
 
-    Route::get('/categories', function () {
-        return view('categories.index');
-    })->name('categories');
+    Route::get('/', fn() => view('dashboard'))
+        ->middleware('verified')
+        ->name('/');
 
-    // Admin Routes
+    Route::get('/categories', fn() => view('categories.index'))
+        ->name('categories');
+
+    // ── Admin ──
     Route::middleware('role:Admin')->group(function () {
         Route::prefix('admin')
             ->name('admin.')
@@ -38,9 +41,9 @@ Route::middleware('auth')->group(function () {
                 Route::resource('help-requests', HelpRequestController::class)->except(['index']);
 
             });
-    });
 
-    // Technician Routes
+
+    // ── Technieker ──
     Route::middleware('role:Technieker')->group(function () {
         Route::prefix('technieker')->group(function () {
             Route::resource('orders', OrderController::class);
@@ -48,9 +51,16 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    // Profile
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // ── Manager ──
+    Route::middleware('role:Manager')->group(function () {
+        Route::get('/bestellingen', [BestellingController::class, 'index'])
+            ->name('bestellingen.index');
+        Route::get('/bestellingen/{id}', [BestellingController::class, 'show'])
+            ->name('bestellingen.show');
+    });
+
+    // ── Profiel ──
+    Route::get('/profile',    [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile',  [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
