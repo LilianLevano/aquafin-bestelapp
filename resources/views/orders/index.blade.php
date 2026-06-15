@@ -71,5 +71,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/orders-index.js')
+    @vite('resources/js/orders/orders-index.js')
 @endpush

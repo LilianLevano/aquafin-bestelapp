@@ -113,5 +113,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/account-create.js')
+    @vite('resources/js/accounts/account-create.js')
 @endpush

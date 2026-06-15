@@ -103,5 +103,5 @@
 
 
 @push('scripts')
-    @vite('resources/js/materials-edit.js')
+    @vite('resources/js/materials/materials-edit.js')
 @endpush

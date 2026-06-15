@@ -29,5 +29,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/category.js')
+    @vite('resources/js/categories/category.js')
 @endpush

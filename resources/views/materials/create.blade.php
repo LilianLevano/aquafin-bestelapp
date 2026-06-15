@@ -65,5 +65,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/materials-create.js')
+    @vite('resources/js/materials/materials-create.js')
 @endpush

@@ -32,7 +32,7 @@ searchInput.addEventListener('input', filterTable);
 dateInput.addEventListener('change', filterTable);
 regioSelect.addEventListener('change', filterTable);
 
-import { initFuzzySearch } from './fuzzy-search.js'
+import { initFuzzySearch } from '../fuzzy-search.js'
 
 
 document.addEventListener('DOMContentLoaded', () => {

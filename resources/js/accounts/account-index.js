@@ -12,7 +12,7 @@ window.filterTable = function(query) {
     document.getElementById('no-results').style.display = visible === 0 && q !== '' ? 'block' : 'none';
 }
 
-import { initFuzzySearch } from './fuzzy-search.js'
+import { initFuzzySearch } from '../fuzzy-search.js'
 
 
 document.addEventListener('DOMContentLoaded', () => {

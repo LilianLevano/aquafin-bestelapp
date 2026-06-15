@@ -1,8 +1,8 @@
-import {checkMaxLength, checkMinLength, checkEmailFormat, validateOnBlur} from './utils.js';
+import {checkMaxLength, checkMinLength, checkEmailFormat, validateOnBlur} from '../utils.js';
 
 checkMinLength('name','check-input-name', 2 )
 
-import { initFuzzySearch } from './fuzzy-search.js'
+import { initFuzzySearch } from '../fuzzy-search.js'
 
 
 document.addEventListener('DOMContentLoaded', () => {
