@@ -1,5 +1,6 @@
-<x-layouts.site-layout>
+@extends('layouts.app')
 
+@section('content')
     <div class="weer-container">
 
         <h1 class="weer-title">Voorspelling weersomstandigheden</h1>
@@ -18,12 +19,12 @@
             <p>Gegevens laden...</p>
         </div>
 
-     
+
         <div id="error-state" class="weer-error" style="display:none;">
             Er ging iets mis bij het ophalen van de weersomstandigheden gegevens.
         </div>
 
-       
+
         <div id="empty-state" class="weer-empty" style="display:none;">
             Er zijn geen gegevens beschikbaar om te tonen.
         </div>
@@ -48,7 +49,7 @@
                 </table>
             </div>
 
-           
+
             <div class="weer-chart-selector">
                 <button class="chart-type-btn active" id="btn-gemengd" onclick="selectChartType('gemengd')">
                     Gemengd
@@ -75,11 +76,9 @@
 
         </div>
     </div>
+@endsection
 
-   
+@push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-  
     @vite('resources/js/weersomstandigheden.js')
-
-</x-layouts.site-layout>
+@endpush
