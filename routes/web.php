@@ -5,6 +5,9 @@ use App\Http\Controllers\Models\RoleController;
 use App\Http\Controllers\Models\MaterialController;
 use App\Http\Controllers\Models\HelpRequestController;
 use App\Http\Controllers\Models\OrderController;
+use App\Http\Controllers\Models\AddressController;
+use App\Http\Controllers\Models\CategoryController;
+use App\Http\Controllers\Models\SiteController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -39,6 +42,9 @@ Route::middleware('auth')->group(function () {
                 Route::resource('roles', RoleController::class)->except(['show']);
                 Route::resource('materials', MaterialController::class);
                 Route::resource('help-requests', HelpRequestController::class)->except(['store']);
+                Route::resource('addresses', AddressController::class);
+                // Route::resource('categories', CategoryController::class)->except(['store']);
+                // Route::resource('sites', SiteController::class)->except(['store']);
                 Route::get('categories', function () {
                     return view('categories.index');
                 })->name('categories');
