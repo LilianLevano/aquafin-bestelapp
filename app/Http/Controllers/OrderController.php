@@ -18,10 +18,14 @@ class OrderController extends Controller
      * Display a listing of the resource.
      */
     public function index()
-    {
-        $orders = Order::with(['user', 'material', 'site'])->get();
-        return view('orders.index', compact('orders'));
-    }
+{
+    $orders = Order::with(['user', 'materials', 'site'])
+        ->where('user_id', Auth::id())
+        ->orderByDesc('created_at')
+        ->get();
+
+    return view('orders.index', compact('orders'));
+}
 
     /**
      * Show the form for creating a new resource.
@@ -37,31 +41,29 @@ class OrderController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'materials' => ['nullable','array'],
-            'quantity' => ['nullable','array'],
-            'delivery_date' => ['required', 'date', 'after:today'],
-            'site_id' => ['required', 'exists:sites,id'],
-        ]);
+{
+    $validated = $request->validate([
+        'materials'     => ['nullable', 'array'],
+        'quantity'      => ['nullable', 'array'],
+        'delivery_date' => ['required', 'date', 'after:today'],
+        'site_id'       => ['required', 'exists:sites,id'],
+    ]);
 
-        $pivotData = [];
-
-        foreach ($request->materials ?? [] as $materialId) {
-            $pivotData[$materialId] = [
-                'quantity' => $request->quantity[$materialId]
-            ];
-        }
-
-        unset($validated['materials']);
-        unset($validated['quantity']);
-
-        $validated['user_id'] = Auth::user()->id ?? 1;
-        $order = Order::create($validated);
-
-        $order->material()->sync($pivotData);
-        return back()->with('status', 'Order saved');
+    $pivotData = [];
+    foreach ($request->materials ?? [] as $materialId) {
+        $pivotData[$materialId] = [
+            'quantity' => $request->quantity[$materialId] ?? 0
+        ];
     }
+
+    unset($validated['materials'], $validated['quantity']);
+    $validated['user_id'] = Auth::id();
+
+    $order = Order::create($validated);
+    $order->materials()->sync($pivotData);  // ← was material(), now materials()
+
+    return redirect()->route('orders.index')->with('status', 'Bestelling geplaatst!');
+}
 
     /**
      * Display the specified resource.
