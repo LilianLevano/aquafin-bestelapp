@@ -743,3 +743,126 @@ table th {
 @media (max-width: 768px) {
     .weer-charts-grid { grid-template-columns: 1fr; }
 }
+
+.weather-tab.active {
+    background-color: #0069a6;
+    color: white;
+    font-weight: bold;
+}
+
+.risk-day {
+    background-color: #fff3cd;
+}
+
+.weather-legend {
+    margin: 15px 0;
+    display: flex;
+    gap: 20px;
+    font-weight: bold;
+}
+
+.weather-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 120px;
+    margin: 20px auto;
+    max-width: 600px;
+    border-bottom: 2px solid #ccc;
+}
+
+.chart-bar {
+    width: 25px;
+    background-color: #4caf50;
+    border-radius: 6px 6px 0 0;
+}
+
+.risk-bar {
+    background-color: #f59e0b;
+}
+
+.weather-empty {
+    padding: 12px;
+    background: #f3f4f6;
+    border-radius: 8px;
+}
+
+#weather-section {
+    margin-top: 35px;
+    padding: 30px;
+    background: white;
+    border-radius: 18px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.weather-tab {
+    padding: 10px 18px;
+    border: 1px solid #0069a6;
+    background: white;
+    color: #0069a6;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    margin: 8px 4px 20px 0;
+}
+
+.weather-tab.active {
+    background-color: #0069a6;
+    color: white;
+}
+
+.weather-legend {
+    display: flex;
+    gap: 25px;
+    margin: 18px 0;
+    font-weight: 600;
+}
+
+.weather-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    height: 180px;
+    padding: 20px;
+    margin: 20px 0 35px 0;
+    background: #f8fbff;
+    border-radius: 14px;
+    border-left: 4px solid #0069a6;
+}
+
+.chart-bar {
+    width: 34px;
+    min-height: 12px;
+    background: #4caf50;
+    border-radius: 8px 8px 0 0;
+    transition: 0.2s;
+}
+
+.chart-bar:hover {
+    transform: scale(1.08);
+}
+
+.risk-bar {
+    background: #f59e0b;
+}
+
+.temp-bar {
+    background: #0069a6;
+}
+
+.risk-day {
+    background: #fff7dc;
+}
+
+.weather-empty {
+    background: #f3f4f6;
+    padding: 14px;
+    border-radius: 10px;
+}
+
+.weather-error {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 14px;
+    border-radius: 10px;
+}

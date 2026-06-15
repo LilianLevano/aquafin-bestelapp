@@ -80,3 +80,64 @@ footer hr {
     border-color: #004070;
 }
 .hidden { display: none !important; }
+
+.weather-tab.active {
+    background-color: #0069a6;
+    color: white;
+    font-weight: bold;
+}
+
+.risk-day {
+    background-color: #fff3cd;
+}
+
+.weather-legend {
+    margin: 15px 0;
+    display: flex;
+    gap: 20px;
+    font-weight: bold;
+}
+
+.weather-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 140px;
+    margin: 20px auto;
+    max-width: 700px;
+    border-bottom: 2px solid #ccc;
+}
+
+.chart-bar {
+    width: 25px;
+    background-color: #4caf50;
+    border-radius: 6px 6px 0 0;
+}
+
+.risk-bar {
+    background-color: #f59e0b;
+}
+
+.temp-bar {
+    background-color: #0069a6;
+}
+
+.weather-empty {
+    padding: 12px;
+    background: #f3f4f6;
+    border-radius: 8px;
+}
+
+.weather-error {
+    padding: 12px;
+    background: #fee2e2;
+    color: #991b1b;
+    border-radius: 8px;
+}
+
+.weather-legend {
+    margin: 15px 0;
+    display: flex;
+    gap: 20px;
+    font-weight: bold;
+}
