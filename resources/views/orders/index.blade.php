@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Mijn Bestellingen')
 
 @section('content')
     <h1>Bestellingen Overzicht</h1>

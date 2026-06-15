@@ -79,3 +79,4 @@ footer hr {
     background-color: #004070;
     border-color: #004070;
 }
+.hidden { display: none !important; }

@@ -76,7 +76,7 @@ document.getElementById('create-form').addEventListener('submit', function(e) {
             valid = false;
         }
     });
-    var pw = document.getElementById('password').value;
+    var pw = document.getElementById('password').value;ç
     var pwc = document.getElementById('password_confirmation').value;
     if (pw !== pwc) {
         document.getElementById('password_confirmation').classList.add('is-invalid');
