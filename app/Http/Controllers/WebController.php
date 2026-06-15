@@ -1,0 +1,57 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Closure;
+use Override;
+use BadMethodCallException;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+/**
+ * WebController serves as a base controller for web-facing resource controllers.
+ * It provides conventional methods for resource creation and editing forms,
+ * which are intentionally not implemented here and should be overridden as needed.
+ */
+abstract class WebController extends ResourceController
+{
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @override Override this method to provide the appropriate view for creation.
+     * @throws BadMethodCallException
+     * @return View
+     */
+    public function create(): View
+    {
+        throw new BadMethodCallException('Non-implemented method: create().', 1);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @override Override this method to provide the appropriate view for editing.
+     * @param string $id
+     * @throws BadMethodCallException
+     * @return View
+     */
+    public function edit(string $id): View
+    {
+        throw new BadMethodCallException('Non-implemented method: edit().', 1);
+    }
+
+    /**
+     * Proxy to the parent handleWithCases, exposing it for potential override or annotation.
+     */
+    #[Override]
+    public function handleWithCases(
+        Request $request,
+        Closure $methodToTry,
+        array $data,
+        string $responseType = RedirectResponse::class,
+        bool $debug = false
+    ) {
+        return parent::handleWithCases($request, $methodToTry, $data, $responseType, $debug);
+    }
+}

@@ -78,6 +78,10 @@ a:hover { text-decoration: underline; }
 
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
+input.error {
+    border-color:  var(--danger);
+}
+
 /* Buttons */
 .btn {
     display: inline-flex; align-items: center; justify-content: center;

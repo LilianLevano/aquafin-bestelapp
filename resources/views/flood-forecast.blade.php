@@ -6,10 +6,10 @@
             Overstromingsvoorspelling
         </h1>
         @isset($data)
-            <p>Status: {{ $data['status'] }}</p>
-            <p>Message: {{ $data['message'] }}</p>
-            <p>Weather data: {{ print_r($data['weatherData']) }}</p>
-            <p>User data: {{ print_r($data['user']) }}</p>
+            <p>Status: {{ $data['status'] ?? '' }}</p>
+            <p>Message: {{ $data['message'] ?? '' }}</p>
+            <p>Weather data: {{ print_r($data['weatherData'] ?? []) }}</p>
+            <p>User data: {{ print_r($data['user'] ?? []) }}</p>
         @else
             <p>No data acquired from the controller.</p>
         @endisset

@@ -38,27 +38,28 @@
                     </tr>
                 </thead>
                 <tbody id="accounts-tbody">
-                    @forelse($accounts as $a)
-                    <tr>
-                        <td>{{ $a->id }}</td>
-                        <td>{{ $a->first_name }}</td>
-                        <td>{{ $a->last_name }}</td>
-                        <td>{{ $a->email }}</td>
-                        <td>{{ $a->role->name ?? '—' }}</td>
-                        <td>{{ $a->site->locatie }}</td>
-                        <td class="right">
-                            <a href="{{route('admin.accounts.edit', $a->id)}}" class="link">Edit</a>
+                    @if (!(empty($accounts) || $accounts->isEmpty()))
+                        @forelse($accounts as $a)
+                            <tr>
+                                <td>{{ $a->id }}</td>
+                                <td>{{ $a->first_name }}</td>
+                                <td>{{ $a->last_name }}</td>
+                                <td>{{ $a->email }}</td>
+                                <td>{{ $a->role->name ?? '—' }}</td>
+                                <td>{{ $a->site->locatie }}</td>
+                                <td class="right">
+                                    <a href="{{route('admin.accounts.edit', $a->id)}}" class="link">Edit</a>
 
-                            <form method="POST" action="{{ route('admin.accounts.destroy', $a) }}" style="display:inline"
-                                onsubmit="return confirm('Delete this account?');">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="link link-danger">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr id="empty-row"><td colspan="7" class="muted center">No users to display.</td></tr>
-                    @endforelse
+                                    <form method="POST" action="{{ route('admin.accounts.destroy', $a) }}" style="display:inline"
+                                        onsubmit="return confirm('Delete this account?');">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="link link-danger">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            @empty <tr id="empty-row"><td colspan="7" class="muted center">No users to display.</td></tr>
+                        @endforelse
+                    @endif
                 </tbody>
             </table>
             <p id="no-results" class="muted center" style="display:none;padding:16px;">No results found.</p>

@@ -2,21 +2,28 @@
 
 namespace App\Http\Controllers\FloodForecast;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
+use BadMethodCallException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use Override;
 
-class FloodForecastController extends Controller
+class FloodForecastController extends WebController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, $days_ahead = null)
+    #[Override]
+    public function index(): View
     {
         // https://archive-api.open-meteo.com/v1/archive?latitude=52.52&longitude=13.41&start_date=2026-05-24&end_date=2026-06-07&hourly=temperature_2m
 
         // return view('dashboard', compact());
-        $response = $this->api($request, $days_ahead);
+        $days_ahead = request()->input('days_ahead');
+        $response = $this->api(request(), $days_ahead);
+
         $data = $response->getData(true); // Decodes to associative array
         return view('flood-forecast', compact('data'));
     }
@@ -67,48 +74,54 @@ class FloodForecastController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    #[Override]
+    public function create(): View
     {
-        //
+        throw new BadMethodCallException('Non-implemented method: index().', 1);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    #[Override]
+    public function store(Request $request): RedirectResponse
     {
-        //
+        throw new BadMethodCallException('Non-implemented method: index().', 1);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    #[Override]
+    public function show(string $id): View
     {
-        //
+        throw new BadMethodCallException('Non-implemented method: index().', 1);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    #[Override]
+    public function edit(string $id): View
     {
-        //
+        throw new BadMethodCallException('Non-implemented method: index().', 1);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    #[Override]
+    public function update(Request $request, string $id): RedirectResponse
     {
-        //
+        throw new BadMethodCallException('Non-implemented method: index().', 1);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    #[Override]
+    public function destroy(string $id): RedirectResponse
     {
-        //
+        throw new BadMethodCallException('Non-implemented method: index().', 1);
     }
 }
