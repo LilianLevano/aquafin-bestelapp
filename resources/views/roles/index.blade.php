@@ -2,6 +2,24 @@
 @section('title', 'Roles')
 
 @section('content')
+
+  <style>
+        .card {
+            border-radius: 14px;
+        }
+
+         .table th {
+            background-color: #eaf3ff;
+            color: #005fa3;
+    } 
+
+
+          .table tr:hover {
+            background-color: #eaf3ff;
+         }
+    </style>
+
+
     <div class="card">
         <div class="tabs">
             <button type="button" class="tab tab-active">Current</button>
@@ -57,6 +75,7 @@
             <p id="no-results" class="muted center" style="display:none;padding:16px;">No results found.</p>
         </div>
     </div>
+
 @endsection
 
 @push('scripts')
