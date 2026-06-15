@@ -67,14 +67,13 @@
                         Locatie <span class="text-danger">*</span>
                     </label>
                     <select name="site_id" id="site_id"
-                            class="form-select form-select-sm @error('site_id') is-invalid @enderror">
-                        @foreach($sites as $site)
-                            <option value="{{ $site->id }}"
-                                @selected(old('site_id', auth()->user()->site_id) == $site->id)>
-                                {{ $site->locatie }}
-                            </option>
-                        @endforeach
-                    </select>
+        class="form-select form-select-sm @error('site_id') is-invalid @enderror">
+    <option value="">Kies een locatie</option>
+    <option value="1" @selected(old('site_id') == '1')>Limburg</option>
+    <option value="2" @selected(old('site_id') == '2')>Oost-Vlaanderen</option>
+    <option value="3" @selected(old('site_id') == '3')>West-Vlaanderen</option>
+    <option value="4" @selected(old('site_id') == '4')>Antwerpen</option>
+</select>
                     @error('site_id')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

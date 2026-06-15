@@ -30,12 +30,11 @@ class OrderController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        $materials = Material::select('id', 'name', 'category_id')->with('category:id,name')->get();
-        $sites = Site::select('id', 'locatie')->get();
-        return view('orders.create', compact('materials', 'sites'));
-    }
+   public function create()
+{
+    $materials = Material::select('id', 'name', 'category_id')->with('category:id,name')->get();
+    return view('orders.create', compact('materials'));
+}
 
     /**
      * Store a newly created resource in storage.
@@ -46,13 +45,14 @@ class OrderController extends Controller
         'materials'     => ['nullable', 'array'],
         'quantity'      => ['nullable', 'array'],
         'delivery_date' => ['required', 'date', 'after:today'],
-        'site_id'       => ['required', 'exists:sites,id'],
+         'site_id'       => ['required', 'in:1,2,3,4'], 
     ]);
 
     $pivotData = [];
     foreach ($request->materials ?? [] as $materialId) {
         $pivotData[$materialId] = [
             'quantity' => $request->quantity[$materialId] ?? 0
+        
         ];
     }
 
