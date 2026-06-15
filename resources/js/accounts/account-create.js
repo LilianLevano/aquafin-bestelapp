@@ -54,7 +54,7 @@ document.getElementById('last_name').addEventListener('blur', function() {
 
 document.getElementById('phone_number').addEventListener('blur', function() {
     var ok = /^(\+32|0)[0-9]{8,9}$/.test(this.value.trim());
-    setValidity(this, ok, 'Ongeldig telefoonnummer.');
+    setValidity(this, ok, 'Ongeldig telefoonnummer. (Verwachte formaat: (+32|0)xxxxxxxxx (Belgisch telefoonnummer)) ');
 });
 
 document.getElementById('password').addEventListener('blur', function() {
