@@ -51,7 +51,7 @@
                 <button type="button" class="back-link" onclick="toggleHulp(false)">← Back to login</button>
                 <h1 class="h1">Request Help</h1>
 
-                <form method="POST" action="{{ route('hulp.store') }}" class="form">
+                <form method="POST" action="{{ route('help-requests.store') }}" class="form">
                     @csrf
                     <input type="hidden" name="_form" value="hulp">
 

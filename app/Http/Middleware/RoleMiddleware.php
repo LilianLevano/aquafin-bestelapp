@@ -26,7 +26,7 @@ class RoleMiddleware
 
         if (Auth::user()->role->name !== $role) {
             return redirect()
-                ->route('/')
+                ->route('home')
                 ->with('error', 'You do not have access to this page.');
         }
         return $next($request);

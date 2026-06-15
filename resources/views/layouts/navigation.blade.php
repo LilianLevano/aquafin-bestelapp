@@ -1,50 +1,23 @@
-@use(App\Models\Role)
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex items-center">
-                <a href="{{ route('/') }}" class="flex items-center">
+                <a href="{{ route('home') }}" class="flex items-center">
                     <img class="logo" src="{{ asset('images/Logo_Aquafin.png') }}" alt="Aquafin logo" title="Aquafin logo">
                 </a>
                 <div class="space-x-6 sm:flex sm:ml-10">
-                    @if(auth()->check())
-                        {{-- Show navigation links based on user role --}}
-                        <x-nav-link :href="route('/')" :active="request()->routeIs('/')">
-                            {{ __('Dashboard') }}
-                        </x-nav-link>
+                    {{-- Show navigation links based on user role --}}
+                    <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
+                        {{ __('Thuis') }}
+                    </x-nav-link>
 
-                        @php
-                            $roleName = auth()->user()->role->name ?? null;
-                        @endphp
+                    @php
+                        $roleName = auth()->user()->role->name ?? null;
+                    @endphp
 
-                        @if($roleName === Role::ADMIN)
-
-                            <x-nav-link :href="route('admin.accounts.index')" :active="request()->routeIs('technieker')">
-                                {{ __('Accounts') }}
-                            </x-nav-link>
-
-                            <x-nav-link :href="route('admin.roles.index')" :active="request()->routeIs('technieker')">
-                                {{ __('Rollen') }}
-                            </x-nav-link>
-
-                            <x-nav-link href="#">
-                                {{ __('Hulpaanvraag') }}
-                            </x-nav-link>
-                        @elseif($roleName === Role::TECHNIEKER)
-
-
-                            <x-nav-link :href="route('orders.index')" :active="request()->routeIs('technieker.bestellen')">
-                                {{ __('Bestellingen') }}
-                            </x-nav-link>
-
-                            <x-nav-link :href="route('orders.create')" :active="request()->routeIs('technieker.bestellen')">
-                                {{ __('Bestellen') }}
-                            </x-nav-link>
-
-
-
-                        @endif
+                    @if (isset($roleName))
+                        @include('components.nav-options-' . strtolower($roleName))
                     @endif
                 </div>
             </div>
@@ -97,39 +70,15 @@
     <!-- Responsive Navigation -->
     <div :class="{'block': open, 'hidden': !open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            @if(auth()->check())
-                <x-responsive-nav-link :href="route('/')" :active="request()->routeIs('/')">
-                    {{ __('Dashboard') }}
-                </x-responsive-nav-link>
-                @php
-                    $roleName = auth()->user()->role->name ?? null;
-                @endphp
+            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
+                {{ __('Thuis') }}
+            </x-responsive-nav-link>
+            @php
+                $roleName = auth()->user()->role->name ?? null;
+            @endphp
 
-                @if($roleName === Role::ADMIN)
-
-                    <x-responsive-nav-link :href="route('admin.accounts.index')" :active="request()->routeIs('technieker')">
-                        {{ __('Accounts') }}
-                    </x-responsive-nav-link>
-
-                    <x-responsive-nav-link :href="route('admin.roles.index')" :active="request()->routeIs('technieker')">
-                        {{ __('Rollen') }}
-                    </x-responsive-nav-link>
-
-                    <x-responsive-nav-link href="#">
-                        {{ __('Hulpaanvraag') }}
-                    </x-responsive-nav-link>
-                @elseif($roleName === Role::TECHNIEKER)
-
-
-                    <x-responsive-nav-link :href="route('orders.index')" :active="request()->routeIs('technieker.bestellen')">
-                        {{ __('Bestellingen') }}
-                    </x-responsive-nav-link>
-
-                    <x-responsive-nav-link :href="route('orders.create')" :active="request()->routeIs('technieker.bestellen')">
-                        {{ __('Bestellen') }}
-                    </x-responsive-nav-link>
-
-                @endif
+            @if (isset($roleName))
+                @include('components.nav-options-' . strtolower($roleName), ['type' => 'responsive'])
             @endif
         </div>
 

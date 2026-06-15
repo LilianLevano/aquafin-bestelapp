@@ -8,7 +8,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -25,28 +24,32 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        try {
-            $request->authenticate();
-            $request->session()->regenerate();
-
-            return redirect()
-                ->intended(route('/', absolute: false))
-                ->with('status', 'success');
-        } catch (ValidationException $e) {
-            return redirect()
-                ->intended(route('login', absolute: false))
-                ->with('status', 'fail')
-                ->with('message', 'Foutieve login gegevens');
-        } catch (\Exception $e) {
-            return redirect()
-                ->intended(route('login', absolute: false))
-                ->with('status', 'error')
-                ->with('message', 'Er ging iets mis met het verzoeken voor autorisatie...');
-        }
+        return $this->handleWithCases(
+            $request,
+            function () use ($request) {
+                $request->authenticate();
+                $request->session()->regenerate();
+            },
+            [
+                200 => [
+                    'message' => 'Je bent ingelogd!',
+                    'route' => route('home', absolute: false)],
+                422 => [
+                    'message' => 'Foutieve login gegevens',
+                    'route' => route('login', absolute: false)],
+                500 => [
+                    'message' => 'Er ging iets mis met het verzoeken voor autorisatie.',
+                    'route' => route('login', absolute: false)]
+            ]
+        );
     }
 
     /**
      * Destroy an authenticated session.
+     * Logs out the user, invalidates the session, and regenerates the CSRF token.
+     *
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function destroy(Request $request): RedirectResponse
     {
@@ -54,6 +57,6 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/login');
     }
 }

@@ -1,18 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Models;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\WebController;
 use App\Models\Category;
 use App\Models\Material;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Override;
 
-class MaterialController extends Controller
+class MaterialController extends WebController
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    #[Override]
+    public function index(): View
     {
         $materials = Material::with('category')->get();
         return view('materials.index', compact('materials'));
@@ -21,7 +25,8 @@ class MaterialController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    #[Override]
+    public function create(): View
     {
         $categories = Category::all();
         return view('materials.create', compact('categories'));
@@ -30,7 +35,8 @@ class MaterialController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    #[Override]
+    public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'unique:materials,name'],
@@ -44,7 +50,8 @@ class MaterialController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    #[Override]
+    public function show(string $id): View
     {
         $material = Material::findOrFail($id);
         return view('materials.show', compact('material'));
@@ -53,7 +60,8 @@ class MaterialController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    #[Override]
+    public function edit(string $id): View
     {
         $material = Material::findOrFail($id);
         $categories = Category::all();
@@ -63,7 +71,8 @@ class MaterialController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    #[Override]
+    public function update(Request $request, string $id): RedirectResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'unique:materialen,name'],
@@ -78,7 +87,8 @@ class MaterialController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    #[Override]
+    public function destroy(string $id): RedirectResponse
     {
         $material = Material::findOrFail($id);
         $material->delete();

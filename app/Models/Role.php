@@ -14,11 +14,6 @@ class Role extends Model
     /** @use HasFactory<\Database\Factories\RoleFactory> */
     use HasFactory;
 
-    public const ADMIN = 'Admin';
-    public const TECHNIEKER = 'Technieker';
-    public const MANAGER = 'Manager';
-    public const MAGAZIJNIER = 'Magazijnier';
-
     /**
      * Get the users that have the role.
      */
