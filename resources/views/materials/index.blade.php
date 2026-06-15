@@ -4,10 +4,21 @@
 @section('content')
     <div class="materials-container">
 
-        <div class="materials-header">
-            <h1 class="materials-title">Materialen</h1>
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-bottom: 1.5rem;">
+        <h1>Materialen</h1>
+        <a href="{{ route('admin.materials.create') }}"
+           style="font-size: 14px; padding: 10px 16px; background: #16a34a; color: #fff; border-radius: 8px; text-decoration: none;">
+            + Nieuw materiaal
+        </a>
+    </div>
 
-        </div>
+    <div class="mb">
+        <input type="text" id="search-materials" placeholder="Zoek een materiaal op naam..." autocomplete="off"
+               style="margin-bottom: 0; padding: .5rem; width: 100%; position: relative;">
+        <ul id="search-suggestions" style=" list-style: none; margin-bottom: 10px; padding: 0; border: 1px solid #ccc; border-top: none; position: absolute; background: white; width: 40%; z-index: 100; display: none; "></ul>
+    </div>
+
+       
 
         @if(session('success'))
             <p class="alert alert-success">{{session('success')}}</p>
@@ -17,9 +28,7 @@
             <p class="alert alert-error">{{session('error')}}</p>
         @endif
 
-        <a href="{{route('admin.materials.create')}}" class="btn-primary">
-            + Materiaal
-        </a>
+
         <div class="row-between mb">
             <button type="button" class="btn btn-outline btn-sm" onclick="location.reload()">↺ Refresh</button>
         </div>
@@ -76,3 +85,7 @@
 
     </div>
 @endsection
+
+@push('scripts')
+    @vite('resources/js/materials-index.js')
+@endpush

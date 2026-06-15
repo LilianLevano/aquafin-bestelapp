@@ -26,6 +26,12 @@
         <button class="btn-primary">Zoeken</button>
     </section>
 
+    <div class="mb">
+        <input type="text" id="search-materials" placeholder="Zoek materiaal..." autocomplete="off"
+               style="margin-bottom: 0; padding: .5rem; width: 100%; position: relative;">
+        <ul id="search-suggestions" style=" list-style: none; margin-bottom: 10px; padding: 0; border: 1px solid #ccc; border-top: none; position: absolute; background: white; width: 40%; z-index: 100; display: none; "></ul>
+    </div>
+
     <form action="{{route('orders.store')}}" method="POST">
         @csrf
 
@@ -55,9 +61,9 @@
             </tr>
             </thead>
 
-            <tbody>
+            <tbody id="materials-tbody">
                 @foreach($materials as $material)
-                    <tr>
+                    <tr data-id="{{ $material->id }}" data-name="{{ $material->name }}">
                         <td class="extra-information">{{$material->id}}</td>
                         <td ><a href="{{route('materials.show', $material->id)}}">{{$material->name}}</a> </td>
                         <td class="extra-information">{{$material->category->name}}</td>
@@ -73,3 +79,7 @@
         <button class="btn-primary">Toon alles</button>
     </div>
 @endsection
+
+@push('scripts')
+    @vite('resources/js/orders-create.js')
+@endpush

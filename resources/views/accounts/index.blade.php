@@ -21,9 +21,9 @@
             @endif
 
             <div class="mb">
-                <input id="search-input" type="text" placeholder="Search by name..."
-                    oninput="filterTable(this.value)"
-                    style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font:inherit;width:100%;max-width:300px;">
+                <input type="text" id="search-account" placeholder="Zoek een account op voornaam..." autocomplete="off"
+                       style="margin-bottom: 0; padding: .5rem; width: 100%; position: relative;">
+                <ul id="search-suggestions" style=" list-style: none; margin-bottom: 10px; padding: 0; border: 1px solid #ccc; border-top: none; position: absolute; background: white; width: 40%; z-index: 100; display: none; "></ul>
             </div>
 
             <table class="table" id="accounts-table">
@@ -41,7 +41,7 @@
                 </thead>
                 <tbody id="accounts-tbody">
                     @forelse($accounts as $a)
-                    <tr>
+                        <tr data-id="{{ $a->id }}" data-firstname="{{ $a->first_name }}" data-lastname="{{ $a->last_name }}">
                         <td class="id-account">{{ $a->id }}</td>
                         <td>{{ $a->first_name }}</td>
                         <td>{{ $a->last_name }}</td>

@@ -26,9 +26,9 @@
             @endif
 
             <div class="mb">
-                <input id="search-input" type="text" placeholder="Search by name..."
-                    oninput="filterTable(this.value)"
-                    style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font:inherit;width:100%;max-width:300px;">
+                <input type="text" id="search-roles" placeholder="Zoek rol..." autocomplete="off"
+                       style="margin-bottom: 0; padding: .5rem; width: 100%; position: relative;">
+                <ul id="search-suggestions" style=" list-style: none; margin-bottom: 10px; padding: 0; border: 1px solid #ccc; border-top: none; position: absolute; background: white; width: 40%; z-index: 100; display: none; "></ul>
             </div>
 
             <table class="table">
@@ -42,7 +42,7 @@
                 </thead>
                 <tbody id="roles-tbody">
                     @forelse($roles as $r)
-                    <tr>
+                    <tr data-id="{{ $r->id }}" data-name="{{ $r->name }}">
                         <td>{{ $r->id }}</td>
                         <td>{{ $r->name }}</td>
 
@@ -64,6 +64,7 @@
         </div>
     </div>
 @endsection
+
 
 @push('scripts')
     @vite('resources/js/roles-index.js')
