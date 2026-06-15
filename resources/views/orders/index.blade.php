@@ -59,7 +59,7 @@
                                 title="${esc(b.items)}">{{ $o->items ?? '—' }}</td>
                             <td class="text-muted small">{{ \Carbon\Carbon::parse($o->datum)->format('d/m/Y H:i') }}</td>
                             <td>
-                                <a href="/bestellingen/{{ $o->id }}" class="btn btn-sm btn-outline-primary">
+                                <a href="/manager/orders/{{ $o->id }}" class="btn btn-sm btn-outline-primary">
                                     Meer details →
                                 </a>
                             </td>

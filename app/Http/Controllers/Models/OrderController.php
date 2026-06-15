@@ -157,5 +157,4 @@ class OrderController extends WebController
                 ->with('message', 'Er ging iets mis met het ophalen van de bestellingsdetails.');
         }
     }
-
 }
