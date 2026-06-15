@@ -32,5 +32,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/roles-edit.js')
+    @vite('resources/js/roles/roles-edit.js')
 @endpush

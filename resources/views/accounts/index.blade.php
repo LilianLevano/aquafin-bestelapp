@@ -73,5 +73,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/account-index.js')
+    @vite('resources/js/accounts/account-index.js')
 @endpush

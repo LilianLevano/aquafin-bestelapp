@@ -87,5 +87,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/materials-index.js')
+    @vite('resources/js/materials/materials-index.js')
 @endpush

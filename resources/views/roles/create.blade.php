@@ -34,5 +34,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/roles-create.js')
+    @vite('resources/js/roles/roles-create.js')
 @endpush

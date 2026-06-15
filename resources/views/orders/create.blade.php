@@ -81,5 +81,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/orders-create.js')
+    @vite('resources/js/orders/orders-create.js')
 @endpush

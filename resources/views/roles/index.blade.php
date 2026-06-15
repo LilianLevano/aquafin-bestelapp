@@ -67,5 +67,5 @@
 
 
 @push('scripts')
-    @vite('resources/js/roles-index.js')
+    @vite('resources/js/roles/roles-index.js')
 @endpush

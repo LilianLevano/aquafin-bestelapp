@@ -45,5 +45,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/help-request-index.js')
+    @vite('resources/js/help-requests/help-request-index.js')
 @endpush

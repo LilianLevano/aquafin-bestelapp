@@ -84,5 +84,5 @@
 
 
 @push('scripts')
-    @vite('resources/js/help-request-create.js')
+    @vite('resources/js/help-requests/help-request-create.js')
 @endpush
