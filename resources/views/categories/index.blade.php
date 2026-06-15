@@ -10,7 +10,13 @@
         </a>
     </div>
 
-    <table class="manager-table">
+    <div class="mb">
+        <input type="text" id="search-categories" placeholder="Zoek een categorie op naam..." autocomplete="off"
+               style="margin-bottom: 0; padding: .5rem; width: 100%; position: relative;">
+        <ul id="search-suggestions" style=" list-style: none; margin-bottom: 10px; padding: 0; border: 1px solid #ccc; border-top: none; position: absolute; background: white; width: 40%; z-index: 100; display: none; "></ul>
+    </div>
+
+    <table class="manager-table" id="categories-table">
         <thead>
             <tr>
                 <th>ID</th>
@@ -19,9 +25,9 @@
             </tr>
         </thead>
 
-        <tbody>
+        <tbody id="categories-tbody">
         @forelse($categories as $category)
-            <tr>
+            <tr data-id="{{$category->id}}" data-name="{{$category->name}}">
                 <td>{{$category->id}}</td>
                 <td>{{$category->name}}</td>
                 <td><div class="table-actions">
@@ -48,3 +54,7 @@
         </tbody>
     </table>
 @endsection
+
+@push('scripts')
+    @vite('resources/js/category.js')
+@endpush
