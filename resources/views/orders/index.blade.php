@@ -4,7 +4,7 @@
 @section('content')
     <h1>Bestellingen Overzicht</h1>
 
- 
+
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h1 mb-0">Mijn Bestellingen</h1>
         <a href="{{ route('orders.create') }}" class="btn btn-primary">
@@ -35,14 +35,12 @@
 
         <button class="btn-primary">Filter</button>
     </div>
-</div>
-
     <table class="manager-table">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Geplaatst door</th>
-                <th>Items</th>
+
                 <th>Leverplaats</th>
                 <th>Leverdatum</th>
                 <th>Status</th>
@@ -53,16 +51,14 @@
         <tbody>
 
 
-        @foreach($bestellingen as $bestelling)
+        @foreach($orders as $order)
             <tr>
-                <td>{{$bestelling->id}}</td>
-                <td>{{$bestelling->user->first_name . ' ' . $bestelling->user->last_name  }}</td>
-                <td>
-                    {{ $bestelling->material->take(3)->map(fn($m) => $m->name . ' (x' . $m->pivot->quantity . ')')->implode(', ') . ($bestelling->materiaal->count() > 3 ? ', ...' : '') }}
-                </td>
-                <td>{{$bestelling->site->locatie}}</td>
-                <td>{{$bestelling->delivery_date}}</td>
-                <td>{{ \Carbon\Carbon::parse($bestelling->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>
+                <td>{{$order->id}}</td>
+                <td>{{$order->user->first_name . ' ' . $order->user->last_name  }}</td>
+
+                <td>{{$order->site->description}}</td>
+                <td>{{$order->delivery_date}}</td>
+                <td>{{ \Carbon\Carbon::parse($order->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>
             </tr>
 
         @endforeach
