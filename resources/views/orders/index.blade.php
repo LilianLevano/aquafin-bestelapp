@@ -1,11 +1,8 @@
 @extends('layouts.app')
+@section('title', 'Mijn Bestellingen')
 
 @section('content')
     <h1>Bestellingen Overzicht</h1>
-
-    <button type="button" class="btn-primary" id="weather-btn">
-        Voorspelling weersomstandigheden
-    </button>
 
     <div class="filter-zone">
         <div class="filter-item">
@@ -32,35 +29,7 @@
         <button class="btn-primary">Filter</button>
     </div>
 
-    <div id="weather-section" style="display:none; margin-top:30px;">
-        <h2>Voorspelling weersomstandigheden</h2>
-
-        <div class="weather-tabs">
-            <button type="button" class="weather-tab active" onclick="showWeatherTable('week1', this)">
-                Overzicht 1 week
-            </button>
-
-            <button type="button" class="weather-tab" onclick="showWeatherTable('week2', this)">
-                Overzicht 2 weken
-            </button>
-        </div>
-
-        <p id="weather-loading" style="display:none;">Gegevens worden geladen...</p>
-
-        <p id="weather-error" style="display:none; color:red;">
-            Er ging iets mis bij het ophalen van de weersomstandigheden gegevens.
-        </p>
-
-        <p id="weather-empty" style="display:none;">
-            Er zijn geen gegevens beschikbaar om te tonen.
-        </p>
-
-        <div id="weather-table-container"></div>
-    </div>
-
-    <button>
-        <a href="{{ route('orders.create') }}">Plaats een nieuwe bestelling</a>
-    </button>
+    <button><a href="{{route('orders.create')}}">Plaats een nieuwe bestelling</a> </button>
 
     <table class="manager-table">
         <thead>
@@ -74,122 +43,28 @@
             </tr>
         </thead>
 
+
         <tbody>
+
+
         @foreach($bestellingen as $bestelling)
             <tr>
-                <td>{{ $bestelling->id }}</td>
-                <td>{{ $bestelling->user->first_name . ' ' . $bestelling->user->last_name }}</td>
+                <td>{{$bestelling->id}}</td>
+                <td>{{$bestelling->user->first_name . ' ' . $bestelling->user->last_name  }}</td>
                 <td>
                     {{ $bestelling->material->take(3)->map(fn($m) => $m->name . ' (x' . $m->pivot->quantity . ')')->implode(', ') . ($bestelling->materiaal->count() > 3 ? ', ...' : '') }}
                 </td>
-                <td>{{ $bestelling->site->locatie }}</td>
-                <td>{{ $bestelling->delivery_date }}</td>
+                <td>{{$bestelling->site->locatie}}</td>
+                <td>{{$bestelling->delivery_date}}</td>
                 <td>{{ \Carbon\Carbon::parse($bestelling->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>
             </tr>
+
         @endforeach
+
         </tbody>
     </table>
 
     <p class="empty-message">Geen data om te tonen.</p>
-
-    <script>
-        const weatherData = {
-            week1: [
-                { dag: 'Maandag', min: 8, max: 14, vochtigheid: '78%', neerslag: '12 mm', risico: 'hoog' },
-                { dag: 'Dinsdag', min: 7, max: 13, vochtigheid: '80%', neerslag: '9 mm', risico: 'hoog' },
-                { dag: 'Woensdag', min: 10, max: 16, vochtigheid: '65%', neerslag: '3 mm', risico: 'laag' },
-                { dag: 'Donderdag', min: 9, max: 15, vochtigheid: '70%', neerslag: '5 mm', risico: 'laag' },
-                { dag: 'Vrijdag', min: 11, max: 17, vochtigheid: '60%', neerslag: '1 mm', risico: 'laag' },
-                { dag: 'Zaterdag', min: 8, max: 12, vochtigheid: '85%', neerslag: '14 mm', risico: 'hoog' },
-                { dag: 'Zondag', min: 9, max: 14, vochtigheid: '75%', neerslag: '6 mm', risico: 'laag' }
-            ],
-
-            week2: [
-                { dag: 'Maandag', min: 8, max: 14, vochtigheid: '78%', neerslag: '12 mm', risico: 'hoog' },
-                { dag: 'Dinsdag', min: 7, max: 13, vochtigheid: '80%', neerslag: '9 mm', risico: 'hoog' },
-                { dag: 'Woensdag', min: 10, max: 16, vochtigheid: '65%', neerslag: '3 mm', risico: 'laag' },
-                { dag: 'Donderdag', min: 9, max: 15, vochtigheid: '70%', neerslag: '5 mm', risico: 'laag' },
-                { dag: 'Vrijdag', min: 11, max: 17, vochtigheid: '60%', neerslag: '1 mm', risico: 'laag' },
-                { dag: 'Zaterdag', min: 8, max: 12, vochtigheid: '85%', neerslag: '14 mm', risico: 'hoog' },
-                { dag: 'Zondag', min: 9, max: 14, vochtigheid: '75%', neerslag: '6 mm', risico: 'laag' },
-                { dag: 'Maandag 2', min: 10, max: 15, vochtigheid: '72%', neerslag: '4 mm', risico: 'laag' },
-                { dag: 'Dinsdag 2', min: 11, max: 18, vochtigheid: '58%', neerslag: '0 mm', risico: 'laag' },
-                { dag: 'Woensdag 2', min: 9, max: 13, vochtigheid: '82%', neerslag: '11 mm', risico: 'hoog' },
-                { dag: 'Donderdag 2', min: 8, max: 12, vochtigheid: '86%', neerslag: '15 mm', risico: 'hoog' },
-                { dag: 'Vrijdag 2', min: 10, max: 16, vochtigheid: '68%', neerslag: '2 mm', risico: 'laag' },
-                { dag: 'Zaterdag 2', min: 12, max: 19, vochtigheid: '55%', neerslag: '0 mm', risico: 'laag' },
-                { dag: 'Zondag 2', min: 10, max: 15, vochtigheid: '73%', neerslag: '7 mm', risico: 'laag' }
-            ]
-        };
-
-        document.getElementById('weather-btn').addEventListener('click', function () {
-            document.getElementById('weather-section').style.display = 'block';
-
-            const cachedData = localStorage.getItem('weatherData');
-
-            if (!cachedData) {
-                localStorage.setItem('weatherData', JSON.stringify(weatherData));
-            }
-
-            showWeatherTable('week1', document.querySelector('.weather-tab.active'));
-        });
-
-        function showWeatherTable(type, button) {
-            document.querySelectorAll('.weather-tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-
-            button.classList.add('active');
-
-            const data = weatherData[type];
-            const container = document.getElementById('weather-table-container');
-
-            if (!data || data.length === 0) {
-                document.getElementById('weather-empty').style.display = 'block';
-                container.innerHTML = '';
-                return;
-            }
-
-            document.getElementById('weather-empty').style.display = 'none';
-
-            let html = `
-                <table class="manager-table">
-                    <thead>
-                        <tr>
-                            <th>Dag</th>
-                            <th>Min °C</th>
-                            <th>Max °C</th>
-                            <th>Vochtigheid</th>
-                            <th>Neerslag</th>
-                            <th>Risico</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-
-            data.forEach(item => {
-                const riskClass = item.risico === 'hoog' ? 'risk-day' : '';
-
-                html += `
-                    <tr class="${riskClass}">
-                        <td>${item.dag}</td>
-                        <td>${item.min}</td>
-                        <td>${item.max}</td>
-                        <td>${item.vochtigheid}</td>
-                        <td>${item.neerslag}</td>
-                        <td>${item.risico === 'hoog' ? '⚠️ Hoog' : 'Laag'}</td>
-                    </tr>
-                `;
-            });
-
-            html += `
-                    </tbody>
-                </table>
-            `;
-
-            container.innerHTML = html;
-        }
-    </script>
 @endsection
 
 @push('scripts')
