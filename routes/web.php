@@ -6,8 +6,8 @@ use App\Http\Controllers\Admin\MaterialController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\HelpRequestController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\BestellingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BestellingController;
 use Illuminate\Support\Facades\Route;
 
 require __DIR__.'/auth.php';

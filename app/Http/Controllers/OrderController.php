@@ -30,11 +30,12 @@ class OrderController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-   public function create()
-{
-    $materials = Material::select('id', 'name', 'category_id')->with('category:id,name')->get();
-    return view('orders.create', compact('materials'));
-}
+    public function create()
+    {
+        $materials = Material::select('id', 'name', 'category_id')->with('category:id,name')->get();
+        $sites = Site::select('id', 'description')->get();
+        return view('orders.create', compact('materials', 'sites'));
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -66,7 +67,7 @@ class OrderController extends Controller
     $order = Order::create($validated);
     $order->materials()->sync($pivotData);  // ← was material(), now materials()
 
-    return redirect()->route('orders.index')->with('status', 'Bestelling geplaatst!');
+        return back()->with('status', 'Order saved');
 }
 
     /**

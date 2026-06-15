@@ -171,7 +171,12 @@
         </div>
 
     </div>
-</div>
+
+
+@push('scripts')
+    @vite('resources/js/orders/orders-create.js')
+@endpush
+
 
 <script>
 const basket = {};
