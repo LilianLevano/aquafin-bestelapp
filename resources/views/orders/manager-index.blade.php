@@ -26,7 +26,7 @@
                 <label for="zoek-filter" class="form-label small fw-semibold mb-1">Zoeken</label>
                 <input type="text" id="zoek-filter"
                        placeholder="Zoeken op naam, ID of materiaal…"
-                       class="form-control form-control-sm">
+                       class="form-control form-control-sm  zoek-filter-manager">
             </div>
         </div>
     </div>
@@ -45,10 +45,10 @@
                 <thead class="table-light">
                     <tr>
                         <th>ID</th>
-                        <th>Geplaatst door</th>
-                        <th>Items</th>
-                        <th>Datum</th>
-                        <th>Acties</th>
+                        <th class="extra-information-order-manager">Geplaatst door</th>
+                        <th class="extra-information-order-manager">Items</th>
+                        <th class="extra-information-order-manager">Datum</th>
+                        <th  class="actie-manager">Acties</th>
                     </tr>
                 </thead>
                 <tbody id="bestellingen-body"></tbody>
@@ -125,11 +125,11 @@ function renderTabel(bestellingen, datum) {
         tr.dataset.zoek = `${b.id} ${(b.geplaatst_door||'').toLowerCase()} ${(b.items||'').toLowerCase()}`;
         tr.innerHTML = `
             <td class="font-monospace text-muted">#${b.id}</td>
-            <td class="fw-medium">${esc(b.geplaatst_door)}</td>
-            <td class="text-muted small" style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
+            <td class="fw-medium  extra-information-order-manager">${esc(b.geplaatst_door)}</td>
+            <td class="text-muted small  extra-information-order-manager" style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
                 title="${esc(b.items)}">${esc(b.items)}</td>
-            <td class="text-muted small">${formatDatumTijd(b.datum)}</td>
-           <td class="d-flex gap-2">
+            <td class="text-muted small  extra-information-order-manager">${formatDatumTijd(b.datum)}</td>
+           <td class="d-flex gap-2  actie-manager">
                 <a href="/bestellingen/${b.id}" class="btn btn-sm btn-outline-primary">
                     Meer details →
                 </a>

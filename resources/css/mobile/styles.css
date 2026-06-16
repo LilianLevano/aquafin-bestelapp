@@ -148,3 +148,21 @@
     }
 }
 
+@media screen and (max-width: 701px){
+    .extra-information-order-manager{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 484px){
+    .actie-manager{
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 530px){
+    .zoek-filter-manager{
+        width: 70%;
+    }
+}
