@@ -9,14 +9,18 @@ import Fuse from 'fuse.js'
  * @param {number} [options.threshold]    - tolerantie op fouten (défaut 0.4)
  * @param {number} [options.maxSuggestions] - aantal max suggesties (défaut 5)
  */
-export function initFuzzySearch({ inputId, suggestionsId, tbodyId, keys, threshold = 0.4, maxSuggestions = 5 }) {
+export function initFuzzySearch({inputId, suggestionsId, tbodyId, containerId, itemSelector, keys, threshold = 0.4, maxSuggestions = 5}) {
     const input       = document.getElementById(inputId)
     const suggestions = document.getElementById(suggestionsId)
-    const tbody       = document.getElementById(tbodyId)
 
-    if (!input || !tbody) return
+    // Support tableau (tbody) ou cards (container)
+    const container = tbodyId ? document.getElementById(tbodyId) : document.getElementById(containerId)
 
-    const rows = [...tbody.querySelectorAll('tr[data-id]')]
+    const selector = tbodyId ? 'tr[data-id]' : itemSelector
+
+    if (!input || !container) return
+
+    const rows = [...container.querySelectorAll(selector)]
 
     const data = rows.map(row => {
         const item = { _row: row }

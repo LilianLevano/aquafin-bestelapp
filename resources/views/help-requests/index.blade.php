@@ -10,7 +10,11 @@
 
     </div>
 
-
+    <div class="mb">
+        <input type="text" id="search-requests" placeholder="Zoek een hulp aanvraag op titel..." autocomplete="off"
+               style="margin-bottom: 0; padding: .5rem; width: 100%; position: relative;">
+        <ul id="search-suggestions" style=" list-style: none; margin-bottom: 10px; padding: 0; border: 1px solid #ccc; border-top: none; position: absolute; background: white; width: 40%; z-index: 100; display: none; "></ul>
+    </div>
 
     <div id="aanvragen-list">
         @if (count($requests) === 0)
@@ -18,7 +22,7 @@
         @else
 
         @foreach ($requests as $request)
-            <div class="aanvraag-card" data-status="{{ $request->status ?? 'open' }}">
+            <div class="aanvraag-card"  data-title="{{ $request->title ?? '' }}">
                 <div class="aanvraag-header">
                     <div class="aanvraag-title">
                         <label>Titel</label>
