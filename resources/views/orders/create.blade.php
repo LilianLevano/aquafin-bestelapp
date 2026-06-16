@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    <div class="d-flex gap-4 align-items-start">
+    <div class="d-flex gap-4 align-items-start flex-wrap" id="bestel-layout">
 
         {{-- LEFT: FORM --}}
         <div style="flex:1;min-width:0;">
@@ -97,7 +97,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Materiaal</th>
-                                    <th>Categorie</th>
+                                    <th class="category-material">Categorie</th>
                                     <th>Hoeveelheid</th>
                                     <th>Selecteer</th>
                                 </tr>
@@ -107,13 +107,13 @@
                                     <tr data-naam="{{ strtolower($material->name) }}"
                                         data-categorie="{{ $material->category->name ?? '' }}">
                                         <td class="text-muted font-monospace small">{{ $material->id }}</td>
-                                        <td class="fw-medium">{{ $material->name }}</td>
-                                        <td>
-                                            <span class="badge bg-primary bg-opacity-10 text-primary">
+                                        <td class="fw-medium"><a href="{{route('materials.show', $material->id)}}">{{ $material->name }}</a> </td>
+                                        <td class="category-material">
+                                            <span class="badge bg-primary bg-opacity-10 text-primary ">
                                                 {{ $material->category->name ?? '—' }}
                                             </span>
                                         </td>
-                                        <td style="width:140px;">
+                                        <td>
                                             <input type="number"
                                                    value="0" min="0"
                                                    name="quantity[{{ $material->id }}]"
@@ -121,7 +121,7 @@
                                                    data-id="{{ $material->id }}"
                                                    data-naam="{{ $material->name }}">
                                         </td>
-                                        <td style="width:80px;">
+                                        <td >
                                             <input type="checkbox"
                                                    name="materials[]"
                                                    value="{{ $material->id }}"
@@ -140,7 +140,7 @@
         </div>
 
         {{-- RIGHT: BASKET --}}
-        <div id="basket-panel"
+        <div class="basket-panel" id="basket-panel"
              style="width:300px;flex-shrink:0;position:sticky;top:1rem;display:none;">
             <div class="card shadow-sm">
                 <div class="card-header fw-semibold d-flex justify-content-between align-items-center"
