@@ -61,7 +61,7 @@ Route::middleware('auth')->group(function () {
             ->name('technieker.')
             ->group(function () {
                 Route::resource('orders', OrderController::class)->except(['show']);
-                Route::resource('flood-forecast', FloodForecastController::class);
+                Route::resource('flood-forecast', FloodForecastController::class)->except(['api']);
                 Route::get('home', function () {
                     return redirect()->route('technieker.orders.index');
                 })->name('home');
