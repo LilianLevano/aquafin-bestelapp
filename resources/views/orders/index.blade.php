@@ -7,6 +7,23 @@
     <button type="button" class="btn-primary" onclick="openWeather()">
         Voorspelling weersomstandigheden
     </button>
+     <div id="weather-section" style="display:none;">
+    <h2>Voorspelling weersomstandigheden</h2>
+
+    <button type="button" class="weather-tab active" onclick="showWeatherTable('week1', this)">
+        Overzicht 1 week
+    </button>
+
+    <button type="button" class="weather-tab" onclick="showWeatherTable('week2', this)">
+        Overzicht 2 weken
+    </button>
+
+    <p id="weather-error" class="weather-error" style="display:none;">
+        Er ging iets mis bij het ophalen van de weersomstandigheden gegevens.
+    </p>
+
+    <div id="weather-table-container"></div>
+</div>
 
 
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -57,7 +74,7 @@
         <tbody>
 
 
-        @foreach($bestellingen as $bestelling)
+        @forelse($bestellingen ?? [] as $bestelling)
             <tr>
                 <td>{{$bestelling->id}}</td>
                 <td>{{$bestelling->user->first_name . ' ' . $bestelling->user->last_name  }}</td>
