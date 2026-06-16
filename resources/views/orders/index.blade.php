@@ -39,7 +39,7 @@
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Geplaatst door</th>
+                <th class="col-geplaatst">Geplaatst door</th>
 
                 <th>Leverplaats</th>
                 <th>Leverdatum</th>
@@ -54,7 +54,7 @@
         @foreach($orders as $order)
             <tr>
                 <td>{{$order->id}}</td>
-                <td>{{$order->user->first_name . ' ' . $order->user->last_name  }}</td>
+                <td class="col-geplaatst">{{$order->user->first_name . ' ' . $order->user->last_name  }}</td>
 
                 <td>{{$order->site->description}}</td>
                 <td>{{$order->delivery_date}}</td>
