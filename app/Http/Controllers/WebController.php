@@ -40,18 +40,4 @@ abstract class WebController extends ResourceController
     {
         throw new BadMethodCallException('Non-implemented method: edit().', 1);
     }
-
-    /**
-     * Proxy to the parent handleWithCases, exposing it for potential override or annotation.
-     */
-    #[Override]
-    public function handleWithCases(
-        Request $request,
-        Closure $methodToTry,
-        array $data,
-        string $responseType = RedirectResponse::class,
-        bool $debug = false
-    ) {
-        return parent::handleWithCases($request, $methodToTry, $data, $responseType, $debug);
-    }
 }
