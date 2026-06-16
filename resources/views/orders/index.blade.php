@@ -5,13 +5,33 @@
 <div style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
     <h1 class="h1 mb-4">Bestellingen Overzicht</h1>
 
-    {{-- ERROR TOAST --}}
-    <div id="error-toast"
-         class="alert alert-danger d-flex align-items-center gap-2 hidden"
-         style="position:fixed;top:1rem;right:1rem;z-index:9999;max-width:420px;">
-        <span>⚠️</span>
-        <span id="error-toast-text" class="flex-grow-1 small"></span>
-        <button type="button" class="btn-close" onclick="hideToast()"></button>
+    <button type="button" class="btn-primary" onclick="openWeather()">
+        Voorspelling weersomstandigheden
+    </button>
+     <div id="weather-section" style="display:none;">
+    <h2>Voorspelling weersomstandigheden</h2>
+
+    <button type="button" class="weather-tab active" onclick="showWeatherTable('week1', this)">
+        Overzicht 1 week
+    </button>
+
+    <button type="button" class="weather-tab" onclick="showWeatherTable('week2', this)">
+        Overzicht 2 weken
+    </button>
+
+    <p id="weather-error" class="weather-error" style="display:none;">
+        Er ging iets mis bij het ophalen van de weersomstandigheden gegevens.
+    </p>
+
+    <div id="weather-table-container"></div>
+</div>
+
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h1 mb-0">Mijn Bestellingen</h1>
+        <a href="{{ route('orders.create') }}" class="btn btn-primary">
+            + Nieuwe bestelling
+        </a>
     </div>
 
     {{-- FILTERS --}}
@@ -30,45 +50,123 @@
         </div>
     </div>
 
-    {{-- TABEL --}}
-    <div class="card">
-        <div id="loading" class="text-center py-5 text-muted small @if(isset($success) && $success) hidden @endif">
-            <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-            <div>Bestellingen laden…</div>
+    <button><a href="{{route('orders.create')}}">Plaats een nieuwe bestelling</a> </button>
+
+    <table class="manager-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Geplaatst door</th>
+
+                <th>Leverplaats</th>
+                <th>Leverdatum</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+
+        @forelse($bestellingen ?? [] as $bestelling)
+            <tr>
+                <td>{{$bestelling->id}}</td>
+                <td>{{$bestelling->user->first_name . ' ' . $bestelling->user->last_name  }}</td>
+                <td>
+                    {{ $bestelling->material->take(3)->map(fn($m) => $m->name . ' (x' . $m->pivot->quantity . ')')->implode(', ') . ($bestelling->materiaal->count() > 3 ? ', ...' : '') }}
+                </td>
+                <td>{{$bestelling->site->locatie}}</td>
+                <td>{{$bestelling->delivery_date}}</td>
+                <td>{{ \Carbon\Carbon::parse($bestelling->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="6">Geen bestellingen gevonden.</td>
+            </tr>
+        @endforelse
+        </tbody>
+    </table>
+
+    <p class="empty-message">Geen data om te tonen.</p>
+
+<script>
+const weatherData = {
+    week1: [
+        { dag:'Maandag', min:8, max:14, vochtigheid:'78%', neerslag:'12 mm', risico:'hoog' },
+        { dag:'Dinsdag', min:7, max:13, vochtigheid:'80%', neerslag:'9 mm', risico:'hoog' },
+        { dag:'Woensdag', min:10, max:16, vochtigheid:'65%', neerslag:'3 mm', risico:'laag' },
+        { dag:'Donderdag', min:9, max:15, vochtigheid:'70%', neerslag:'5 mm', risico:'laag' },
+        { dag:'Vrijdag', min:11, max:17, vochtigheid:'60%', neerslag:'1 mm', risico:'laag' },
+        { dag:'Zaterdag', min:8, max:12, vochtigheid:'85%', neerslag:'14 mm', risico:'hoog' },
+        { dag:'Zondag', min:9, max:14, vochtigheid:'75%', neerslag:'6 mm', risico:'laag' }
+    ],
+    week2: [
+        { dag:'Maandag', min:8, max:14, vochtigheid:'78%', neerslag:'12 mm', risico:'hoog' },
+        { dag:'Dinsdag', min:7, max:13, vochtigheid:'80%', neerslag:'9 mm', risico:'hoog' },
+        { dag:'Woensdag', min:10, max:16, vochtigheid:'65%', neerslag:'3 mm', risico:'laag' },
+        { dag:'Donderdag', min:9, max:15, vochtigheid:'70%', neerslag:'5 mm', risico:'laag' },
+        { dag:'Vrijdag', min:11, max:17, vochtigheid:'60%', neerslag:'1 mm', risico:'laag' },
+        { dag:'Zaterdag', min:8, max:12, vochtigheid:'85%', neerslag:'14 mm', risico:'hoog' },
+        { dag:'Zondag', min:9, max:14, vochtigheid:'75%', neerslag:'6 mm', risico:'laag' },
+        { dag:'Maandag 2', min:10, max:15, vochtigheid:'72%', neerslag:'4 mm', risico:'laag' },
+        { dag:'Dinsdag 2', min:11, max:18, vochtigheid:'58%', neerslag:'0 mm', risico:'laag' },
+        { dag:'Woensdag 2', min:9, max:13, vochtigheid:'82%', neerslag:'11 mm', risico:'hoog' },
+        { dag:'Donderdag 2', min:8, max:12, vochtigheid:'86%', neerslag:'15 mm', risico:'hoog' },
+        { dag:'Vrijdag 2', min:10, max:16, vochtigheid:'68%', neerslag:'2 mm', risico:'laag' },
+        { dag:'Zaterdag 2', min:12, max:19, vochtigheid:'55%', neerslag:'0 mm', risico:'laag' },
+        { dag:'Zondag 2', min:10, max:15, vochtigheid:'73%', neerslag:'7 mm', risico:'laag' }
+    ]
+};
+
+function openWeather() {
+    try {
+        document.getElementById('weather-error').style.display = 'none';
+        document.getElementById('weather-section').style.display = 'block';
+
+        localStorage.setItem('weatherData', JSON.stringify(weatherData));
+
+        const risicoMaanden = weatherData.week2.filter(item => item.risico === 'hoog');
+        localStorage.setItem('risicoMaanden', JSON.stringify(risicoMaanden));
+
+        showWeatherTable('week1', document.querySelector('.weather-tab.active'));
+    } catch(error) {
+        document.getElementById('weather-error').style.display = 'block';
+    }
+}
+
+function showWeatherTable(type, button) {
+    document.querySelectorAll('.weather-tab').forEach(tab => tab.classList.remove('active'));
+    button.classList.add('active');
+
+    const savedData = JSON.parse(localStorage.getItem('weatherData')) || weatherData;
+    const data = savedData[type];
+    const container = document.getElementById('weather-table-container');
+
+    if (!data || data.length === 0) {
+        container.innerHTML = '<p class="weather-empty">Er zijn geen gegevens beschikbaar om te tonen.</p>';
+        return;
+    }
+
+    let html = `
+        <div class="weather-legend">
+            <span>🟢 Laag risico</span>
+            <span>⚠️ Hoog risico</span>
         </div>
 
-        <div id="geen-data" class="hidden py-5 text-center text-muted fst-italic small"></div>
+        <h3>Trendgrafiek neerslag</h3>
+        <div class="weather-chart">
+    `;
 
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Geplaatst door</th>
-                        <th>Items</th>
-                        <th>Datum</th>
-                        <th>Acties</th>
-                    </tr>
-                </thead>
-                <tbody id="bestellingen-body">
-                    @forelse($orders as $o)
-                        <tr>
-                            <td class="font-monospace text-muted">#{{ $o->id }}</td>
-                            <td class="fw-medium">{{ $o->geplaatst_door ?? '—'  }}</td>
-                            <td class="text-muted small" style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
-                                title="${esc(b.items)}">{{ $o->items ?? '—' }}</td>
-                            <td class="text-muted small">{{ \Carbon\Carbon::parse($o->datum)->format('d/m/Y H:i') }}</td>
-                            <td>
-                                <a href="/manager/orders/{{ $o->id }}" class="btn btn-sm btn-outline-primary">
-                                    Meer details →
-                                </a>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr id="empty-row"><td colspan="5" class="muted center">No orders to display.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
+    data.forEach(item => {
+        const neerslag = parseInt(item.neerslag);
+        html += `
+            <div class="chart-bar ${item.risico === 'hoog' ? 'risk-bar' : ''}"
+                 style="height:${neerslag * 6 + 20}px"
+                 title="${item.dag}: ${item.neerslag}, vochtigheid ${item.vochtigheid}, risico ${item.risico}">
+            </div>
+        `;
+    });
+
+    html += `
         </div>
     </div>
 </div>
