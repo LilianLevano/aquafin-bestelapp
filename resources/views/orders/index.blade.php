@@ -8,6 +8,13 @@
         Voorspelling weersomstandigheden
     </button>
 
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h1 mb-0">Mijn Bestellingen</h1>
+        <a href="{{ route('orders.create') }}" class="btn btn-primary">
+            + Nieuwe bestelling
+        </a>
+    </div>
     <div class="filter-zone">
         <div class="filter-item">
             <label>Zoeken</label>
@@ -33,34 +40,14 @@
         <button class="btn-primary">Filter</button>
     </div>
 
-    <div id="weather-section" style="display:none;">
-        <h2>Voorspelling weersomstandigheden</h2>
-
-        <button type="button" class="weather-tab active" onclick="showWeatherTable('week1', this)">
-            Overzicht 1 week
-        </button>
-
-        <button type="button" class="weather-tab" onclick="showWeatherTable('week2', this)">
-            Overzicht 2 weken
-        </button>
-
-        <p id="weather-error" class="weather-error" style="display:none;">
-            Er ging iets mis bij het ophalen van de weersomstandigheden gegevens.
-        </p>
-
-        <div id="weather-table-container"></div>
-    </div>
-
-    <button>
-        <a href="{{ route('orders.create') }}">Plaats een nieuwe bestelling</a>
-    </button>
+    <button><a href="{{route('orders.create')}}">Plaats een nieuwe bestelling</a> </button>
 
     <table class="manager-table">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Geplaatst door</th>
-                <th>Items</th>
+
                 <th>Leverplaats</th>
                 <th>Leverdatum</th>
                 <th>Status</th>
@@ -68,15 +55,17 @@
         </thead>
 
         <tbody>
-        @forelse($bestellingen ?? [] as $bestelling)
+
+
+        @foreach($bestellingen as $bestelling)
             <tr>
-                <td>{{ $bestelling->id }}</td>
-                <td>{{ $bestelling->user->first_name . ' ' . $bestelling->user->last_name }}</td>
+                <td>{{$bestelling->id}}</td>
+                <td>{{$bestelling->user->first_name . ' ' . $bestelling->user->last_name  }}</td>
                 <td>
-                    {{ $bestelling->material->take(3)->map(fn($m) => $m->name . ' (x' . $m->pivot->quantity . ')')->implode(', ') . ($bestelling->material->count() > 3 ? ', ...' : '') }}
+                    {{ $bestelling->material->take(3)->map(fn($m) => $m->name . ' (x' . $m->pivot->quantity . ')')->implode(', ') . ($bestelling->materiaal->count() > 3 ? ', ...' : '') }}
                 </td>
-                <td>{{ $bestelling->site->locatie }}</td>
-                <td>{{ $bestelling->delivery_date }}</td>
+                <td>{{$bestelling->site->locatie}}</td>
+                <td>{{$bestelling->delivery_date}}</td>
                 <td>{{ \Carbon\Carbon::parse($bestelling->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>
             </tr>
         @empty

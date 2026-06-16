@@ -1,43 +1,72 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1>Bestelling detail</h1>
+    <div class="order-container">
 
-    <div class="detail-card">
-        <div class="detail-item">
-            <strong>ID</strong>
-            <span>1</span>
+        <a href="{{ route('orders.index') }}" class="order-back-link">
+            ← Bestellingen
+        </a>
+
+        <h1 class="order-title">Bestelling detail</h1>
+
+        <div class="order-info-card">
+            <div>
+                <p class="info-label">ID</p>
+                <p class="info-value">#{{ $order->id }}</p>
+            </div>
+            <div>
+                <p class="info-label">Gebruiker</p>
+                <p class="info-value">{{ $order->user->first_name . ' ' . $order->user->last_name }}</p>
+            </div>
+            <div>
+                <p class="info-label">Leverdatum</p>
+                <p class="info-value">{{ $order->delivery_date }}</p>
+            </div>
+            <div>
+                <p class="info-label">Status</p>
+                <td class="info-value">{{ \Carbon\Carbon::parse($order->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>
+            </div>
         </div>
 
-        <div class="detail-item">
-            <strong>User</strong>
-            <span>Technieker Jan</span>
+        <p class="materials-section-label">Bestelde materialen</p>
+
+        <div class="materials-table-wrapper">
+            <table class="materials-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Naam</th>
+                    <th>Categorie</th>
+                    <th>Quantity</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                @forelse($order->materials as $material)
+                    <tr>
+                        <td class="col-id">#{{ $material->id }}</td>
+                        <td class="col-name"><a href="{{ route('materials.show', $material->id) }}">{{ $material->name }}</a> </td>
+                        <td>
+                            @if($material->category)
+                                <span class="category-badge">{{ $material->category->name }}</span>
+                            @else
+                                <span class="category-badge no-category">Geen categorie</span>
+                            @endif
+                        </td>
+                        <td>
+                            {{$material->pivot->quantity}}
+                        </td>
+
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="4" class="materials-empty">Deze bestelling heeft geen materialen.</td>
+                    </tr>
+                @endforelse
+                </tbody>
+            </table>
         </div>
 
-        <div class="detail-item">
-            <strong>Leverdatum</strong>
-            <span>12/06/2026</span>
-        </div>
     </div>
-
-    <table class="manager-table">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Materiaal</th>
-                <th>Category</th>
-                <th>Quantity</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Pomp</td>
-                <td>Watermateriaal</td>
-                <td>5</td>
-            </tr>
-        </tbody>
-    </table>
 @endsection
 

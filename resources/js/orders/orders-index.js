@@ -31,3 +31,15 @@ function filterTable() {
 searchInput.addEventListener('input', filterTable);
 dateInput.addEventListener('change', filterTable);
 regioSelect.addEventListener('change', filterTable);
+
+import { initFuzzySearch } from '../fuzzy-search.js'
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    initFuzzySearch({
+        inputId:       'search-order',
+        suggestionsId: 'search-suggestions',
+        tbodyId:       'orders-tbody',
+        keys:           ['firstname', 'lastname', 'deliverysite'],
+    })
+})

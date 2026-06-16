@@ -4,8 +4,9 @@
 @section('content')
     <div class="card">
         <div class="tabs">
-            <button type="button" class="tab tab-active">Current</button>
-            <a href="{{ route('admin.accounts.create') }}" class="tab">New</a>
+            <a href="{{route('admin.accounts.create')}}" class="btn-primary">
+                + Account
+            </a>
         </div>
 
         {{-- TABLE --}}
@@ -20,39 +21,44 @@
             @endif
 
             <div class="mb">
-                <input id="search-input" type="text" placeholder="Search by name..."
-                    oninput="filterTable(this.value)"
-                    style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font:inherit;width:100%;max-width:300px;">
+                <input type="text" id="search-account" placeholder="Zoek een account op voornaam..." autocomplete="off"
+                       style="margin-bottom: 0; padding: .5rem; width: 100%; position: relative;">
+                <ul id="search-suggestions" style=" list-style: none; margin-bottom: 10px; padding: 0; border: 1px solid #ccc; border-top: none; position: absolute; background: white; width: 40%; z-index: 100; display: none; "></ul>
             </div>
 
             <table class="table" id="accounts-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th class="id-account">ID</th>
                         <th>First Name</th>
                         <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Site</th>
+                        <th class="extra-information">Email</th>
+                        <th class="extra-information">Phone Number</th>
+                        <th class="extra-information">Role</th>
+                        <th class="extra-information">Site</th>
                         <th class="right">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="accounts-tbody">
                     @forelse($accounts as $a)
-                    <tr>
-                        <td>{{ $a->id }}</td>
+                        <tr data-id="{{ $a->id }}" data-firstname="{{ $a->first_name }}" data-lastname="{{ $a->last_name }}">
+                        <td class="id-account">{{ $a->id }}</td>
                         <td>{{ $a->first_name }}</td>
                         <td>{{ $a->last_name }}</td>
-                        <td>{{ $a->email }}</td>
-                        <td>{{ $a->role->name ?? '—' }}</td>
-                        <td>{{ $a->site->locatie }}</td>
+                        <td class="extra-information">{{ $a->email }}</td>
+                        <td class="extra-information">{{ $a->phone_number }}</td>
+                        <td class="extra-information">{{ $a->role->name ?? '—' }}</td>
+                        <td class="extra-information">{{ $a->site->description }}</td>
                         <td class="right">
-                            <a href="{{route('admin.accounts.edit', $a->id)}}" class="link">Edit</a>
+
+                            <a href="{{route('admin.accounts.show', $a->id)}}" class="show" >Meer details</a>
+
+                            <a href="{{route('admin.accounts.edit', $a->id)}}" class="link">Bewerken</a>
 
                             <form method="POST" action="{{ route('admin.accounts.destroy', $a) }}" style="display:inline"
                                 onsubmit="return confirm('Delete this account?');">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="link link-danger">Delete</button>
+                                <button type="submit"  class="link link-danger">Verwijderen</button>
                             </form>
                         </td>
                     </tr>
@@ -67,5 +73,5 @@
 @endsection
 
 @push('scripts')
-    @vite('resources/js/account-index.js')
+    @vite('resources/js/accounts/account-index.js')
 @endpush

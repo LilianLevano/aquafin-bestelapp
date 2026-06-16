@@ -1,58 +1,151 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Aquafin bestelapp
+Webapplicatie voor het beheer van materiaalbestellingen binnen het Aquafin netwerk. Deze applicatie laat techniekers toe om bestellingen te plaatsen voor hun werksite, terwijl managers en magazijniers bestellingen kunnen raadplegen voor logistieke doelen.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Admins hebben volledige controle over wat (materialen, rollen, categorieën, ...) beschikbaar is op de website voor de verschillende werknemers binnen Aquafin.
 
-## About Laravel
+Dit webapplicatie werd gemaakt in opdracht van Aquafin voor een examenproject bij de Erasmushogeschool Brussel voor de opleiding "Graduaat in het Programmeren" in het eerste jaar.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
+## Functionaliteiten
+### Techniekers
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Bestellingen plaatsen met materialen, hoeveelheden, leverdatum en leverplaats.
+- Eigen bestellingen bekijken en annuleren.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Managers
 
-## Learning Laravel
+- Volledig overzicht en beheer van alle bestellingen
+- Detailweergave per bestelling met materialen, hoeveelheden, leverdatum, datum van bestelling, leverplaats
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Magazijniers
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Overzicht over bestellingen met materialen, hoeveelheden, leverdatum, leverplaats
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+### Admins
 
-## Agentic Development
+- Volledige controle over beschikbaarheid van alle verschillende componenten (bijvoorbeeld materialen of categorieën)
+- Hulpverzoeken bij het login beantwoorden
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+### Algemeen
 
+- Publiek hulpverzoekformulier
+- Beveiligd met rolgebaseerde toegangscontrole
+
+---
+
+## Installatie
+
+### Vereisten
+
+- PHP >= 8.3
+- Composer
+- Node.js >= 18 & npm
+- MySQL
+
+### Stappen
+
+1. Repository klonen
 ```bash
-composer require laravel/boost --dev
 
-php artisan boost:install
+mkdir <naam-project>
+cd <naam-project>
+git clone https://github.com/LilianLevano/aquafin-bestelapp
+ 
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+2. Dependencies installeren
 
-## Contributing
+```bash
+composer install
+npm install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. Omgevingsvariabelen instellen
 
-## Code of Conduct
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+! .env aanpassen met eigen databasegegevens
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE= <naam-database>
+DB_USERNAME= <username>
+DB_PASSWORD= <wachtwoord-username>
+```
+> **SSH-tunnel** — als de database op een externe server staat, open je eerst een tunnel:
+> ```bash
+> ssh -L 3306:localhost:3306 gebruiker@server
+> ```
+> Gebruik dan `DB_PORT=3306` in `.env`.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+> Als de "3306" poort niet werk, probeer eender welk andere poort (3307, 3308).
+>
+> Bij een verandering van een poort, moeten beiden .env file (DB_PORT=xxxx) en SSH-tunnel commando aangepast worden.
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 4. Database migreren en seeden
 
-## License
+```bash
+php artisan migrate
+php artisan db:seed
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 5. Assets builden
+
+```bash
+npm run build
+# of voor ontwikkeling:
+npm run dev
+```
+
+### 6. Server starten
+
+```bash
+php artisan serve
+```
+---
+## Rollen & toegang
+
+De applicatie gebruikt een rolgebaseerd toegangssysteem via `RoleMiddleware`. Elke gebruiker heeft één rol.
+
+| Rol             | Toegang                                                          |
+|-----------------|------------------------------------------------------------------|
+| **Admin**       | Accounts, rollen, materialen, categorieën, hulpverzoeken beheren |
+| **Technieker**  | Bestellingen plaatsen en annuleren, materialen bekijken          |
+| **Manager**     | Overzicht, detail en beheren van alle bestellingen               |
+| **Magazijnier** | Bestellingenlijst raadplegen                                     |
+ 
+---
+---
+## Testaccounts
+
+Een account per rol worden automatisch aangemaakt bij het seeden (database aanvullen) om makkelijk toegang te krijgen binnen de webapplicatie.
+
+Maak zelf een aparte admin account, via de admin testaccount, dan kunnen de testaccounts veilig verwijderd worden.
+
+| Rol         | E-mail                     | Wachtwoord |
+|-------------|----------------------------|------------|
+| Admin       | `admin@aquawerf.com`       | `password` |
+| Technieker  | `technieker@aquawerf.com`  | `password` |
+| Manager     | `manager@aquawerf.com`     | `password` |
+| Magazijnier | `magazijnier@aquawerf.com` | `password` |
+
+---
+## Auteurs
+
+| Naam                 | GitHub                                 |
+|----------------------|----------------------------------------|
+| Hamzic Bruno         | https://github.com/CodeSmashing        |
+| Duga Kanjinga Meryem | https://github.com/meryemduga          |
+| Mohsine Rania        | https://github.com/raniamohsine        |
+| Aouragh Nisrine      | https://github.com/nisrineaourag1-star |
+| Levano Lilian        | https://github.com/LilianLevano        |
+
+--- 
+## ERD Diagram
+
+![ERD Diagram](public/images/erd_diagram.png)
+
