@@ -179,7 +179,7 @@
 
 
 <script>
-const basket = {};
+    const basket = JSON.parse(sessionStorage.getItem('basket') ?? '{}');
 
 function updateBasket(id, naam, qty) {
     if (qty > 0) {
@@ -187,6 +187,7 @@ function updateBasket(id, naam, qty) {
     } else {
         delete basket[id];
     }
+    sessionStorage.setItem('basket', JSON.stringify(basket));
     renderBasket();
 }
 
@@ -236,6 +237,7 @@ function removeItem(id) {
     if (qtyInput) qtyInput.value = 0;
     if (checkbox) checkbox.checked = false;
     delete basket[id];
+    sessionStorage.setItem('basket', JSON.stringify(basket));
     renderBasket();
 }
 
@@ -290,5 +292,16 @@ function filterTable() {
         tr.style.display = (matchCat && matchZoek) ? '' : 'none';
     });
 }
+    Object.entries(basket).forEach(([id, item]) => {
+        const qtyInput = document.querySelector(`.quantity-input[data-id="${id}"]`);
+        const checkbox = document.querySelector(`.material-checkbox[data-id="${id}"]`);
+        if (qtyInput) qtyInput.value = item.qty;
+        if (checkbox) checkbox.checked = true;
+    });
+    renderBasket();
+
+    document.getElementById('bestel-form').addEventListener('submit', () => {
+        sessionStorage.removeItem('basket');
+    });
 </script>
 @endsection
