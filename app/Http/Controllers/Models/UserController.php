@@ -23,9 +23,9 @@ class UserController extends WebController
         $accounts = User::paginate(
             20,           // perPage
             ['*'],        // columns
-            'page',       // pageName,
-            null,
-            null
+            'page',       // pageName
+            null,         // page
+            null          // total
         );
         return view('accounts.index', compact('accounts'));
     }
@@ -66,14 +66,14 @@ class UserController extends WebController
             },
             [
                 200 => [
-                    'message' => 'Gebruiker aangemaakt!',
-                    'route' => route('admin.accounts.index', absolute: false)],
+                    'message' => 'Gebruiker succesvol aangemaakt!',
+                    'route' => route('admin.accounts.index', absolute: true)],
                 422 => [
-                    'message' => 'Foutieve login gegevens',
-                    'route' => url()->previous()],
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('admin.accounts.create', absolute: true)],
                 500 => [
-                    'message' => 'Er ging iets mis met het verzoeken voor autorisatie.',
-                    'route' => url()->previous()]
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('admin.accounts.create', absolute: true)]
             ]
         );
     }
@@ -94,6 +94,7 @@ class UserController extends WebController
     #[Override]
     public function edit(string $id): View
     {
+        $account = User::findOrFail($id);
         $roles = Role::all();
         $sites = Site::all();
         return view('accounts.edit', compact('account', 'roles', 'sites'));
@@ -117,11 +118,9 @@ class UserController extends WebController
                     'site_id' => ['required', 'exists:sites,id'],
                     'password' => ['nullable'],
                     'password_confirmation' => ['nullable'],
-
                 ]);
 
                 if ($validated['password']) {
-
                     if($validated['password'] == $validated['password_confirmation']) {
                         $validated['password'] = Hash::make($validated['password']);
                     }
@@ -131,18 +130,18 @@ class UserController extends WebController
                 }
 
                 $user = User::findOrFail($id);
-                $user->update($validated);
+                $user->updateOrFail($validated);
             },
             [
                 200 => [
-                    'message' => 'Gebruiker aangepast!',
-                    'route' => route('admin.accounts.index', absolute: false)],
+                    'message' => 'Gebruiker succesvol aangepast!',
+                    'route' => route('admin.accounts.index', absolute: true)],
                 422 => [
-                    'message' => 'Foutieve login gegevens',
-                    'route' => url()->previous()],
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('admin.accounts.index', absolute: true)],
                 500 => [
-                    'message' => 'Er ging iets mis met het verzoeken voor autorisatie.',
-                    'route' => url()->previous()]
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('admin.accounts.index', absolute: true)]
             ]
         );
     }
@@ -153,7 +152,24 @@ class UserController extends WebController
     #[Override]
     public function destroy(string $id): RedirectResponse
     {
-        User::destroy($id);
-        return redirect()->route('admin.accounts.index')->with('status', 'Gebruiker verwijderd!');
+        $request = request();
+        return $this->handleWithCases(
+            $request,
+            function () use ($request, $id) {
+                $user = User::findOrFail($id);
+                $user->deleteOrFail();
+            },
+            [
+                200 => [
+                    'message' => 'Gebruiker succesvol verwijderd!',
+                    'route' => route('admin.accounts.index', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('admin.accounts.index', absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('admin.accounts.index', absolute: true)]
+            ]
+        );
     }
 }

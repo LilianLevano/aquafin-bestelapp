@@ -4,7 +4,7 @@
     <div class="page-header">
         <h1>Admin Category</h1>
 
-        <a href="/admin/category/material" class="btn-primary">
+        <a href="{{ route('admin.categories.index') }}" class="btn-primary">
             + Materiaal
         </a>
     </div>

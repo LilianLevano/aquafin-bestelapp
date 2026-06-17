@@ -42,7 +42,7 @@
 
                         <td class="right">
                             <button type="button" class="link"><a href="{{route('admin.roles.edit', $r->id)}}">Edit</a> </button>
-                            <form method="POST" action="{{ route('admin.roles.destroy', $r) }}" style="display:inline"
+                            <form method="POST" action="{{ route('admin.roles.destroy', $r->id) }}" style="display:inline"
                                 onsubmit="return confirm('Delete this role?');">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="link link-danger">Delete</button>

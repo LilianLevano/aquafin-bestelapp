@@ -36,16 +36,26 @@ class RoleController extends WebController
     #[Override]
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|unique:roles|max:255',
-        ]);
-
-        try{
-            Role::create($validated);
-            return redirect()->route('admin.roles.index')->with('status', 'Rol aangemaakt!');
-        }catch (\Exception $exception){
-            return redirect()->route('admin.roles.create')->with('status', $exception->getMessage());
-        }
+        return $this->handleWithCases(
+            $request,
+            function () use ($request) {
+                $validated = $request->validate([
+                    'name' => 'required|unique:roles|max:255',
+                ]);
+                Role::create($validated);
+            },
+            [
+                200 => [
+                    'message' => 'Rol succesvol aangemaakt!',
+                    'route' => route('admin.roles.index', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('admin.roles.create', absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('admin.roles.create', absolute: true)]
+            ]
+        );
     }
 
     /**
@@ -64,17 +74,28 @@ class RoleController extends WebController
     #[Override]
     public function update(Request $request, string $id): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|unique:roles|max:255',
-        ]);
+        return $this->handleWithCases(
+            $request,
+            function () use ($request, $id) {
+                $validated = $request->validate([
+                    'name' => 'required|unique:roles|max:255',
+                ]);
 
-        try{
-            $role = Role::findOrFail($id);
-            $role->update($validated);
-            return redirect()->route('admin.roles.index')->with('status', 'Rol bijgewerkt!');
-        } catch (\Exception $exception){
-            return redirect()->route('admin.roles.edit')->with('status', $exception->getMessage());
-        }
+                $role = Role::findOrFail($id);
+                $role->updateOrFail($validated);
+            },
+            [
+                200 => [
+                    'message' => 'Rol succesvol geüpdatet!',
+                    'route' => route('admin.roles.index', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('admin.roles.edit', ['role' => $id], absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('admin.roles.edit', ['role' => $id], absolute: true)]
+            ]
+        );
     }
 
     /**
@@ -83,12 +104,24 @@ class RoleController extends WebController
     #[Override]
     public function destroy(string $id): RedirectResponse
     {
-        try{
-            $role = Role::findOrFail($id);
-            $role->delete();
-            return redirect()->route('admin.roles.index')->with('status', 'Rol verwijderd!');
-        }catch (\Exception $exception){
-            return redirect()->route('admin.roles.index')->with('status', $exception->getMessage());
-        }
+        $request = request();
+        return $this->handleWithCases(
+            $request,
+            function () use ($request, $id) {
+                $role = Role::findOrFail($id);
+                $role->deleteOrFail();
+            },
+            [
+                200 => [
+                    'message' => 'Rol succesvol verwijderd!',
+                    'route' => route('admin.roles.index', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('admin.roles.index', absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('admin.roles.index', absolute: true)]
+            ]
+        );
     }
 }

@@ -50,7 +50,7 @@
                                 <td class="right">
                                     <a href="{{route('admin.accounts.edit', $a->id)}}" class="link">Edit</a>
 
-                                    <form method="POST" action="{{ route('admin.accounts.destroy', $a) }}" style="display:inline"
+                                    <form method="POST" action="{{ route('admin.accounts.destroy', $a->id) }}" style="display:inline"
                                         onsubmit="return confirm('Delete this account?');">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="link link-danger">Delete</button>

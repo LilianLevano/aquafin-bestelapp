@@ -25,7 +25,7 @@ class CategoryFactory extends Factory
                 "Technische onderhoudsmaterialen",
                 "Specifieke Aquafin/riolering gerelateerde tools",
                 "Diversen / Verbruiksgoederen"
-            ]),
+            ])
         ];
     }
 }

@@ -5,7 +5,7 @@
     <div class="card" style="max-width:560px;margin:0 auto;">
         <h1 class="h1">Edit Account</h1>
 
-        <form id="edit-form" method="POST" action="{{ route('admin.accounts.update', $account) }}" class="form">
+        <form id="edit-form" method="POST" action="{{ route('admin.accounts.update', $account->id) }}" class="form">
             @csrf @method('PUT')
 
             <div class="field">

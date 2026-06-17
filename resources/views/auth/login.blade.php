@@ -12,37 +12,37 @@
 @endphp
 
 @section('content')
-    <input type="hidden" name="_generic-placeholder" value="{{ _('Het ___ veld moet gevuld worden') }}">
+    <input type="hidden" name="_generic-placeholder" value="{{ __('Het ___ veld moet gevuld worden') }}">
     <div class="centered">
         <div class="card" style="max-width:520px;width:100%;">
             {{-- LOGIN FORM --}}
             <div id="section-login">
-                <h1 class="h1">{{ _('Login') }}</h1>
+                <h1 class="h1">{{ __('Login') }}</h1>
 
                 <form name="login" method="POST" action="{{ route('login') }}" class="form">
                     @csrf
                     <input type="hidden" name="_active-form" value="login">
 
                     <div class="field">
-                        <label for="email">{{ _('Email') }}</label>
+                        <label for="email">{{ __('Email') }}</label>
                         <input
                             id="email"
                             type="email"
                             name="email"
                             value="{{ old('email') }}"
-                            data-translation="{{ _('email') }}"
+                            data-translation="{{ __('email') }}"
                             required
                             autofocus
                             class="{{ $errors->has('email') && !$hasHelpRequestErrors ? 'is-invalid' : '' }}">
                     </div>
 
                     <div class="field" id="password-field">
-                        <label for="password">{{ _('Wachtwoord') }}</label>
+                        <label for="password">{{ __('Wachtwoord') }}</label>
                         <input
                             id="password"
                             type="password"
                             name="password"
-                            data-translation="{{ _('wachtwoord') }}"
+                            data-translation="{{ __('wachtwoord') }}"
                             required
                             class="{{ $errors->has('password') && !$hasHelpRequestErrors ? 'is-invalid' : '' }}">
 
@@ -50,15 +50,15 @@
                     </div>
 
                     <div class="row-between">
-                        <button id="toggle-help-request-on" type="button" class="link">{{ _('Problemen met autorisatie') }}?</button>
-                        <button type="submit" class="btn btn-primary">{{ _('Log in') }}</button>
+                        <button id="toggle-help-request-on" type="button" class="link">{{ __('Problemen met autorisatie') }}?</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Log in') }}</button>
                     </div>
                 </form>
             </div>
 
             {{-- HELP FORM --}}
             <div id="section-help-request" class="visually-hidden">
-                <h1 class="h1">{{ _('Hulp aanvragen') }}</h1>
+                <h1 class="h1">{{ __('Hulp aanvragen') }}</h1>
 
                 <form
                     name="help-request"
@@ -69,57 +69,57 @@
                     <input type="hidden" name="_active-form" value="help">
 
                     <div class="field">
-                        <label for="hulp-mail">{{ _('Email') }}</label>
+                        <label for="hulp-mail">{{ __('Email') }}</label>
                         <input
                             id="hulp-mail"
                             type="email"
                             name="email"
                             value="{{ old('email') }}"
-                            data-translation="{{ _('email') }}"
+                            data-translation="{{ __('email') }}"
                             required
                             class="{{ $errors->has('email') && !$hasLoginErrors ? 'is-invalid' : '' }}">
                     </div>
 
                     <div class="grid-2">
                         <div class="field">
-                            <label for="hulp-first_name">{{ _('Voornaam') }}</label>
+                            <label for="hulp-first_name">{{ __('Voornaam') }}</label>
                             <input
                                 id="hulp-first_name"
                                 name="first_name"
                                 value="{{ old('first_name') }}"
-                                data-translation="{{ _('voornaam') }}"
+                                data-translation="{{ __('voornaam') }}"
                                 required
                                 class="{{ $errors->has('first_name') && !$hasLoginErrors ? 'is-invalid' : '' }}">
                         </div>
                         <div class="field">
-                            <label for="hulp-last_name">{{ _('Achternaam') }}</label>
+                            <label for="hulp-last_name">{{ __('Achternaam') }}</label>
                             <input
                                 id="hulp-last_name"
                                 name="last_name"
                                 value="{{ old('last_name') }}"
-                                data-translation="{{ _('achternaam') }}"
+                                data-translation="{{ __('achternaam') }}"
                                 required
                                 class="{{ $errors->has('last_name') && !$hasLoginErrors ? 'is-invalid' : '' }}">
                         </div>
                     </div>
 
                     <div class="field">
-                        <label for="hulp-title">{{ _('Titel') }}</label>
+                        <label for="hulp-title">{{ __('Titel') }}</label>
                         <input
                             id="hulp-title"
                             name="title"
                             value="{{ old('title') }}"
-                            data-translation="{{ _('titel') }}"
+                            data-translation="{{ __('titel') }}"
                             required
                             class="{{ $errors->has('title') && !$hasLoginErrors ? 'is-invalid' : '' }}">
                     </div>
 
                     <div class="field">
-                        <label for="hulp-description">{{ _('Beschrijving') }}</label>
+                        <label for="hulp-description">{{ __('Beschrijving') }}</label>
                         <textarea
                             id="hulp-description"
                             name="description"
-                            data-translation="{{ _('beschrijving') }}"
+                            data-translation="{{ __('beschrijving') }}"
                             rows="4"
                             required
                             class="{{ $errors->has('description') && !$hasLoginErrors ? 'is-invalid' : '' }}">{{ old('description') }}
@@ -127,8 +127,8 @@
                     </div>
 
                     <div class="row-between">
-                        <button id="toggle-help-request-off" type="button" class="link">{{ _('← Terug naar login') }}</button>
-                        <button type="submit" class="btn btn-primary">{{ _('Stuur') }}</button>
+                        <button id="toggle-help-request-off" type="button" class="link">{{ __('← Terug naar login') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Stuur') }}</button>
                     </div>
                 </form>
             </div>

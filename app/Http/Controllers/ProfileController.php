@@ -8,7 +8,6 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 use Override;
 
@@ -31,19 +30,36 @@ class ProfileController extends WebController
     #[Override]
     public function update(Request $request, string $id): RedirectResponse
     {
-        $validationRules = (new ProfileUpdateRequest())->rules();
-        $validated = $request->validate($validationRules);
+        return $this->handleWithCases(
+            $request,
+            function () use ($request, $id) {
+                $profileRequest = app(ProfileUpdateRequest::class);
+                $validated = $profileRequest->validated();
+                $user = $request->user();
+                $user->fill($validated);
 
-        $user = $request->user();
-        $request->user()->fill($validated);
+                if ($user->isDirty('email')) {
+                    $user->email_verified_at = null;
+                }
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
+                if ($request->filled('phone_number')) {
+                    $user->phone_number = $request->input('phone_number');
+                }
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+                $user->saveOrFail();
+            },
+            [
+                200 => [
+                    'message' => 'Profiel succesvol geüpdatet!',
+                    'route' => route('profile.edit', $id, absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('profile.edit', $id, absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('profile.edit', $id, absolute: true)]
+            ]
+        );
     }
 
     /**
@@ -53,18 +69,32 @@ class ProfileController extends WebController
     public function destroy(string $id): RedirectResponse
     {
         $request = request();
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
+        return $this->handleWithCases(
+            $request,
+            function () use ($request, $id) {
+                $request->validateWithBag('userDeletion', [
+                    'password' => ['required', 'current_password'],
+                ]);
 
-        $user = User::findOrFail($id);
+                $user = User::findOrFail($id);
 
-        Auth::logout();
-        $user->delete();
+                Auth::logout();
+                $user->deleteOrFail();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/login');
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+            },
+            [
+                200 => [
+                    'message' => 'Profiel succesvol verwijderd!',
+                    'route' => route('login', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('profile.edit', $id, absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('profile.edit', $id, absolute: true)]
+            ]
+        );
     }
 }

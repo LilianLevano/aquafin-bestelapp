@@ -38,13 +38,27 @@ class MaterialController extends WebController
     #[Override]
     public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'unique:materials,name'],
-            'category_id' => ['required', 'exists:categories,id'],
-        ]);
-
-        Material::create($validated);
-        return redirect()->route('admin.materials.index')->with('success', 'Materiaal is aangemaakt');
+        return $this->handleWithCases(
+            $request,
+            function () use ($request) {
+                $validated = $request->validate([
+                    'name' => ['required', 'unique:materials,name'],
+                    'category_id' => ['required', 'exists:categories,id'],
+                ]);
+                Material::create($validated);
+            },
+            [
+                200 => [
+                    'message' => 'Materiaal succesvol aangemaakt!',
+                    'route' => route('admin.materials.index', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('admin.materials.create', absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('admin.materials.create', absolute: true)]
+            ]
+        );
     }
 
     /**
@@ -74,14 +88,29 @@ class MaterialController extends WebController
     #[Override]
     public function update(Request $request, string $id): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'unique:materialen,name'],
-            'category_id' => ['required', 'exists:categories,id'],
-        ]);
+        return $this->handleWithCases(
+            $request,
+            function () use ($request, $id) {
+                $validated = $request->validate([
+                    'name' => ['required', 'unique:materialen,name'],
+                    'category_id' => ['required', 'exists:categories,id'],
+                ]);
 
-        $material = Material::findOrFail($id);
-        $material->update($validated);
-        return redirect()->route('admin.materials.index')->with('success', 'Materiaal is aangepast');
+                $material = Material::findOrFail($id);
+                $material->updateOrFail($validated);
+            },
+            [
+                200 => [
+                    'message' => 'Materiaal succesvol geüpdatet!',
+                    'route' => route('admin.materials.index', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('admin.materials.edit', ['material' => $id], absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('admin.materials.edit', ['material' => $id], absolute: true)]
+            ]
+        );
     }
 
     /**
@@ -90,8 +119,24 @@ class MaterialController extends WebController
     #[Override]
     public function destroy(string $id): RedirectResponse
     {
-        $material = Material::findOrFail($id);
-        $material->delete();
-        return redirect()->route('admin.materials.index')->with('success', 'Materiaal is verwijderd');
+        $request = request();
+        return $this->handleWithCases(
+            $request,
+            function () use ($id) {
+                $material = Material::findOrFail($id);
+                $material->deleteOrFail();
+            },
+            [
+                200 => [
+                    'message' => 'Materiaal succesvol verwijderd!',
+                    'route' => route('admin.materials.index', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('admin.materials.index', absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('admin.materials.index', absolute: true)]
+            ]
+        );
     }
 }

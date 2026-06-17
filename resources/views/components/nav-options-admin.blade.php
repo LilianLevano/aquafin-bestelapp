@@ -12,6 +12,10 @@
         {{ __('Rollen') }}
     </x-responsive-nav-link>
 
+    <x-responsive-nav-link :href="route('admin.materials.index')" :active="request()->routeIs('admin.materials.index')">
+        {{ __('Materialen') }}
+    </x-responsive-nav-link>
+
     <x-responsive-nav-link :href="route('admin.help-requests.index')" :active="request()->routeIs('admin.help-requests.index')">
         {{ __('Hulpaanvragen') }}
     </x-responsive-nav-link>
@@ -22,6 +26,10 @@
 
     <x-nav-link :href="route('admin.roles.index')" :active="request()->routeIs('admin.roles.index')">
         {{ __('Rollen') }}
+    </x-nav-link>
+
+    <x-nav-link :href="route('admin.materials.index')" :active="request()->routeIs('admin.materials.index')">
+         {{ __('Materialen') }}
     </x-nav-link>
 
     <x-nav-link :href="route('admin.help-requests.index')" :active="request()->routeIs('admin.help-requests.index')">

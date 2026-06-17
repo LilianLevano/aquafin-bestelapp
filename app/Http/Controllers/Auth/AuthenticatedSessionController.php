@@ -32,14 +32,14 @@ class AuthenticatedSessionController extends Controller
             },
             [
                 200 => [
-                    'message' => 'Je bent ingelogd!',
-                    'route' => route('home', absolute: false)],
+                    'message' => 'U bent ingelogd!',
+                    'route' => route('home', absolute: true)],
                 422 => [
-                    'message' => 'Foutieve login gegevens',
-                    'route' => route('login', absolute: false)],
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('login', absolute: true)],
                 500 => [
-                    'message' => 'Er ging iets mis met het verzoeken voor autorisatie.',
-                    'route' => route('login', absolute: false)]
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('login', absolute: true)]
             ]
         );
     }
@@ -53,10 +53,24 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/login');
+        return $this->handleWithCases(
+            $request,
+            function () use ($request) {
+                Auth::guard('web')->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+            },
+            [
+                200 => [
+                    'message' => 'U bent uitgelogd!',
+                    'route' => route('login', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('home', absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('home', absolute: true)]
+            ]
+        );
     }
 }

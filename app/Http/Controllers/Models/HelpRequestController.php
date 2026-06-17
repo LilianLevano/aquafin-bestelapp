@@ -50,14 +50,14 @@ class HelpRequestController extends WebController
             },
             [
                 200 => [
-                    'message' => 'Jouw aanvraag werd gestuurd!',
-                    'route' => route('home', absolute: false)],
+                    'message' => 'Jouw aanvraag werd opgeslagen!',
+                    'route' => route('home', absolute: true)],
                 422 => [
-                    'message' => 'Jouw aanvraag werd niet doorgestuurd, probeer het opnieuw later.',
-                    'route' => url()->previous()],
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('home', absolute: true)],
                 500 => [
-                    'message' => 'Jouw aanvraag werd niet doorgestuurd, probeer het opnieuw later.',
-                    'route' => url()->previous()]
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('home', absolute: true)]
             ]
         );
     }
