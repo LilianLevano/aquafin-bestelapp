@@ -156,3 +156,65 @@ export function checkEmailFormat(inputId, errorId) {
         message.style.display = valid ? 'none' : 'block';
     });
 }
+
+/**
+ * Saves data to browser localStorage as JSON under the given `key`.
+ * Includes a timestamp to enable cache invalidation.
+ *
+ * @param {string} key - The localStorage key
+ * @param {any} data - The data to cache
+ */
+export function saveToCache(key, data) {
+    try {
+        localStorage.setItem(
+            key,
+            JSON.stringify({
+                timestamp: Date.now(),
+                data
+            })
+        );
+    } catch (e) {
+        // Most common: storage quota exceeded or JSON stringify error
+        // Consider logging or handling error as needed
+        console.error("Failed to save to cache:", e);
+    }
+}
+
+/**
+ * Loads and returns cached data from localStorage if present and not stale.
+ * Checks cache age against `duration` (in minutes).
+ * If not found or stale, returns null.
+ *
+ * @param {string} key - The localStorage key
+ * @param {number} duration - Maximum cache age in minutes
+ * @returns {any | null} The cached data, or null if unavailable or expired
+ */
+export function loadFromCache(key, duration) {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+
+    let payload;
+    try {
+        payload = JSON.parse(raw);
+    } catch (e) {
+        // Corrupted or non-JSON data, remove and return null
+        localStorage.removeItem(key);
+        return null;
+    }
+
+    if (
+        typeof payload !== "object" ||
+        typeof payload.timestamp !== "number" ||
+        !("data" in payload)
+    ) {
+        // Invalid structure
+        localStorage.removeItem(key);
+        return null;
+    }
+
+    if (Date.now() - payload.timestamp > duration) {
+        localStorage.removeItem(key);
+        return null;
+    }
+    return payload.data;
+}

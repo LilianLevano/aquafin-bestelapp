@@ -1,4 +1,4 @@
-import { findIn, getForm, createWatchedObject } from "./utilities";
+import { findIn, getForm, createWatchedObject, saveToCache, loadFromCache } from "./utilities";
 
 const CACHE_KEY      = 'weather_forecast_cache';
 const CACHE_DURATION = 30 * 60 * 1000; // 30 min
@@ -239,43 +239,6 @@ function handleStateChange(prop, newValue, oldValue) {
 }
 
 /**
- * Saves the forecast data to browser localStorage as JSON under `CACHE_KEY`.
- * Adds a timestamp so cache staleness can be checked later.
- *
- * @param {object[]} data - The processed daily forecast array to cache.
- */
-function saveToCache(data) {
-    localStorage.setItem(
-        CACHE_KEY,
-        JSON.stringify({
-            timestamp: Date.now(),
-            data
-        })
-    );
-}
-
-/**
- * Loads forecast data from localStorage if cache is present and still fresh.
- * Checks cache age against CACHE_DURATION.
- * If stale or not present, returns null.
- * If valid, returns the cached data array.
- *
- * @returns {object[] | null} Cached forecast array, or null if not available/fresh.
- */
-function loadFromCache() {
-    const raw = localStorage.getItem(CACHE_KEY);
-
-    if (!raw) return null;
-    const payload = JSON.parse(raw);
-
-    if (Date.now() - payload.timestamp > CACHE_DURATION) {
-        localStorage.removeItem(CACHE_KEY);
-        return null;
-    }
-    return payload.data;
-}
-
-/**
  * Fetches weather forecast data from backend for the selected window and updates state.
  * Populates `daily` with processed data, then triggers rendering. Sets daily to always be the largest API returned set.
  * Sets empty, error, and success states.
@@ -284,7 +247,7 @@ function loadFromCache() {
  */
 async function loadWeatherData() {
     state.value = "loading";
-    const cached = loadFromCache();
+    const cached = loadFromCache(CACHE_KEY, CACHE_DURATION);
 
     if (cached && cached.length >= overview.value) {
         daily = cached;
@@ -334,7 +297,7 @@ async function loadWeatherData() {
             }
         }
 
-        saveToCache(daily);
+        saveToCache(CACHE_KEY, daily);
         renderAll();
         state.value = "data";
     } catch (error) {
