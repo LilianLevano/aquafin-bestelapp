@@ -1,5 +1,13 @@
 import {initFuzzySearch} from "./fuzzy-search.js";
 
+/**
+ * Function to check on empty input onblur.
+ * Must use an error message in HTML Page with none display as default.
+ *
+ *
+ * @param inputId
+ * @param errorId
+ */
 export function validateOnBlur(inputId, errorId) {
     const input = document.getElementById(inputId);
     const error = document.getElementById(errorId);
@@ -17,6 +25,14 @@ export function validateOnBlur(inputId, errorId) {
     });
 }
 
+/**
+ * Check on max length when typing in an input.
+ * Requires an error message with none display as default in the HTML page.
+ *
+ * @param inputId
+ * @param errorId
+ * @param maxLength
+ */
 export function checkMaxLength(inputId, errorId, maxLength) {
     const input = document.getElementById(inputId);
     const message = document.getElementById(errorId);
@@ -28,6 +44,14 @@ export function checkMaxLength(inputId, errorId, maxLength) {
     });
 }
 
+/**
+ * Check on min. length when input is onblur.
+ * Requires an error message with none display as default in the HTML page.
+ *
+ * @param inputId
+ * @param errorId
+ * @param minLength
+ */
 export function checkMinLength(inputId, errorId, minLength) {
     const input = document.getElementById(inputId);
     const message = document.getElementById(errorId);
@@ -39,6 +63,14 @@ export function checkMinLength(inputId, errorId, minLength) {
     });
 }
 
+/**
+ * Check an email input.
+ * Checks on format (<x>@<y>.<z>)
+ * Requires an error message with none display as default in the HTML page.
+ *
+ * @param inputId
+ * @param errorId
+ */
 export function checkEmailFormat(inputId, errorId) {
     const input = document.getElementById(inputId);
     const message = document.getElementById(errorId);
@@ -51,6 +83,11 @@ export function checkEmailFormat(inputId, errorId) {
     });
 }
 
+/**
+ * Checks on changes when typing in an input.
+ *
+ * @param input
+ */
 export function checkChanged(input) {
     if (input.value !== input.dataset.original) {
         input.style.borderColor = '#f59e0b'; // orange
@@ -61,6 +98,12 @@ export function checkChanged(input) {
     }
 }
 
+/**
+ * Function to apply the "checkChanged" function to all inputs on a page.
+ * The inputs must have a "data-original" attribute in order to be picked up.
+ *
+ * @param checkChanged Uses the function checkChanged in js/utils.js
+ */
 export function addCheckChange(checkChanged){
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('[data-original]').forEach(input => {
@@ -69,6 +112,14 @@ export function addCheckChange(checkChanged){
     });
 }
 
+/**
+ * Function to add an error field under the chosen field with custom message.
+ *
+ *
+ * @param input
+ * @param valid
+ * @param message
+ */
 export function setValidity(input, valid, message) {
     var field = input.closest('.field');
     var existing = field.querySelector('.error-js');
@@ -86,6 +137,12 @@ export function setValidity(input, valid, message) {
     }
 }
 
+/**
+ * Function to check the format of an email input onblur.
+ * Uses setValidity function.
+ * @param inputId
+ * @param setValidity
+ */
 export function checkEmail(inputId, setValidity){
     document.getElementById(inputId).addEventListener('blur', function() {
         var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.value.trim());
@@ -94,6 +151,12 @@ export function checkEmail(inputId, setValidity){
 
 }
 
+/**
+ * Function to check the format of a phone number input onblur.
+ * Uses setValidity function.
+ * @param inputId
+ * @param setValidity
+ */
 export function checkPhoneNumber(inputId, setValidity){
     document.getElementById(inputId).addEventListener('blur', function() {
         var ok = /^(\+32|0)[0-9]{8,9}$/.test(this.value.trim());
@@ -101,6 +164,13 @@ export function checkPhoneNumber(inputId, setValidity){
     });
 }
 
+/**
+ * Function to check the format of a simple text input onblur.
+ * It checks if the input is not empty.
+ * Uses setValidity function.
+ * @param inputId
+ * @param setValidity
+ */
 export function checkName(inputId, setValidity){
     document.getElementById(inputId).addEventListener('blur', function() {
         var ok = /^[A-Za-zÀ-ÿ\s\-']{2,}$/.test(this.value.trim());
@@ -108,6 +178,12 @@ export function checkName(inputId, setValidity){
     });
 }
 
+/**
+ * Function to check the format of a password input onblur.
+ * Uses setValidity function.
+ * @param inputId
+ * @param setValidity
+ */
 export function checkPassword(inputId, setValidity){
     document.getElementById(inputId).addEventListener('blur', function() {
         if (!this.value) return;
@@ -117,6 +193,13 @@ export function checkPassword(inputId, setValidity){
     });
 }
 
+/**
+ * Function to check if the confirmation password input matches the password input onblur.
+ * Uses setValidity function.
+ * @param inputId
+ * @param inputToMatchId
+ * @param setValidity
+ */
 export function checkPasswordMatch(inputId, inputToMatchId, setValidity){
     document.getElementById(inputId).addEventListener('blur', function() {
         var pw = document.getElementById(inputToMatchId).value;
@@ -125,6 +208,13 @@ export function checkPasswordMatch(inputId, inputToMatchId, setValidity){
     });
 }
 
+/**
+ * Function to hide or show the value in a password input.
+ * Onclick, it changes the type of the input.
+ * It changes the SVG icon to match the type.
+ * @param inputId
+ * @param btn
+ */
 export function togglePassword(inputId, btn){
     const input = document.getElementById(inputId);
     const label = btn.querySelector('span');
@@ -148,6 +238,16 @@ export function togglePassword(inputId, btn){
     }
 }
 
+/**
+ * Function to easily access the initiation of the "initFuzzySearch" function to create a fuzzy search bar.
+ *
+ * @param inputId
+ * @param suggestionsId
+ * @param tbodyId
+ * @param keys
+ * @param containerId
+ * @param itemSelector
+ */
 export function addFuzzySearch(inputId, suggestionsId, tbodyId, keys, containerId = null, itemSelector = null){
     document.addEventListener('DOMContentLoaded', () => {
         initFuzzySearch({
