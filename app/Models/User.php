@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['first_name', 'last_name', 'email', 'password', 'phone_number', 'role_id', 'site_id'])]
 #[Hidden(['password', 'remember_token'])]
@@ -18,6 +19,7 @@ class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+    use SoftDeletes;
 
     /**
      * Get the attributes that should be cast.

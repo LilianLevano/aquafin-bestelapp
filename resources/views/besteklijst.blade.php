@@ -1,5 +1,6 @@
-<x-layouts.site-layout>
+@extends('layouts.app')
 
+@section('content')
     <div style="padding: 40px; text-align: left;">
 
         <h1>Besteklijst</h1>
@@ -7,7 +8,7 @@
         <!-- Knoppen -->
         <div style="margin-bottom: 20px; display: flex; gap: 10px;">
             <button onclick="herlaadt()" class="btn-primary">Herlaadt</button>
-            <input type="text" id="zoekInput" placeholder="Zoek op naam of categorie..." 
+            <input type="text" id="zoekInput" placeholder="Zoek op naam of categorie..."
                    onkeyup="filterTabel()"
                    style="padding: 10px; border: 1px solid #d1d5db; border-radius: 8px; width: 300px;">
         </div>
@@ -55,7 +56,9 @@
         </div>
 
     </div>
+@endsection
 
+@push('scripts')
     <script>
         let huidigId = null;
 
@@ -99,5 +102,4 @@
             document.getElementById('geenMateriaal').style.display = zichtbaar === 0 ? 'block' : 'none';
         }
     </script>
-
-</x-layouts.site-layout>
+@endpush

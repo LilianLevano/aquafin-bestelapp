@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Table;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable(['address_id, description, longitude, latitude'])]
 #[Table('sites')]
@@ -13,6 +14,7 @@ class Site extends Model
 {
     /** @use HasFactory<\Database\Factories\SiteFactory> */
     use HasFactory;
+    use SoftDeletes;
 
     /**
      * Get the orders that're assigned to the site.

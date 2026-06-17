@@ -26,7 +26,7 @@
         <button class="btn-primary">Zoeken</button>
     </section>
 
-    <form action="{{route('orders.store')}}" method="POST">
+    <form action="{{route('technieker.orders.store')}}" method="POST">
         @csrf
 
         <table class="manager-table">

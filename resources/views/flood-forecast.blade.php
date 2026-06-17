@@ -1,66 +1,79 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mx-auto p-6">
-        <h1 class="text-3xl font-bold mb-6">
-            Overstromingsvoorspelling
-        </h1>
-        @isset($data)
-            <p>Status: {{ $data['status'] }}</p>
-            <p>Message: {{ $data['message'] }}</p>
-            <p>Weather data: {{ print_r($data['weatherData']) }}</p>
-            <p>User data: {{ print_r($data['user']) }}</p>
-        @else
-            <p>No data acquired from the controller.</p>
-        @endisset
+    <div id="forecast-container" class="weer-container">
+        <h1 class="weer-title">Voorspelling weersomstandigheden</h1>
 
-        <!-- Tabs -->
-        <div class="flex gap-4 mb-4">
-            <button
-                id="trendBtn"
-                class="px-4 py-2 bg-blue-500 text-white rounded"
-            >
-                Trendgrafiek
+        <div class="weer-tab-bar">
+            <button class="weer-tab active" id="tab-1week" value="7">
+                Overzicht 1 week
             </button>
-
-            <button
-                id="evolutionBtn"
-                class="px-4 py-2 bg-gray-500 text-white rounded"
-            >
-                Evolutiegrafiek
+            <button class="weer-tab" id="tab-2weken" value="14">
+                Overzicht 2 weken
             </button>
+            <button class="btn-primary" id="reload-web-page">Herlaadt</button>
         </div>
 
-        <!-- Mixed Mode -->
-        <div class="mb-4">
-            <label class="flex items-center gap-2">
-                <input
-                    type="checkbox"
-                    id="mixedMode"
-                >
-                Gemengd
-            </label>
+        <div id="loading-state" class="weer-loading visually-hidden">
+            <div class="weer-spinner"></div>
+            <p>Gegevens laden...</p>
         </div>
 
-        <!-- Trend Chart -->
-        <div id="trendContainer">
-            <canvas id="trendChart"></canvas>
+        <div id="error-state" class="weer-error visually-hidden">
+            Er ging iets mis bij het ophalen van de weersomstandigheden gegevens.
         </div>
 
-        <!-- Evolution Chart -->
-        <div id="evolutionContainer" class="hidden">
-            <canvas id="evolutionChart"></canvas>
+        <div id="empty-state" class="weer-empty visually-hidden">
+            Er zijn geen gegevens beschikbaar om te tonen.
         </div>
 
-        <!-- Combined Charts -->
-        <div
-            id="combinedContainer"
-            class="hidden space-y-6 mt-6"
-        >
+        <div id="data-content" class="visually-hidden">
+            {{-- TABLE --}}
+            <div class="weer-table-wrapper">
+                <table class="weer-table">
+                    <thead>
+                        <tr>
+                            <th>Datum</th>
+                            <th>Min °C</th>
+                            <th>Max °C</th>
+                            <th>Vochtigheid (%)</th>
+                            <th>Neerslag kans (%)</th>
+                            <th>Neerslag (mm)</th>
+                            <th>Risico</th>
+                        </tr>
+                    </thead>
+                    <tbody id="weather-table-body"></tbody>
+                </table>
+            </div>
+
+            <div class="weer-chart-selector">
+                <button class="chart-type-btn active" id="btn-gemengd" value="mixed">
+                    Gemengd
+                </button>
+                <button class="chart-type-btn" id="btn-lijn" value="line">
+                    Lijn
+                </button>
+                <button class="chart-type-btn" id="btn-staaf" value="bar">
+                    Staaf
+                </button>
+            </div>
+
+            {{-- CHARTS --}}
+            <div class="weer-charts-grid">
+                <div id="trend-chart-block" class="weer-chart-block">
+                    <h2>Trendgrafiek – Voorspeld risico</h2>
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <div id="evolution-chart-block" class="weer-chart-block">
+                    <h2>Evolutiegrafiek – Min / Max / Gemiddelde</h2>
+                    <canvas id="evolutionChart"></canvas>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
 
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @vite('resources/js/flood-forecast.js')
 @endpush

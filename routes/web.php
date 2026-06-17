@@ -1,71 +1,92 @@
 <?php
 
-use App\Http\Controllers\Admin\AccountController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\MaterialController;
-use App\Http\Controllers\HelpRequestController;
+use App\Http\Controllers\Models\UserController;
+use App\Http\Controllers\Models\RoleController;
+use App\Http\Controllers\Models\MaterialController;
+use App\Http\Controllers\Models\HelpRequestController;
+use App\Http\Controllers\Models\OrderController;
+use App\Http\Controllers\Models\AddressController;
+use App\Http\Controllers\Models\CategoryController;
+use App\Http\Controllers\Models\SiteController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\OrderController;
 use App\Http\Controllers\FloodForecast\FloodForecastController;
-use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 // Guest Routes
-Route::post('/hulp', [HelpRequestController::class, 'store'])->name('hulp.store');
+Route::post('help-requests', [HelpRequestController::class, 'store'])->name('help-requests.store');
+Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route('home');
+    }
+    return redirect()->route('login');
+});
 
 // Protected Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/', function () {
-        return view('dashboard');
-    })->middleware('verified')->name('/');
+    Route::get('home', function () {
+        $roleName = Auth::user()->role->name;
+        $routeName = strtolower($roleName . '.home');
 
-    Route::get('/categories', function () {
-        return view('categories.index');
-    })->name('categories');
+        if (Route::has($routeName)) {
+            return redirect()->route($routeName);
+        }
+        return redirect()->route('login');
+    })->name('home');
 
-    // Admin Routes
+    // Admin
     Route::middleware('role:Admin')->group(function () {
         Route::prefix('admin')
             ->name('admin.')
             ->group(function () {
-                Route::resource('accounts', AccountController::class)->except(['show']);
+                Route::resource('accounts', UserController::class)->except(['show']);
                 Route::resource('roles', RoleController::class)->except(['show']);
                 Route::resource('materials', MaterialController::class);
+                Route::resource('help-requests', HelpRequestController::class)->except(['store']);
+                Route::resource('addresses', AddressController::class);
+                // Route::resource('categories', CategoryController::class)->except(['store']);
+                // Route::resource('sites', SiteController::class)->except(['store']);
+                Route::get('categories', function () {
+                    return view('categories.index');
+                })->name('categories');
+                Route::get('home', function () {
+                    return redirect()->route('admin.accounts.index');
+                })->name('home');
             });
-
-        Route::get('/help-requests', function () {
-            return view('help-requests.index');
-        })->name('help-requests');
     });
 
-    // Technician Routes
+    // Technician
     Route::middleware('role:Technieker')->group(function () {
-        Route::prefix('technieker')->group(function () {
-            Route::resource('orders', OrderController::class)->except(['show']);
+        Route::prefix('technieker')
+            ->name('technieker.')
+            ->group(function () {
+                Route::resource('orders', OrderController::class)->except(['show']);
+                Route::resource('flood-forecast', FloodForecastController::class)->except(['api']);
+                Route::get('home', function () {
+                    return redirect()->route('technieker.orders.index');
+                })->name('home');
+            });
+    });
+
+    // Manager
+    Route::middleware('role:Manager')->group(function () {
+        Route::prefix('manager')
+            ->name('manager.')
+            ->group(function () {
+                Route::resource('orders', OrderController::class)->only(['index', 'show']);
+                Route::get('home', function () {
+                    return redirect()->route('manager.orders.index');
+                })->name('home');
         });
     });
 
     // Profile
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', function() {
+        $user = Auth::user();
+        return app(ProfileController::class)->edit($user);
+    })->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    // Flood forecasts
-    Route::get('/flood-forecast', [FloodForecastController::class, 'index'])
-        ->name('flood-forecast');
-    Route::get('/flood-forecast/{days_ahead}', [FloodForecastController::class, 'index'])
-        ->name('flood-forecast.days_ahead');
-    Route::get('/risk-months', [FloodForecastController::class, 'index'])
-        ->name('risk-months');
-    Route::get('/risk-months/{days_ahead}', [FloodForecastController::class, 'index'])
-        ->name('risk-months.days_ahead');
-    Route::post('/flood-forecast/refresh', [FloodForecastController::class, 'index'])
-        ->name('flood-forecast.refresh');
-
-    // Catalogue
-    Route::get('/catalogus', function () {
-        return view('materiaal-catalogus');
-    });
 });
 
 require __DIR__.'/auth.php';
