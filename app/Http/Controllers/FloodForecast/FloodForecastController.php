@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\FloodForecast;
 
 use App\Http\Controllers\WebController;
+use App\Services\WeatherService;
+use App\Services\RiskCalculationService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -13,36 +15,39 @@ use Exception;
 
 class FloodForecastController extends WebController
 {
+    public function __construct(
+        protected WeatherService $weatherService,
+        protected RiskCalculationService $riskService
+    ) {}
+
     /**
-     * Display a listing of the resource.
+     * Display the flood forecast page.
      */
     #[Override]
     public function index(): View
     {
-        $data = cache()->flexible('weather-data', [10000, 20000], function () {
-            $days_ahead = request()->input('days_ahead');
-            $response = $this->api(request(), $days_ahead);
-            return $response->getData(true); // Decodes to associative array
-        });
-
-        return view('flood-forecast', compact('data'));
+        return view('flood-forecast');
     }
 
     /**
-     * Fetch weather forecast data from the Open-Meteo API for the authenticated user's site.
-     * Supports custom number of forecast days (default: 7, max: 14).
-     * Returns JSON weather data (or error details) with basic API validation and error handling.
-     *
-     * @param Request $request
-     * @param int $days_ahead Number of days ahead to fetch the forecast. Defaults to 7, max 14.
-     * @return JsonResponse
+     * API endpoint — returns processed forecast + risk data as JSON.
+     * Cached for 30 minutes. Used by the frontend JS.
      */
-    public function api(Request $request, int $days_ahead = 7): JsonResponse
+    public function api(Request $request): JsonResponse
     {
         return $this->handleWithCases(
             $request,
-            function () use ($request, $days_ahead) {
-                // User/site validation
+            function () use ($request) {
+                // Validate days_ahead param
+                $days = (int) $request->input('days_ahead', 7);
+
+                if ($days < 1 || $days > 14) {
+                    throw ValidationException::withMessages([
+                        'days_ahead' => 'Aantal dagen moet tussen 1 en 14 zijn.'
+                    ]);
+                }
+
+                // Validate user has a site with coordinates
                 $user = Auth::user();
                 if (
                     !$user ||
@@ -50,68 +55,42 @@ class FloodForecastController extends WebController
                     !isset($user->site->latitude) ||
                     !isset($user->site->longitude)
                 ) {
-                    throw ValidationException::withMessages(['site' => 'User site location not configured.']);
+                    throw ValidationException::withMessages([
+                        'site' => 'Gebruikerslocatie is niet geconfigureerd.'
+                    ]);
                 }
 
                 $latitude  = $user->site->latitude;
                 $longitude = $user->site->longitude;
 
-                // Sanitize days_ahead param
-                $maxDaysAhead = 14;
-                $defaultDays = 7;
-                $days = $defaultDays;
+                // Use cache — re-fetch if not available
+                $cacheKey = "weather_forecast_{$user->id}_{$days}";
 
-                if ($days_ahead !== null) {
-                    if (!is_numeric($days_ahead) || $days_ahead < 1) {
-                        throw ValidationException::withMessages(['days_ahead' => 'Invalid days_ahead parameter.']);
-                    }
-                    $days = min((int) $days_ahead, $maxDaysAhead);
-                }
+                $result = cache()->remember($cacheKey, now()->addMinutes(30), function () use ($latitude, $longitude, $days) {
+                    // Fetch raw data from Open-Meteo
+                    $raw = $this->weatherService->fetchForecast($latitude, $longitude, $days);
 
-                // Calculate start and end date
-                $today = now()->startOfDay();
-                $start_date = $today->copy();
-                $end_date = $start_date->copy()->addDays($days);
+                    // Process into daily records with risk values
+                    $dailyRecords = $this->riskService->processDailyRecords($raw, $days);
 
-                // Assemble the Open-Meteo API query
-                $apiUrl = "https://api.open-meteo.com/v1/forecast";
-                $query = http_build_query([
-                    'latitude' => $latitude,
-                    'longitude' => $longitude,
-                    'start_date' => $start_date->toDateString(),
-                    'end_date' => $end_date->toDateString(),
-                    'daily' => 'temperature_2m_max,temperature_2m_min,precipitation_sum',
-                    'hourly' => 'relative_humidity_2m,precipitation_probability',
-                    'timezone' => 'Europe/Berlin'
-                ]);
-                $fullUrl = "{$apiUrl}?{$query}";
+                    // Calculate weekly summary (min, max, avg risk + risk days)
+                    $weeklySummary = $this->riskService->calculateWeeklySummary($dailyRecords);
 
-                // Make HTTP request to Open-Meteo.
-                $response = \Illuminate\Support\Facades\Http::get($fullUrl);
+                    return [
+                        'daily'         => $dailyRecords,
+                        'summary'       => $weeklySummary,
+                        'riskThreshold' => RiskCalculationService::RISK_THRESHOLD,
+                        'days'          => $days,
+                        'raw'           => $raw, // kept for frontend chart compatibility
+                    ];
+                });
 
-                if ($response->failed()) {
-                    throw new Exception('Could not acquire forecasts from Open-Meteo. ' . $response->body());
-                }
-
-                $weatherData = $response->json();
-
-                // Base structure check: must have 'daily' key in array.
-                if (!is_array($weatherData) || !array_key_exists('daily', $weatherData)) {
-                    throw new Exception('Malformed weather data received from API.');
-                }
-
-                return $weatherData;
+                return $result;
             },
             [
-                200 => [
-                    'message' => 'Voorspellingen succesvol opgehaald!'
-                ],
-                422 => [
-                    'message' => 'Ongeldige invoer voor aantal dagen vooruit.'
-                ],
-                500 => [
-                    'message' => 'Fout bij het ophalen van gegevens van de Open-Meteo API.'
-                ]
+                200 => ['message' => 'Voorspellingen succesvol opgehaald!'],
+                422 => ['message' => 'Ongeldige invoer voor aantal dagen vooruit.'],
+                500 => ['message' => 'Fout bij het ophalen van gegevens van de Open-Meteo API.'],
             ],
             JsonResponse::class
         );
