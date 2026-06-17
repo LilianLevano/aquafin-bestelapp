@@ -17,15 +17,15 @@ class UserController extends WebController
     /**
      * Display a listing of the resource.
      */
-    
+    #[Override]
     public function index(): View
     {
         $accounts = User::paginate(
             20,           // perPage
             ['*'],        // columns
-            'page',       // pageName,
-            null,
-            null
+            'page',       // pageName
+            null,         // page
+            null          // total
         );
         return view('accounts.index', compact('accounts'));
     }
@@ -53,12 +53,12 @@ class UserController extends WebController
                 $validated = $request->validate([
                     'first_name' => ['required', 'max:40'],
                     'last_name' => ['required', 'max:40'],
-                    'email' => ['required','email','unique:users'],
-                    'phone_number' => ['required','numeric','unique:users'],
+                    'email' => ['required', 'email', 'unique:users,email'],
+                    'phone_number' => ['required', 'numeric', 'unique:users', 'regex:/^(\+32|0)[0-9]{8,9}$/'],
                     'role_id' => ['required', 'exists:roles,id'],
                     'site_id' => ['required', 'exists:sites,id'],
-                    'password' => ['required','min:8'],
-                    'password_confirmation' => ['required','same:password'],
+                    'password' => ['required', 'min:8'],
+                    'password_confirmation' => ['required', 'same:password']
                 ]);
 
                 $validated['password'] = Hash::make($validated['password']);
@@ -66,14 +66,14 @@ class UserController extends WebController
             },
             [
                 200 => [
-                    'message' => 'Gebruiker aangemaakt!',
-                    'route' => route('admin.accounts.index', absolute: false)],
+                    'message' => 'Gebruiker succesvol aangemaakt!',
+                    'route' => route('admin.accounts.index', absolute: true)],
                 422 => [
-                    'message' => 'Foutieve login gegevens',
-                    'route' => url()->previous()],
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('admin.accounts.create', absolute: true)],
                 500 => [
-                    'message' => 'Er ging iets mis met het verzoeken voor autorisatie.',
-                    'route' => url()->previous()]
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('admin.accounts.create', absolute: true)]
             ]
         );
     }
@@ -94,15 +94,17 @@ class UserController extends WebController
     #[Override]
     public function edit(string $id): View
     {
+        $account = User::findOrFail($id);
         $roles = Role::all();
         $sites = Site::all();
         return view('accounts.edit', compact('account', 'roles', 'sites'));
     }
 
-   /**
- * Update the specified resource in storage.
- */
-public function update(Request $request, string $id): RedirectResponse
+    /**
+     * Update the specified resource in storage.
+     */
+    #[Override]
+    public function update(Request $request, string $id): RedirectResponse
     {
         return $this->handleWithCases(
             $request,
@@ -110,18 +112,16 @@ public function update(Request $request, string $id): RedirectResponse
                 $validated = $request->validate([
                     'first_name' => ['required', 'max:40'],
                     'last_name' => ['required', 'max:40'],
-                    'email' => ['required','email','unique:users,email,'.$id],
-                    'phone_number' => ['required','numeric','unique:users'],
+                    'email' => ['required', 'email', 'unique:users,email,' . $id],
+                    'phone_number' => ['required', 'numeric', 'unique:users,phone_number,' . $id],
                     'role_id' => ['required', 'exists:roles,id'],
                     'site_id' => ['required', 'exists:sites,id'],
                     'password' => ['nullable'],
-                    'password_confirmation' => ['nullable'],
-
+                    'password_confirmation' => ['nullable']
                 ]);
 
                 if ($validated['password']) {
-
-                    if($validated['password'] == $validated['password_confirmation']) {
+                    if ($validated['password'] == $validated['password_confirmation']) {
                         $validated['password'] = Hash::make($validated['password']);
                     }
                 } else {
@@ -130,18 +130,18 @@ public function update(Request $request, string $id): RedirectResponse
                 }
 
                 $user = User::findOrFail($id);
-                $user->update($validated);
+                $user->updateOrFail($validated);
             },
             [
                 200 => [
-                    'message' => 'Gebruiker aangepast!',
-                    'route' => route('admin.accounts.index', absolute: false)],
+                    'message' => 'Gebruiker succesvol aangepast!',
+                    'route' => route('admin.accounts.index', absolute: true)],
                 422 => [
-                    'message' => 'Foutieve login gegevens',
-                    'route' => url()->previous()],
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('admin.accounts.index', absolute: true)],
                 500 => [
-                    'message' => 'Er ging iets mis met het verzoeken voor autorisatie.',
-                    'route' => url()->previous()]
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('admin.accounts.index', absolute: true)]
             ]
         );
     }
@@ -152,7 +152,24 @@ public function update(Request $request, string $id): RedirectResponse
     #[Override]
     public function destroy(string $id): RedirectResponse
     {
-        User::destroy($id);
-        return redirect()->route('admin.accounts.index')->with('status', 'Gebruiker verwijderd!');
+        $request = request();
+        return $this->handleWithCases(
+            $request,
+            function () use ($request, $id) {
+                $user = User::findOrFail($id);
+                $user->deleteOrFail();
+            },
+            [
+                200 => [
+                    'message' => 'Gebruiker succesvol verwijderd!',
+                    'route' => route('admin.accounts.index', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('admin.accounts.index', absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('admin.accounts.index', absolute: true)]
+            ]
+        );
     }
 }

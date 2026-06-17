@@ -75,5 +75,14 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        localStorage.setItem(
+            'weather_forecast_cache',
+            JSON.stringify({
+                timestamp: Date.now(),
+                data: @json(session('data')['daily'])
+            })
+        );
+    </script>
     @vite('resources/js/flood-forecast.js')
 @endpush

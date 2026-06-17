@@ -13,23 +13,23 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update', Auth::user()->id) }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
-        <div>
+        <div class="field">
             <x-input-label for="first_name" :value="__('First name')" />
             <x-text-input id="first_name" name="first_name" type="text" class="mt-1 block w-full" :value="old('first_name', $user->first_name)" required autofocus autocomplete="first_name" />
             <x-input-error class="mt-2" :messages="$errors->get('first_name')" />
         </div>
 
-        <div>
+        <div class="field">
             <x-input-label for="last_name" :value="__('Last name')" />
             <x-text-input id="last_name" name="last_name" type="text" class="mt-1 block w-full" :value="old('last_name', $user->last_name)" required autofocus autocomplete="last_name" />
             <x-input-error class="mt-2" :messages="$errors->get('last_name')" />
         </div>
 
-        <div>
+        <div class="field">
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
@@ -53,8 +53,17 @@
             @endif
         </div>
 
+        <div class="field">
+            <label for="phone_number">Telefoonnummer</label>
+            <input id="phone_number" type="tel" name="phone_number"
+                   value="{{ old('phone_number', $user->phone_number) }}" required
+                   data-original="{{ $user->phone_number }}"
+                   class="{{ $errors->has('phone_number') ? 'is-invalid' : '' }}">
+            @error('phone_number') <p class="error">{{ $message }}</p> @enderror
+        </div>
+
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <button type="submit" class="btn-primary">{{ __('Opslaan') }}</button>
 
             @if (session('status') === 'profile-updated')
                 <p

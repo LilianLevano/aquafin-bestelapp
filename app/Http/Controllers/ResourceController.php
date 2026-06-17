@@ -3,11 +3,8 @@
 namespace App\Http\Controllers;
 
 use BadMethodCallException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 /**
@@ -63,4 +60,32 @@ abstract class ResourceController extends Controller
         throw new BadMethodCallException('Non-implemented method: show().', 1);
     }
 
+    // For 'edit(string $id)', see WebController if applicable.
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @override Override this method to customize behavior
+     * @param Request $request
+     * @param string $id
+     * @throws BadMethodCallException
+     * @return RedirectResponse
+     */
+    public function update(Request $request, string $id): RedirectResponse
+    {
+        throw new BadMethodCallException('Non-implemented method: update().', 1);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @override Override this method to customize behavior
+     * @param string $id
+     * @throws BadMethodCallException
+     * @return RedirectResponse
+     */
+    public function destroy(string $id): RedirectResponse
+    {
+        throw new BadMethodCallException('Non-implemented method: destroy().', 1);
+    }
 }

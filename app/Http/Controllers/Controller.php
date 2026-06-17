@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Closure;
 use Throwable;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\ValidationException;
@@ -54,7 +55,31 @@ abstract class Controller
                 $caseData['422']['route'] ?? url()->current(),
                 $caseData['422']['data'] ?? null,
                 $responseType,
-                ['errors' => $e->errors()],
+                ['errors' => $e->errors(), 'exception' => $e],
+                $debug
+            );
+        } catch (QueryException $e) {
+            $errorType = (new \ReflectionClass($e))->getShortName();
+            $errorCode = $e->getCode();
+            $shortMessage = 'A database error occurred';
+
+            // Common SQLSTATE codes and their simple messages
+            $knownErrors = [
+                // See https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html
+                '23000' => 'Integrity constraint violation',
+                '23505' => 'Unique constraint violation',
+                '42000' => 'Syntax error or access rule violation',
+                'HY000' => 'General database error',
+            ];
+            $shortMessage = $knownErrors[$errorCode] ?? $shortMessage;
+            $displayMessage = "Database error ($errorCode): $shortMessage.";
+
+            return $this->handleErrorResponse(
+                $caseData['500']['message'],
+                $caseData['500']['route'] ?? url()->current(),
+                $caseData['500']['data'] ?? null,
+                $responseType,
+                ['errors' => [$errorType => $displayMessage], 'exception' => $e],
                 $debug
             );
         } catch (Throwable $e) {
@@ -63,7 +88,7 @@ abstract class Controller
                 $caseData['500']['route'] ?? url()->current(),
                 $caseData['500']['data'] ?? null,
                 $responseType,
-                ['exception' => $e],
+                ['errors' => 'Unhandled error occurred.', 'exception' => $e],
                 $debug
             );
         }
@@ -122,7 +147,7 @@ abstract class Controller
             : '';
         $responseData = [
             'message' => $sanitizedMessage,
-            'success' => false,
+            'success' => false
         ];
 
         if ($data !== null) {

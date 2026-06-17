@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['category_id', 'name'])]
+#[Fillable(['category_id', 'name', 'description', 'image_path'])]
 #[Table('materials')]
 class Material extends Model
 {

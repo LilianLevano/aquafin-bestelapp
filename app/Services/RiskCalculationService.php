@@ -4,6 +4,11 @@ namespace App\Services;
 
 class RiskCalculationService
 {
+    /**
+     * Threshold above which a day is considered to have a flood risk.
+     *
+     * @var int
+     */
     const RISK_THRESHOLD = 70;
 
     public function processDailyRecords(array $raw, int $days): array

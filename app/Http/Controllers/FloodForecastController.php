@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\FloodForecast;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\WebController;
 use App\Services\WeatherService;
@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Validation\ValidationException;
 use Override;
-use Exception;
 
 class FloodForecastController extends WebController
 {
@@ -28,20 +27,31 @@ class FloodForecastController extends WebController
     #[Override]
     public function index(): View
     {
+        $response = $this->api(request())->getData(true);
+
+        // Flash the session data
+        session()->flash('message', $response['message']);
+        session()->flash('success', $response['success']);
+        session()->flash('data', $response['data']);
+
         return view('flood-forecast');
     }
 
     /**
-     * API endpoint — returns processed forecast + risk data as JSON.
+     * Fetch weather forecast data from the Open-Meteo API for the authenticated user's site.
+     * Supports custom number of forecast days (default: 7, max: 14).
+     * Returns processed weather and risk data (or error details) as JSON with basic API validation.
+     *
+     * @param Request $request
+     * @return JsonResponse
      */
     public function api(Request $request): JsonResponse
     {
         return $this->handleWithCases(
             $request,
             function () use ($request) {
-                $days = (int) $request->input('days_ahead', 7);
-
-                if ($days < 1 || $days > 14) {
+                $days_ahead = (int) $request->query('days_ahead', 7);
+                if ($days_ahead < 1 || $days_ahead > 14) {
                     throw ValidationException::withMessages([
                         'days_ahead' => 'Aantal dagen moet tussen 1 en 14 zijn.'
                     ]);
@@ -55,34 +65,34 @@ class FloodForecastController extends WebController
                     !isset($user->site->longitude)
                 ) {
                     throw ValidationException::withMessages([
-                        'site' => 'Gebruikerslocatie is niet geconfigureerd.'
+                        'site' => 'Site locatie is niet geconfigureerd.'
                     ]);
                 }
 
-                $siteId    = $user->site->id;
-                $latitude  = $user->site->latitude;
+                $siteId = $user->site->id;
+                $latitude = $user->site->latitude;
                 $longitude = $user->site->longitude;
-                $cacheKey  = "weather_forecast_{$siteId}_{$days}";
+                $cacheKey = "weather_forecast_{$siteId}_{$days_ahead}";
 
-                $result = cache()->remember($cacheKey, now()->addMinutes(30), function () use ($latitude, $longitude, $days, $siteId) {
+                $result = cache()->remember($cacheKey, now()->addMinutes(30), function () use ($latitude, $longitude, $days_ahead, $siteId) {
                     // 1. Fetch raw weather data
-                    $raw = $this->weatherService->fetchForecast($latitude, $longitude, $days);
+                    $raw = $this->weatherService->fetchForecast($latitude, $longitude, $days_ahead);
 
                     // 2. Process daily records with risk values
-                    $dailyRecords = $this->riskService->processDailyRecords($raw, $days);
+                    $dailyRecords = $this->riskService->processDailyRecords($raw, $days_ahead);
 
                     // 3. Calculate weekly summary
                     $weeklySummary = $this->riskService->calculateWeeklySummary($dailyRecords);
 
                     // 4. Generate 5-year prediction + save to DB
                     $predictions = $this->forecastService->generateFiveYearPrediction($dailyRecords, $siteId);
-                    $saved       = $this->forecastService->savePredictions($predictions, $siteId);
+                    $saved = $this->forecastService->savePredictions($predictions, $siteId);
 
                     return [
                         'daily'         => $dailyRecords,
                         'summary'       => $weeklySummary,
                         'riskThreshold' => RiskCalculationService::RISK_THRESHOLD,
-                        'days'          => $days,
+                        'days'          => $days_ahead,
                         'raw'           => $raw,
                         'fiveYear'      => [
                             'analyses'   => array_slice($saved['analyses'], 0, 24), // first 2 years for frontend
@@ -94,9 +104,12 @@ class FloodForecastController extends WebController
                 return $result;
             },
             [
-                200 => ['message' => 'Voorspellingen succesvol opgehaald!'],
-                422 => ['message' => 'Ongeldige invoer voor aantal dagen vooruit.'],
-                500 => ['message' => 'Er ging iets mis bij het ophalen van de overstromingsgegevens.'],
+                200 => [
+                    'message' => 'Voorspellingen succesvol opgehaald!'],
+                422 => [
+                    'message' => 'Ongeldige invoer voor aantal dagen vooruit.'],
+                500 => [
+                    'message' => 'Er ging iets mis bij het ophalen van de overstromingsgegevens.'],
             ],
             JsonResponse::class
         );

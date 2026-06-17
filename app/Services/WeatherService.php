@@ -7,9 +7,9 @@ use Exception;
 
 class WeatherService
 {
-    public function fetchForecast(float $latitude, float $longitude, int $days = 7): array
+    public function fetchForecast(float $latitude, float $longitude, int $days_ahead = 7): array
     {
-        $days = min(max(1, $days), 14);
+        $days = min(max(1, $days_ahead), 14);
 
         $today      = now()->startOfDay();
         $start_date = $today->copy();

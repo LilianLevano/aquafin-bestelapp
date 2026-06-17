@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Models;
 
 use App\Http\Controllers\WebController;
 use App\Models\Category;
-use BadMethodCallException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -18,7 +17,8 @@ class CategoryController extends WebController
     #[Override]
     public function index(): View
     {
-        throw new BadMethodCallException('Non-implemented method.', 1);
+        $categories = Category::all();
+        return view('categories.index', compact('categories'));
     }
 
     /**
@@ -27,7 +27,7 @@ class CategoryController extends WebController
     #[Override]
     public function create(): View
     {
-        throw new BadMethodCallException('Non-implemented method.', 1);
+        return view('categories.create');
     }
 
     /**
@@ -36,16 +36,27 @@ class CategoryController extends WebController
     #[Override]
     public function store(Request $request): RedirectResponse
     {
-        throw new BadMethodCallException('Non-implemented method.', 1);
-    }
+        return $this->handleWithCases(
+            $request,
+            function () use ($request) {
+                $validated = $request->validate([
+                    'name' => 'required|min:2|unique:categories,name'
+                ]);
 
-    /**
-     * Display the specified resource.
-     */
-    #[Override]
-    public function show(string $id): View
-    {
-        throw new BadMethodCallException('Non-implemented method.', 1);
+                Category::create($validated);
+            },
+            [
+                200 => [
+                    'message' => 'Categorie succesvol aangemaakt!',
+                    'route' => route('admin.categories.index', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('admin.categories.create', absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('admin.categories.create', absolute: true)]
+            ]
+        );
     }
 
     /**
@@ -54,16 +65,38 @@ class CategoryController extends WebController
     #[Override]
     public function edit(string $id): View
     {
-        throw new BadMethodCallException('Non-implemented method.', 1);
+        $category = Category::findOrFail($id);
+        return view('categories.edit', compact('category'));
     }
 
     /**
      * Update the specified resource in storage.
      */
     #[Override]
-    public function update(Request $request, string $idy): RedirectResponse
+    public function update(Request $request, string $id): RedirectResponse
     {
-        throw new BadMethodCallException('Non-implemented method.', 1);
+        return $this->handleWithCases(
+            $request,
+            function () use ($request, $id) {
+                $category = Category::findOrFail($id);
+                $validated = $request->validate([
+                    'name' => 'required|min:2|unique:categories,name',
+                ]);
+
+               $category->updateOrFail($validated);
+            },
+            [
+                200 => [
+                    'message' => 'Categorie succesvol geüpdatet!',
+                    'route' => route('admin.categories.index', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('admin.categories.edit', $id, absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('admin.categories.edit', $id, absolute: true)]
+            ]
+        );
     }
 
     /**
@@ -72,6 +105,24 @@ class CategoryController extends WebController
     #[Override]
     public function destroy(string $id): RedirectResponse
     {
-        throw new BadMethodCallException('Non-implemented method.', 1);
+        $request = request();
+        return $this->handleWithCases(
+            $request,
+            function () use ($request, $id) {
+                $category = Category::findOrFail($id);
+                $category->deleteOrFail();
+            },
+            [
+                200 => [
+                    'message' => 'Categorie succesvol verwijderd!',
+                    'route' => route('admin.categories.index', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('admin.categories.index', absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('admin.categories.index', absolute: true)]
+            ]
+        );
     }
 }

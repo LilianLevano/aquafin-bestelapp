@@ -32,7 +32,11 @@ class Site extends Model
         return $this->hasMany(User::class, 'user_id');
     }
 
-    public function user(){
-        return $this->hasMany(User::class, 'user_id', 'id');
+    /**
+     * Get the address that's assigned to the site.
+     */
+    public function address()
+    {
+        return $this->hasOne(Address::class, 'id');
     }
 }

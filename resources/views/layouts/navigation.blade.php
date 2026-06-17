@@ -6,7 +6,7 @@
                 <a href="{{ route('home') }}" class="flex items-center">
                     <img class="logo" src="{{ asset('images/Logo_Aquafin.png') }}" alt="Aquafin logo" title="Aquafin logo">
                 </a>
-                <div class="space-x-6 sm:flex sm:ml-10">
+                <div class="space-x-6 sm:flex sm:ml-10" id="main-nav-bar">
                     {{-- Show navigation links based on user role --}}
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
                         {{ __('Thuis') }}
@@ -37,13 +37,13 @@
                             </button>
                         </x-slot>
                         <x-slot name="content">
-                            <x-dropdown-link :href="route('profile.edit')">
+                            <x-dropdown-link :href="route('profile.edit', Auth::user()->id)">
                                 {{ __('Profile') }}
                             </x-dropdown-link>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
-                                    {{ __('Log Out') }}
+                                   Log Out
                                 </x-dropdown-link>
                             </form>
                         </x-slot>
@@ -53,15 +53,8 @@
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': !open }" class="inline-flex"
-                              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': !open, 'inline-flex': open }" class="hidden"
-                              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                <button @click="open = ! open" class="inline-flex border-0 items-center justify-center p-2 rounded-md   focus:outline-none transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#000000"><path d="M120-693.33V-760h720v66.67H120ZM120-200v-66.67h720V-200H120Zm0-246.67v-66.66h720v66.66H120Z"/></svg>
                 </button>
             </div>
         </div>
@@ -69,7 +62,7 @@
 
     <!-- Responsive Navigation -->
     <div :class="{'block': open, 'hidden': !open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
+        <div class="pt-2 pb-3 space-y-1" id="mobile-nav-bar">
             <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">
                 {{ __('Thuis') }}
             </x-responsive-nav-link>
@@ -90,7 +83,7 @@
                     <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
                 </div>
                 <div class="mt-3 space-y-1">
-                    <x-responsive-nav-link :href="route('profile.edit')">
+                    <x-responsive-nav-link :href="route('profile.edit', Auth::user()->id)">
                         {{ __('Profile') }}
                     </x-responsive-nav-link>
                     <form method="POST" action="{{ route('logout') }}">

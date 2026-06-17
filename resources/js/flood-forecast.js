@@ -4,13 +4,6 @@ const CACHE_KEY      = 'weather_forecast_cache';
 const CACHE_DURATION = 30 * 60 * 1000; // 30 min
 
 /**
- * Threshold above which a day is considered to have a flood risk.
- * Used to determine styling and warnings in UI.
- * @type {number}
- */
-const RISK_THRESHOLD = 70;
-
-/**
  * API endpoint URL for fetching flood forecast data.
  * @type {string}
  */
@@ -246,91 +239,6 @@ function handleStateChange(prop, newValue, oldValue) {
 }
 
 /**
- * Parses Open-Meteo API response into an array of display-friendly, per-day objects.
- * Each object contains: day, min/max temp, humidity, rain chance, rain mm, risk value, and risk flag.
- * Expects presence of all required fields in the raw API response.
- *
- * @param {object} raw - Raw Open-Meteo API response
- * @param {number} days - Max number of days to parse
- * @returns {object[]} Array of processed daily records
- */
-function parseOpenMeteoToDaily(raw, days) {
-    if (
-        !raw ||
-        !raw.daily || !Array.isArray(raw.daily.time) ||
-        !raw.daily.temperature_2m_min ||
-        !raw.daily.temperature_2m_max ||
-        !raw.daily.precipitation_sum ||
-        !raw.hourly || !Array.isArray(raw.hourly.time) ||
-        !raw.hourly.relative_humidity_2m ||
-        !raw.hourly.precipitation_probability
-    ) {
-        return [];
-    }
-
-    const numDays = Math.min(raw.daily.time.length, days);
-    let result = [];
-
-    for (let i = 0; i < numDays; i++) {
-        const dayStr = raw.daily.time[i];
-        const date = new Date(dayStr);
-
-        // Collect all hourly data for current date
-        let humidityVals = [], rainChanceVals = [];
-
-        for (let h = 0; h < raw.hourly.time.length; h++) {
-            if (raw.hourly.time[h].startsWith(dayStr)) {
-                humidityVals.push(raw.hourly.relative_humidity_2m[h]);
-                rainChanceVals.push(raw.hourly.precipitation_probability[h]);
-            }
-        }
-
-        // Average over available hourly measurements if present
-        const humidity = humidityVals.length
-            ? Math.round(
-                  humidityVals.reduce((a, b) => a + b, 0) / humidityVals.length
-              )
-            : null;
-        const rainChance = rainChanceVals.length
-            ? Math.round(
-                  rainChanceVals.reduce((a, b) => a + b, 0) / rainChanceVals.length
-              )
-            : null;
-
-        const minTemp =
-            raw.daily.temperature_2m_min[i] != null
-                ? Math.round(raw.daily.temperature_2m_min[i])
-                : null;
-        const maxTemp =
-            raw.daily.temperature_2m_max[i] != null
-                ? Math.round(raw.daily.temperature_2m_max[i])
-                : null;
-        const rainMm =
-            raw.daily.precipitation_sum[i] != null
-                ? parseFloat(Number(raw.daily.precipitation_sum[i]).toFixed(1))
-                : null;
-
-        // The composite risk value calculation
-        const riskValue =
-            rainChance !== null && humidity !== null
-                ? Math.round(rainChance * 0.5 + humidity * 0.3)
-                : null;
-
-        result.push({
-            date: date.toLocaleDateString("nl-BE"),
-            minTemp,
-            maxTemp,
-            humidity,
-            rainChance,
-            rainMm,
-            riskValue,
-            isRisk: riskValue !== null && riskValue >= RISK_THRESHOLD
-        });
-    }
-    return result;
-}
-
-/**
  * Saves the forecast data to browser localStorage as JSON under `CACHE_KEY`.
  * Adds a timestamp so cache staleness can be checked later.
  *
@@ -386,7 +294,7 @@ async function loadWeatherData() {
     }
 
     try {
-        const { message, data, success } = await getForm(
+        const { message, data, success, errors, exception } = await getForm(
             `${API_URL}?days_ahead=${overview.value}`
         );
         console.log(message);
@@ -396,21 +304,14 @@ async function loadWeatherData() {
             return;
         }
 
-        let processed = parseOpenMeteoToDaily(data, overview.value);
-
-        if (!Array.isArray(processed)) {
-            state.value = "empty";
-            return;
-        }
-
         // If daily is not yet defined or empty, just replace it and update maxFetchedDays
         if (!Array.isArray(daily) || daily.length === 0) {
-            daily = processed;
-            maxFetchedDays = processed.length;
+            daily = data.daily;
+            maxFetchedDays = data.daily.length;
         } else {
             // When processed is longer than or equal to what we've seen before, update all/extend
-            if (processed.length >= maxFetchedDays) {
-                for (const newDay of processed) {
+            if (data.daily.length >= maxFetchedDays) {
+                for (const newDay of data.daily) {
                     const idx = daily.findIndex(item => item.date === newDay.date);
                     if (idx !== -1) {
                         daily[idx] = newDay;
@@ -418,10 +319,10 @@ async function loadWeatherData() {
                         daily.push(newDay);
                     }
                 }
-                maxFetchedDays = processed.length;
+                maxFetchedDays = data.daily.length;
             } else {
                 // processed is shorter (less days than previously seen): only update those days
-                for (const newDay of processed) {
+                for (const newDay of data.daily) {
                     const idx = daily.findIndex(item => item.date === newDay.date);
                     if (idx !== -1) {
                         daily[idx] = newDay;

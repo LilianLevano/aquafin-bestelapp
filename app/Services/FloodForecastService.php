@@ -132,21 +132,19 @@ class FloodForecastService
      */
     public function getCachedPredictions(int $siteId): ?array
     {
-        $analyses = FloodRiskAnalysis::where('site_id', $siteId)
+        $analyses = FloodRiskAnalysis::all()->whereIn('site_id', [$siteId])
             ->where('year', '>=', now()->year)
-            ->orderBy('year')
-            ->orderBy('month')
-            ->get();
+            ->sortByDesc('year')
+            ->sortByDesc('month');
 
         if ($analyses->isEmpty()) {
             return null;
         }
 
-        $riskMonths = RiskMonth::where('site_id', $siteId)
+        $riskMonths = RiskMonth::all()->whereIn('site_id', [$siteId])
             ->where('year', '>=', now()->year)
-            ->orderBy('year')
-            ->orderBy('month')
-            ->get();
+            ->sortByDesc('year')
+            ->sortByDesc('month');
 
         return [
             'analyses'   => $analyses->toArray(),
