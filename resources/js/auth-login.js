@@ -1,7 +1,7 @@
-function toggleHulp(show) {
+window.toggleHulp = function(show) {
     document.getElementById('section-login').style.display = show ? 'none' : 'block';
     document.getElementById('section-hulp').style.display = show ? 'block' : 'none';
-}
+};
 
 function isValidEmail(value) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);

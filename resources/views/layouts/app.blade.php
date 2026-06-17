@@ -41,8 +41,8 @@
         </main>
     </div>
 
-    <style>
 
+    <style>
         @media screen and (max-width: 408px){
             .manager-page {
                 min-height: 70vh !important;
