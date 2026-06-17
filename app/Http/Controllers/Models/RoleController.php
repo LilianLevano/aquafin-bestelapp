@@ -40,7 +40,7 @@ class RoleController extends WebController
             $request,
             function () use ($request) {
                 $validated = $request->validate([
-                    'name' => 'required|unique:roles|max:255',
+                    'name' => 'required|unique:roles,name|max:255|min:2'
                 ]);
                 Role::create($validated);
             },
@@ -78,7 +78,7 @@ class RoleController extends WebController
             $request,
             function () use ($request, $id) {
                 $validated = $request->validate([
-                    'name' => 'required|unique:roles|max:255',
+                    'name' => 'required|unique:roles,name|max:255|min:2'
                 ]);
 
                 $role = Role::findOrFail($id);

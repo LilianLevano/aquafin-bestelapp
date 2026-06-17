@@ -16,7 +16,11 @@
         {{ __('Materialen') }}
     </x-responsive-nav-link>
 
-    <x-responsive-nav-link :href="route('admin.help-requests.index')" :active="request()->routeIs('admin.help-requests.index')">
+    <x-responsive-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.index')">
+        {{ __('Categorieën') }}
+    </x-responsive-nav-link>
+
+    <x-responsive-nav-link :href="route('admin.help-requests.index', 'all')" :active="request()->routeIs('admin.help-requests.index')">
         {{ __('Hulpaanvragen') }}
     </x-responsive-nav-link>
 @else
@@ -32,7 +36,11 @@
          {{ __('Materialen') }}
     </x-nav-link>
 
-    <x-nav-link :href="route('admin.help-requests.index')" :active="request()->routeIs('admin.help-requests.index')">
+    <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('admin.categories.index')">
+        {{ __('Categorieën') }}
+    </x-nav-link>
+
+    <x-nav-link :href="route('admin.help-requests.index', 'all')" :active="request()->routeIs('admin.help-requests.index')">
         {{ __('Hulpaanvragen') }}
     </x-nav-link>
 @endif

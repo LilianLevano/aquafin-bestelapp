@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Models\CategoryController;
 use App\Http\Controllers\Models\UserController;
 use App\Http\Controllers\Models\RoleController;
 use App\Http\Controllers\Models\MaterialController;
@@ -10,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 // Guest Routes
-Route::resource('help-requests', HelpRequestController::class)->only(['store']);
+Route::resource('help-requests', HelpRequestController::class)->only(['create', 'store']);
 Route::get('/', function () {
     if (Auth::check()) {
         return redirect()->route('home');
@@ -39,9 +40,7 @@ Route::middleware('auth')->group(function () {
                 Route::resource('roles', RoleController::class)->except(['show']);
                 Route::resource('materials', MaterialController::class);
                 Route::resource('help-requests', HelpRequestController::class)->except(['store']);
-                Route::get('categories', function () {
-                    return view('categories.index');
-                })->name('categories.index');
+                Route::resource('categories', CategoryController::class)->except(['show']);
                 Route::get('home', function () {
                     return redirect()->route('admin.accounts.index');
                 })->name('home');
@@ -53,7 +52,8 @@ Route::middleware('auth')->group(function () {
         Route::prefix('technieker')
             ->name('technieker.')
             ->group(function () {
-                Route::resource('orders', OrderController::class)->except(['show']);
+                Route::resource('orders', OrderController::class);
+                Route::resource('materials', MaterialController::class)->only('show');
                 Route::get('home', function () {
                     return redirect()->route('technieker.orders.index');
                 })->name('home');

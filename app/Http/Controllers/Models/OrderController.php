@@ -28,7 +28,6 @@ class OrderController extends WebController
         try {
             $orders = Order::with(['user', 'materials', 'site'])
                 ->where('user_id', Auth::id())
-                ->whereDate('created_at', $date)
                 ->orderByDesc('created_at')
                 ->get();
 
@@ -64,26 +63,26 @@ class OrderController extends WebController
             $request,
             function () use ($request) {
                 $validated = $request->validate([
-                    'materials' => ['nullable','array'],
-                    'quantity' => ['nullable','array'],
+                    'materials' => ['nullable', 'array'],
+                    'quantity' => ['nullable', 'array'],
                     'delivery_date' => ['required', 'date', 'after:today'],
                     'site_id' => ['required', 'exists:sites,id'],
                 ]);
 
                 $pivotData = [];
+                $materials = $request->input('materials', []);
+                $quantities = $request->input('quantity', []);
 
-                foreach ($request->materials ?? [] as $materialId) {
+                foreach ($materials as $materialId) {
                     $pivotData[$materialId] = [
-                        'quantity' => $request->quantity[$materialId]
+                        'quantity' => $quantities[$materialId] ?? null
                     ];
                 }
 
-                unset($validated['materials']);
-                unset($validated['quantity']);
-
+                unset($validated['materials'], $validated['quantity']);
                 $validated['user_id'] = Auth::id();
-                $order = Order::create($validated);
 
+                $order = Order::create($validated);
                 $order->materials()->sync($pivotData);
             },
             [
@@ -123,5 +122,38 @@ class OrderController extends WebController
                 ->with('success', false)
                 ->with('message', 'Er ging iets mis met het ophalen van de bestellingsdetails.');
         }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    #[Override]
+    public function destroy(string $id): RedirectResponse
+    {
+        $request = request();
+        return $this->handleWithCases(
+            $request,
+            function () use ($request, $id) {
+                $order = Order::findOrFail($id);
+
+                // Technieker can only cancel their own orders
+                if (Auth::user()->role->name === 'Technieker' && $order->user_id !== Auth::id()) {
+                    throw new Exception('U heeft geen toegang om deze bestelling te verwijderen.');
+                }
+
+                $order->deleteOrFail();
+            },
+            [
+                200 => [
+                    'message' => 'Bestelling succesvol verwijderd!',
+                    'route' => route('manager.orders.index', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('manager.orders.index', absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('manager.orders.index', absolute: true)]
+            ]
+        );
     }
 }

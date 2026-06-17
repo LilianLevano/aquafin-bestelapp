@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Closure;
-use Override;
 use BadMethodCallException;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 /**

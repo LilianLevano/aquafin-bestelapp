@@ -5,77 +5,67 @@
 <div style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
     <h1 class="h1 mb-4">Bestellingen Overzicht</h1>
 
-    {{-- ERROR TOAST --}}
-    <div id="error-toast"
-         class="alert alert-danger d-flex align-items-center gap-2 hidden"
-         style="position:fixed;top:1rem;right:1rem;z-index:9999;max-width:420px;">
-        <span>⚠️</span>
-        <span id="error-toast-text" class="flex-grow-1 small"></span>
-        <button type="button" class="btn-close" onclick="hideToast()"></button>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h1 mb-0">Mijn Bestellingen</h1>
+        <a href="{{ route('technieker.orders.create') }}" class="btn btn-primary">
+            + Nieuwe bestelling
+        </a>
     </div>
-
-    {{-- FILTERS --}}
-    <div class="card mb-4">
-        <div class="card-body d-flex flex-wrap gap-3 align-items-end">
-            <div>
-                <label for="datum-filter" class="form-label small fw-semibold mb-1">Datum</label>
-                <input type="date" id="datum-filter" class="form-control form-control-sm">
-            </div>
-            <div style="flex:1;min-width:200px;">
-                <label for="zoek-filter" class="form-label small fw-semibold mb-1">Zoeken</label>
-                <input type="text" id="zoek-filter"
-                       placeholder="Zoeken op naam, ID of materiaal…"
-                       class="form-control form-control-sm">
-            </div>
+    <div class="filter-zone">
+        <div class="filter-item">
+            <label>Zoeken</label>
+            <input type="text" placeholder="Zoek op woord...">
         </div>
+
+        <div class="filter-item">
+            <label>Datum</label>
+            <input type="date">
+        </div>
+
+        <div class="filter-item">
+            <label>Regio</label>
+            <select>
+                <option>Alle regio's</option>
+                <option>Brussel</option>
+                <option>Antwerpen</option>
+                <option>Gent</option>
+                <option>Leuven</option>
+            </select>
+        </div>
+
+        <button class="btn-primary">Filter</button>
     </div>
-
-    {{-- TABEL --}}
-    <div class="card">
-        <div id="loading" class="text-center py-5 text-muted small @if(isset($success) && $success) hidden @endif">
-            <div class="spinner-border spinner-border-sm text-primary mb-2" role="status"></div>
-            <div>Bestellingen laden…</div>
-        </div>
+    <table class="manager-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th class="col-geplaatst">Geplaatst door</th>
+                <th>Leverplaats</th>
+                <th>Leverdatum</th>
+                <th>Status</th>
+            </tr>
+        </thead>
 
         <div id="geen-data" class="hidden py-5 text-center text-muted fst-italic small"></div>
+        <tbody>
+            @foreach($orders as $order)
+                <tr>
+                    <td>{{$order->id}}</td>
+                    <td class="col-geplaatst">{{$order->user->first_name . ' ' . $order->user->last_name  }}</td>
 
-        <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Geplaatst door</th>
-                        <th>Items</th>
-                        <th>Datum</th>
-                        <th>Acties</th>
-                    </tr>
-                </thead>
-                <tbody id="bestellingen-body">
-                    @forelse($orders as $o)
-                        <tr>
-                            <td class="font-monospace text-muted">#{{ $o->id }}</td>
-                            <td class="fw-medium">{{ $o->geplaatst_door ?? '—'  }}</td>
-                            <td class="text-muted small" style="max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"
-                                title="${esc(b.items)}">{{ $o->items ?? '—' }}</td>
-                            <td class="text-muted small">{{ \Carbon\Carbon::parse($o->datum)->format('d/m/Y H:i') }}</td>
-                            <td>
-                                <a href="/manager/orders/{{ $o->id }}" class="btn btn-sm btn-outline-primary">
-                                    Meer details →
-                                </a>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr id="empty-row"><td colspan="5" class="muted center">No orders to display.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+                    <td>{{$order->site->description}}</td>
+                    <td>{{$order->delivery_date}}</td>
+                    <td>{{ \Carbon\Carbon::parse($order->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+
+    <p class="empty-message">Geen data om te tonen.</p>
 @endsection
 
 @push('scripts')
-    @vite('resources/js/orders-index.js')
+    @vite('resources/js/orders/orders-index.js')
     <script>
         let alleBestellingen = [];
         let huidigeDatum = '';

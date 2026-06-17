@@ -1,0 +1,252 @@
+@import url("./colors.css");
+@import url("./font.css");
+@import url("../pc/styles.css");
+.weer-charts-grid {
+    grid-template-columns: 1fr;
+}
+
+
+
+.quantity{
+    width: 70%;
+}
+
+#site_id{
+    width: 90%;
+}
+
+.checkbox-materials{
+    scale: 1.50;
+}
+
+@media screen and (max-width: 692px){
+    .manager-table th,
+    .manager-table td,
+    table th,
+    table td{
+        padding: 5px;
+    }
+}
+
+@media screen and (max-width: 562px){
+    .extra-information{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 408px) {
+    .manager-page {
+        min-height: 70vh;
+        padding: 20px;
+    }
+}
+
+@media screen and (max-width: 454px) {
+    #accounts-table {
+        td {
+            width: fit-content;
+            padding: 2px;
+        }
+    }
+
+    .id-account {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 650px){
+    #main-nav-bar{
+        display: none;
+    }
+
+    #mobile-nav-bar{
+        display: block;
+    }
+}
+
+@media screen and (min-width: 650px){
+    #main-nav-bar{
+        display: block;
+    }
+
+    #mobile-nav-bar{
+        display: none;
+    }
+}
+
+@media screen and (min-width: 650px) {
+    .actie{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 795px ){
+    .extra-information-order{
+        display: none;
+    }
+}
+@media screen and (max-width: 640px){
+    .leverdatum{
+        display: none;
+    }
+}
+
+@media screen and (max-width:386px){
+    .order-info-card{
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 1015px) {
+    #accounts-table {
+        td {
+            padding: 5px;
+        }
+    }
+}
+
+@media screen and (min-width: 956px) {
+    .show {
+        display: none;
+    }
+}
+
+@media screen and (max-width:956px) {
+    .extra-information {
+        display: none;
+    }
+
+    #accounts-tbody .link {
+        display: none;
+    }
+}
+
+
+@media screen and (max-width: 968px){
+    .text-button{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 747px){
+    .table-actions{
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 659px){
+    .materials-table{
+        th, td{
+            padding: 5px;
+            font-size: 10px;
+        }
+    }
+
+    .category-badge, .category-col{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 701px){
+    .extra-information-order-manager{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 484px){
+    .actie-manager{
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 530px){
+    .zoek-filter-manager{
+        width: 70%;
+    }
+}
+
+@media screen and (max-width: 1165px){
+    .category-material{
+        display: none;
+    }
+}
+
+
+#bestel-layout {
+    flex-direction: row;
+}
+
+#basket-panel {
+    order: 2;
+}
+
+#bestel-layout > div:first-child {
+    order: 1;
+}
+
+@media (max-width: 900px) {
+    #bestel-layout {
+        flex-direction: column;
+    }
+
+    #basket-panel {
+        width: 100% !important;
+        position: static !important;
+        order: -1;
+    }
+
+    #materials-table {
+        font-size: 0.8rem;
+    }
+
+    #materials-table .category-material {
+        display: none;
+    }
+
+    #materials-table td,
+    #materials-table th {
+        padding: 0.3rem 0.4rem;
+    }
+
+    /* Cache la colonne ID */
+    #materials-table td:nth-child(1),
+    #materials-table th:nth-child(1) {
+        display: none;
+    }
+
+    /* Materiaal krijgt de meeste ruimte */
+    #materials-table td:nth-child(2),
+    #materials-table th:nth-child(2) {
+        min-width: 80px;
+        max-width: 110px;
+        word-break: break-word;
+        white-space: normal;
+    }
+
+    /* Hoeveelheid */
+    #materials-table td:nth-child(3),
+    #materials-table th:nth-child(3) {
+        width: 70px;
+    }
+
+    /* Selecteer */
+    #materials-table td:nth-child(4),
+    #materials-table th:nth-child(4) {
+        width: 10px;
+        padding-left: 0;
+        padding-right: 0;
+        text-align: center;
+    }
+
+    #materials-table .quantity-input {
+        width: 55px !important;
+    }
+}
+
+@media (max-width: 400px) {
+    .col-geplaatst {
+        display: none;
+    }
+}

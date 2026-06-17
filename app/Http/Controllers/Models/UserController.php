@@ -53,12 +53,12 @@ class UserController extends WebController
                 $validated = $request->validate([
                     'first_name' => ['required', 'max:40'],
                     'last_name' => ['required', 'max:40'],
-                    'email' => ['required','email','unique:users'],
-                    'phone_number' => ['required','numeric','unique:users'],
+                    'email' => ['required','email','unique:users,email'],
+                    'phone_number' => ['required','numeric','unique:users','regex:/^(\+32|0)[0-9]{8,9}$/'],
                     'role_id' => ['required', 'exists:roles,id'],
                     'site_id' => ['required', 'exists:sites,id'],
                     'password' => ['required','min:8'],
-                    'password_confirmation' => ['required','same:password'],
+                    'password_confirmation' => ['required','same:password']
                 ]);
 
                 $validated['password'] = Hash::make($validated['password']);
@@ -112,12 +112,12 @@ class UserController extends WebController
                 $validated = $request->validate([
                     'first_name' => ['required', 'max:40'],
                     'last_name' => ['required', 'max:40'],
-                    'email' => ['required','email','unique:users,email,'.$id],
-                    'phone_number' => ['required','numeric','unique:users'],
+                    'email' => ['required', 'email', 'unique:users,email,' . $id],
+                    'phone_number' => ['required', 'numeric', 'unique:users,phone_number,' . $id],
                     'role_id' => ['required', 'exists:roles,id'],
                     'site_id' => ['required', 'exists:sites,id'],
                     'password' => ['nullable'],
-                    'password_confirmation' => ['nullable'],
+                    'password_confirmation' => ['nullable']
                 ]);
 
                 if ($validated['password']) {
