@@ -1,3 +1,7 @@
+import {addFuzzySearch} from "../utils.js";
+addFuzzySearch('search-order','search-suggestions', 'orders-tbody', ['firstname', 'lastname', 'deliverysite'],)
+
+
 const searchInput = document.querySelector('input[type="text"]');
 const dateInput = document.querySelector('input[type="date"]');
 const regioSelect = document.querySelector('select');
@@ -32,14 +36,7 @@ searchInput.addEventListener('input', filterTable);
 dateInput.addEventListener('change', filterTable);
 regioSelect.addEventListener('change', filterTable);
 
-import { initFuzzySearch } from '../fuzzy-search.js'
 
 
-document.addEventListener('DOMContentLoaded', () => {
-    initFuzzySearch({
-        inputId:       'search-order',
-        suggestionsId: 'search-suggestions',
-        tbodyId:       'orders-tbody',
-        keys:           ['firstname', 'lastname', 'deliverysite'],
-    })
-})
+
+
