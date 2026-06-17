@@ -7,7 +7,7 @@
                 <a href="{{ route('/') }}" class="flex items-center">
                     <img class="logo" src="{{ asset('images/Logo_Aquafin.png') }}" alt="Aquafin logo" title="Aquafin logo">
                 </a>
-                <div class="space-x-6 sm:flex sm:ml-10">
+                <div class="space-x-6 sm:flex sm:ml-10" id="main-nav-bar">
                     @if(auth()->check())
                         {{-- Show navigation links based on user role --}}
                         <x-nav-link :href="route('/')" :active="request()->routeIs('/')">
@@ -21,29 +21,33 @@
                         @if($roleName === Role::ADMIN)
 
                             <x-nav-link :href="route('admin.accounts.index')" :active="request()->routeIs('technieker')">
-                                {{ __('Accounts') }}
+                                 Accounts
                             </x-nav-link>
 
                             <x-nav-link :href="route('admin.roles.index')" :active="request()->routeIs('technieker')">
-                                {{ __('Rollen') }}
+                             Rollen
                             </x-nav-link>
 
                             <x-nav-link :href="route('admin.materials.index')" :active="request()->routeIs('technieker')">
-                                {{ __('Materialen') }}
+                                 Materialen
                             </x-nav-link>
 
-                            <x-nav-link href="#">
-                                {{ __('Hulpaanvraag') }}
+                            <x-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('technieker')">
+                                Categorieën
+                            </x-nav-link>
+
+                            <x-nav-link href="{{route('admin.help-requests.index', 'all')}}"  :active="request()->routeIs('technieker')">
+                                Hulpaanvraag
                             </x-nav-link>
                         @elseif($roleName === Role::TECHNIEKER)
 
 
                             <x-nav-link :href="route('orders.index')" :active="request()->routeIs('technieker.bestellen')">
-                                {{ __('Bestellingen') }}
+                                Bestellingen
                             </x-nav-link>
 
                             <x-nav-link :href="route('orders.create')" :active="request()->routeIs('technieker.bestellen')">
-                                {{ __('Bestellen') }}
+                                Bestellen
                             </x-nav-link>
 
 
@@ -69,12 +73,12 @@
                         </x-slot>
                         <x-slot name="content">
                             <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profile') }}
+                                 Profile
                             </x-dropdown-link>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">
-                                    {{ __('Log Out') }}
+                                   Log Out
                                 </x-dropdown-link>
                             </form>
                         </x-slot>
@@ -84,15 +88,8 @@
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': !open }" class="inline-flex"
-                              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': !open, 'inline-flex': open }" class="hidden"
-                              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                              d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                <button @click="open = ! open" class="inline-flex border-0 items-center justify-center p-2 rounded-md   focus:outline-none transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#000000"><path d="M120-693.33V-760h720v66.67H120ZM120-200v-66.67h720V-200H120Zm0-246.67v-66.66h720v66.66H120Z"/></svg>
                 </button>
             </div>
         </div>
@@ -100,10 +97,10 @@
 
     <!-- Responsive Navigation -->
     <div :class="{'block': open, 'hidden': !open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
+        <div class="pt-2 pb-3 space-y-1" id="mobile-nav-bar">
             @if(auth()->check())
                 <x-responsive-nav-link :href="route('/')" :active="request()->routeIs('/')">
-                    {{ __('Dashboard') }}
+                 Dashboard
                 </x-responsive-nav-link>
                 @php
                     $roleName = auth()->user()->role->name ?? null;
@@ -112,25 +109,33 @@
                 @if($roleName === Role::ADMIN)
 
                     <x-responsive-nav-link :href="route('admin.accounts.index')" :active="request()->routeIs('technieker')">
-                        {{ __('Accounts') }}
+                       Accounts
                     </x-responsive-nav-link>
 
                     <x-responsive-nav-link :href="route('admin.roles.index')" :active="request()->routeIs('technieker')">
-                        {{ __('Rollen') }}
+                        Rollen
+                    </x-responsive-nav-link>
+
+                    <x-responsive-nav-link :href="route('admin.materials.index')" :active="request()->routeIs('technieker')">
+                      Materialen
+                    </x-responsive-nav-link>
+
+                    <x-responsive-nav-link :href="route('admin.categories.index')" :active="request()->routeIs('technieker')">
+                        Categorieën
                     </x-responsive-nav-link>
 
                     <x-responsive-nav-link href="#">
-                        {{ __('Hulpaanvraag') }}
+                        Hulpaanvraag
                     </x-responsive-nav-link>
                 @elseif($roleName === Role::TECHNIEKER)
 
 
                     <x-responsive-nav-link :href="route('orders.index')" :active="request()->routeIs('technieker.bestellen')">
-                        {{ __('Bestellingen') }}
+                       Bestellingen
                     </x-responsive-nav-link>
 
                     <x-responsive-nav-link :href="route('orders.create')" :active="request()->routeIs('technieker.bestellen')">
-                        {{ __('Bestellen') }}
+                         Bestellen
                     </x-responsive-nav-link>
 
                 @endif

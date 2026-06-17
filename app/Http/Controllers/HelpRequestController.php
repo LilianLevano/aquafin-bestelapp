@@ -4,43 +4,67 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\HelpRequest;
+use Carbon\Carbon;
 
 class HelpRequestController extends Controller
 {
+    public function index(string $is_completed){
+
+        if($is_completed == 'completed'){
+            $requests = HelpRequest::where('is_completed', 1)->orderBy('created_at', 'desc')->get();
+        }else if ($is_completed == 'open'){
+            $requests = HelpRequest::where('is_completed', 0)->orderBy('created_at', 'desc')->get();
+        }else {
+            $requests = HelpRequest::all();
+        }
+
+        return view('help-requests.index', compact('requests'));
+    }
+
+    public function create(){
+        return view('help-requests.create');
+    }
     public function store(Request $request)
     {
         try {
             $validated = $request->validate([
-                'first_name'  => 'required|string|max:255',
-                'last_name'   => 'required|string|max:255',
-                'email'       => 'required|email',
-                'category'    => 'required|string',
-                'description' => 'required|string',
+                'first_name' => ['required', 'min:2'],
+                'last_name' => ['required', 'min:2'],
+                'email' => ['required','email',],
+                'title' => ['required', 'max:50'],
+                'description' => ['required', 'max:400'],
             ]);
 
-            HelpRequest::create([
-                'name'        => trim($validated['first_name'] . ' ' . $validated['last_name']),
-                'email'       => $validated['email'],
-                'category'    => $validated['category'],
-                'description' => $validated['description'],
-                'is_completed' => false,
-            ]);
+            HelpRequest::create($validated);
+            return redirect()->route('login')->with('status', 'Jouw aanvraag werd gestuurd!');
 
-            return response()->json([
-                'status'  => 'success',
-                'message' => 'Verzoek verstuurd.',
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'Controleer de ingevulde velden.',
-                'errors'  => $e->errors(),
-            ], 422);
         } catch (\Exception $e) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => 'Er ging iets mis met het verzoeken voor hulp, neem contact op met de IT-dienst.',
-            ], 500);
+            return redirect()->route('login')->with('status', 'Jouw aanvraag werd niet doorgestuurd, probeer het opnieuw later.');
         }
+    }
+    public function edit($id){
+        $request = HelpRequest::findOrFail($id);
+        return view('help-requests.partials.answer', compact('request'));
+    }
+
+    public function update(Request $request, $id){
+        try{
+            $validated = $request->validate([
+                'answer' => ['required'],
+            ]);
+
+            $helpRequest = HelpRequest::findOrFail($id);
+
+            $helpRequest->is_completed = 1;
+            $helpRequest->update($validated);
+            return redirect()->route('admin.help-requests.index', "all")->with('success', 'Jouw aanvraag werd gestuurd!');
+        }catch (\Exception $e){
+            return redirect()->route('admin.help-requests.index', "all")->with('error', $e->getMessage());
+        }
+    }
+
+    public function show($id){
+        $request = HelpRequest::findOrFail($id);
+        return view('help-requests.show', compact('request'));
     }
 }

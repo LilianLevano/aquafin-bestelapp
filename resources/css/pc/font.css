@@ -1,0 +1,207 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+a {
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.h1 {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.center {
+    text-align: center;
+}
+
+.right {
+    text-align: right;
+}
+
+/* Nav */
+.nav-brand {
+    font-weight: 600;
+}
+
+.nav-link {
+    font-size: 14px;
+}
+
+.nav-link.active {
+    font-weight: 500;
+}
+
+/* Forms */
+.field label {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.field input,
+.field select,
+.field textarea {
+    font: inherit;
+}
+
+.error {
+    font-size: 12px;
+}
+
+/* Buttons */
+.btn {
+    font: inherit;
+    font-weight: 500;
+}
+
+.btn-sm {
+    font-size: 13px;
+}
+
+.btn-primary {
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Table */
+.table th,
+.table td {
+    text-align: left;
+}
+
+.table th {
+    font-weight: 500;
+    font-size: 12px;
+    text-transform: none;
+}
+
+.link {
+    font: inherit;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+/* Alerts */
+.alert {
+    font-size: 13px;
+}
+
+.back-link {
+    font-size: 13px;
+}
+
+/* Other */
+.navbar a {
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.manager-page {
+    text-align: center;
+}
+
+footer {
+    text-align: center;
+}
+
+.manager-page h1 {
+    font-size: 32px;
+}
+
+.manager-table th,
+.manager-table td,
+table th,
+table td {
+    text-align: center;
+}
+
+.manager-table th,
+table th {
+    font-weight: bold;
+}
+
+.form-card label {
+    font-weight: bold;
+}
+
+.empty-message {
+    text-align: center;
+    font-weight: bold;
+}
+
+.btn-edit {
+    text-decoration: none;
+}
+
+.status-tabs .tab {
+    font-weight: 600;
+}
+
+.help-request-title label,
+.help-request-description label {
+    font-weight: 600;
+}
+
+.text-field,
+.description-box {
+    font-size: 15px;
+}
+
+.aanvraag-title label,
+.aanvraag-description label {
+    font-weight: 600;
+}
+
+.weer-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.weer-btn {
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.weer-tab {
+    font-weight: 600;
+}
+
+.chart-type-btn {
+    font-weight: 500;
+}
+
+.weer-table th,
+.weer-table td {
+    text-align: center;
+    font-size: 0.92rem;
+}
+
+.weer-table th {
+    font-weight: 600;
+}
+
+.risk-cell {
+    font-weight: 700;
+}
+
+.weer-chart-block h2 {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.weer-error {
+    font-weight: 500;
+}
+
+.weer-empty {
+    text-align: center;
+    font-size: 1rem;
+}

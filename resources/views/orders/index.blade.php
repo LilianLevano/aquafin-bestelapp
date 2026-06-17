@@ -1,8 +1,16 @@
 @extends('layouts.app')
+@section('title', 'Mijn Bestellingen')
 
 @section('content')
     <h1>Bestellingen Overzicht</h1>
 
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h1 mb-0">Mijn Bestellingen</h1>
+        <a href="{{ route('orders.create') }}" class="btn btn-primary">
+            + Nieuwe bestelling
+        </a>
+    </div>
     <div class="filter-zone">
         <div class="filter-item">
             <label>Zoeken</label>
@@ -27,15 +35,12 @@
 
         <button class="btn-primary">Filter</button>
     </div>
-
-    <button><a href="{{route('orders.create')}}">Plaats een nieuwe bestelling</a> </button>
-
     <table class="manager-table">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Geplaatst door</th>
-                <th>Items</th>
+
                 <th>Leverplaats</th>
                 <th>Leverdatum</th>
                 <th>Status</th>
@@ -50,9 +55,7 @@
             <tr>
                 <td>{{$order->id}}</td>
                 <td>{{$order->user->first_name . ' ' . $order->user->last_name  }}</td>
-                <td>
-                    {{ $order->materials->take(3)->map(fn($m) => $m->name . ' (x' . $m->pivot->quantity . ')')->implode(', ') . ($order->materials->count() > 3 ? ', ...' : '') }}
-                </td>
+
                 <td>{{$order->site->description}}</td>
                 <td>{{$order->delivery_date}}</td>
                 <td>{{ \Carbon\Carbon::parse($order->delivery_date)->isPast() ? 'Geleverd' : 'Aan het leveren' }}</td>

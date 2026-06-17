@@ -40,27 +40,26 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'first_name' => ['required', 'max:40'],
-            'last_name' => ['required', 'max:40'],
-            'email' => ['required','email','unique:users'],
-            'phone_number' => ['required','numeric','unique:users'],
-            'role_id' => ['required', 'exists:roles,id'],
-            'site_id' => ['required', 'exists:sites,id'],
-            'password' => ['required','min:8'],
-            'password_confirmation' => ['required','same:password'],
-        ]);
+        try{
+            $validated = $request->validate([
+                'first_name' => ['required', 'max:40'],
+                'last_name' => ['required', 'max:40'],
+                'email' => ['required','email','unique:users,email'],
+                'phone_number' => ['required','numeric','unique:users','regex:/^(\+32|0)[0-9]{8,9}$/'],
+                'role_id' => ['required', 'exists:roles,id'],
+                'site_id' => ['required', 'exists:sites,id'],
+                'password' => ['required','min:8'],
+                'password_confirmation' => ['required','same:password'],
+            ]);
 
-        $validated['password'] = Hash::make($validated['password']);
-        unset($validated['password_confirmation']);
+            $validated['password'] = Hash::make($validated['password']);
 
-        try {
             User::create($validated);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Er ging iets mis met het aanmaken...'], 500);
+        }catch (\Exception $exception){
+            return back()->with('error', $exception->getMessage());
         }
 
-        return response()->json(['message' => 'Gebruiker aangemaakt.']);
+        return redirect()->route('admin.accounts.index')->with('status', 'Gebruiker aangemaakt!');
     }
 
     /**
@@ -86,30 +85,36 @@ class AccountController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $validated = $request->validate([
-            'first_name' => ['required', 'max:40'],
-            'last_name' => ['required', 'max:40'],
-            'email' => ['required','email','unique:users,email,'.$id],
-            'phone_number' => ['required','numeric','unique:users'],
-            'role_id' => ['required', 'exists:roles,id'],
-            'site_id' => ['required', 'exists:sites,id'],
-            'password' => ['nullable'],
-            'password_confirmation' => ['nullable'],
 
-        ]);
+        try{
+            $validated = $request->validate([
+                'first_name' => ['required', 'max:40'],
+                'last_name' => ['required', 'max:40'],
+                'email' => ['required','email','unique:users,email,'.$id],
+                'phone_number' => ['required','numeric','unique:users'],
+                'role_id' => ['required', 'exists:roles,id'],
+                'site_id' => ['required', 'exists:sites,id'],
+                'password' => ['nullable'],
+                'password_confirmation' => ['nullable'],
 
-        if ($validated['password']) {
+            ]);
 
-            if($validated['password'] == $validated['password_confirmation']) {
-                $validated['password'] = Hash::make($validated['password']);
+            if ($validated['password']) {
+
+                if($validated['password'] == $validated['password_confirmation']) {
+                    $validated['password'] = Hash::make($validated['password']);
+                }
+            } else {
+                unset($validated['password']);
+                unset($validated['password_confirmation']);
             }
-        } else {
-            unset($validated['password']);
-            unset($validated['password_confirmation']);
+
+            $user = User::findOrFail($id);
+            $user->update($validated);
+        }catch (\Exception $exception){
+            return back()->with('error', $exception->getMessage());
         }
 
-        $user = User::findOrFail($id);
-        $user->update($validated);
         return redirect()->route('admin.accounts.index')->with('status', 'Gebruiker aangepast!');
     }
 
