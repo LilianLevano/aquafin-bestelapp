@@ -29,7 +29,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h1 mb-0">Mijn Bestellingen</h1>
-        <a href="{{ route('orders.create') }}" class="btn btn-primary">
+  <a href="{{ route('technieker.orders.create') }}" class="btn btn-primary">
             + Nieuwe bestelling
         </a>
     </div>
@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <button><a href="{{route('orders.create')}}">Plaats een nieuwe bestelling</a> </button>
+    <button><a href="{{route('technieker.orders.create')}}">Plaats een nieuwe bestelling</a> </button>
 
     <table class="manager-table">
         <thead>
@@ -264,3 +264,4 @@ function showWeatherTable(type, button) {
         }
     </script>
 @endpush
+

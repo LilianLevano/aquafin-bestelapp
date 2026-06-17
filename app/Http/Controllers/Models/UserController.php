@@ -17,7 +17,7 @@ class UserController extends WebController
     /**
      * Display a listing of the resource.
      */
-    #[Override]
+    
     public function index(): View
     {
         $accounts = User::paginate(
