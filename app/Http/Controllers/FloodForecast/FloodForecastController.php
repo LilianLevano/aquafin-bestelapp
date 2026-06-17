@@ -5,6 +5,7 @@ namespace App\Http\Controllers\FloodForecast;
 use App\Http\Controllers\WebController;
 use App\Services\WeatherService;
 use App\Services\RiskCalculationService;
+use App\Services\FloodForecastService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,8 @@ class FloodForecastController extends WebController
 {
     public function __construct(
         protected WeatherService $weatherService,
-        protected RiskCalculationService $riskService
+        protected RiskCalculationService $riskService,
+        protected FloodForecastService $forecastService
     ) {}
 
     /**
@@ -31,14 +33,12 @@ class FloodForecastController extends WebController
 
     /**
      * API endpoint — returns processed forecast + risk data as JSON.
-     * Cached for 30 minutes. Used by the frontend JS.
      */
     public function api(Request $request): JsonResponse
     {
         return $this->handleWithCases(
             $request,
             function () use ($request) {
-                // Validate days_ahead param
                 $days = (int) $request->input('days_ahead', 7);
 
                 if ($days < 1 || $days > 14) {
@@ -47,7 +47,6 @@ class FloodForecastController extends WebController
                     ]);
                 }
 
-                // Validate user has a site with coordinates
                 $user = Auth::user();
                 if (
                     !$user ||
@@ -60,28 +59,35 @@ class FloodForecastController extends WebController
                     ]);
                 }
 
+                $siteId    = $user->site->id;
                 $latitude  = $user->site->latitude;
                 $longitude = $user->site->longitude;
+                $cacheKey  = "weather_forecast_{$siteId}_{$days}";
 
-                // Use cache — re-fetch if not available
-                $cacheKey = "weather_forecast_{$user->id}_{$days}";
-
-                $result = cache()->remember($cacheKey, now()->addMinutes(30), function () use ($latitude, $longitude, $days) {
-                    // Fetch raw data from Open-Meteo
+                $result = cache()->remember($cacheKey, now()->addMinutes(30), function () use ($latitude, $longitude, $days, $siteId) {
+                    // 1. Fetch raw weather data
                     $raw = $this->weatherService->fetchForecast($latitude, $longitude, $days);
 
-                    // Process into daily records with risk values
+                    // 2. Process daily records with risk values
                     $dailyRecords = $this->riskService->processDailyRecords($raw, $days);
 
-                    // Calculate weekly summary (min, max, avg risk + risk days)
+                    // 3. Calculate weekly summary
                     $weeklySummary = $this->riskService->calculateWeeklySummary($dailyRecords);
+
+                    // 4. Generate 5-year prediction + save to DB
+                    $predictions = $this->forecastService->generateFiveYearPrediction($dailyRecords, $siteId);
+                    $saved       = $this->forecastService->savePredictions($predictions, $siteId);
 
                     return [
                         'daily'         => $dailyRecords,
                         'summary'       => $weeklySummary,
                         'riskThreshold' => RiskCalculationService::RISK_THRESHOLD,
                         'days'          => $days,
-                        'raw'           => $raw, // kept for frontend chart compatibility
+                        'raw'           => $raw,
+                        'fiveYear'      => [
+                            'analyses'   => array_slice($saved['analyses'], 0, 24), // first 2 years for frontend
+                            'riskMonths' => $saved['riskMonths'],
+                        ],
                     ];
                 });
 
@@ -90,7 +96,7 @@ class FloodForecastController extends WebController
             [
                 200 => ['message' => 'Voorspellingen succesvol opgehaald!'],
                 422 => ['message' => 'Ongeldige invoer voor aantal dagen vooruit.'],
-                500 => ['message' => 'Fout bij het ophalen van gegevens van de Open-Meteo API.'],
+                500 => ['message' => 'Er ging iets mis bij het ophalen van de overstromingsgegevens.'],
             ],
             JsonResponse::class
         );

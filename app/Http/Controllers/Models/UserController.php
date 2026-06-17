@@ -99,11 +99,10 @@ class UserController extends WebController
         return view('accounts.edit', compact('account', 'roles', 'sites'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    #[Override]
-    public function update(Request $request, string $id): RedirectResponse
+   /**
+ * Update the specified resource in storage.
+ */
+public function update(Request $request, string $id): RedirectResponse
     {
         return $this->handleWithCases(
             $request,
