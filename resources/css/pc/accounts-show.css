@@ -9,43 +9,46 @@
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    color: #6b7280;
+    font-weight: 500;
+    color: #4a5c70;
     text-decoration: none;
     margin-bottom: 1.5rem;
+    transition: color .15s;
 }
-
 .account-back-link:hover {
-    color: #111;
+    color: #0057a8;
 }
 
 .account-card {
     background: #fff;
-    border: 0.5px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 1.5rem;
+    border: 1px solid #e1e8f0;
+    border-radius: 14px;
+    padding: 1.75rem;
+    box-shadow: 0 1px 3px rgba(13, 27, 46, .08);
 }
 
 .account-header {
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
     padding-bottom: 1.25rem;
-    border-bottom: 0.5px solid #e5e7eb;
+    border-bottom: 1px solid #e1e8f0;
 }
 
 .account-avatar {
-    width: 48px;
-    height: 48px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background: #eff6ff;
-    color: #1d4ed8;
+    color: #0057a8;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 16px;
+    font-weight: 700;
     flex-shrink: 0;
+    border: 2px solid #dbeafe;
 }
 
 .account-header-info {
@@ -56,13 +59,15 @@
 
 .account-name {
     font-size: 18px;
-    font-weight: 500;
+    font-weight: 700;
     margin: 0;
+    color: #0d1b2e;
+    letter-spacing: -.01em;
 }
 
 .account-id {
     font-size: 13px;
-    color: #6b7280;
+    color: #8fa3b8;
     margin: 0;
 }
 
@@ -70,10 +75,11 @@
     display: inline-block;
     font-size: 12px;
     padding: 3px 10px;
-    border-radius: 6px;
-    font-weight: 500;
+    border-radius: 20px;
+    font-weight: 600;
     background: #f0fdf4;
     color: #15803d;
+    border: 1px solid #bbf7d0;
 }
 
 .account-fields {
@@ -87,42 +93,40 @@
     align-items: center;
     justify-content: space-between;
     padding: 12px 0;
-    border-bottom: 0.5px solid #e5e7eb;
+    border-bottom: 1px solid #e1e8f0;
 }
-
 .account-field:last-child {
     border-bottom: none;
 }
 
 .account-field-label {
     font-size: 13px;
-    color: #6b7280;
+    color: #8fa3b8;
     display: flex;
     align-items: center;
     gap: 8px;
 }
-
 .account-field-label svg {
     flex-shrink: 0;
 }
 
 .account-field-value {
     font-size: 14px;
-    font-weight: 500;
-    color: #111;
+    font-weight: 600;
+    color: #0d1b2e;
 }
-
 .account-field-value.muted {
-    color: #9ca3af;
+    color: #8fa3b8;
     font-weight: 400;
 }
 
 .account-actions {
     display: flex;
     gap: 8px;
-    margin-top: 1.25rem;
+    margin-top: 1.5rem;
     padding-top: 1.25rem;
-    border-top: 0.5px solid #e5e7eb;
+    border-top: 1px solid #e1e8f0;
+    justify-content: flex-end;
 }
 
 .btn-edit {
@@ -130,18 +134,19 @@
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    padding: 7px 16px;
-    background: #111;
-    color: #fff;
+    font-weight: 600;
+    padding: 8px 18px;
+    background: #0057a8;
+    color: #fff !important;
     border: none;
     border-radius: 8px;
-    text-decoration: none;
+    text-decoration: none !important;
     cursor: pointer;
-    transition: background 0.15s;
+    transition: background .15s, transform .1s;
 }
-
 .btn-edit:hover {
-    background: #333;
+    background: #00449a;
+    transform: translateY(-1px);
 }
 
 .btn-delete {
@@ -149,17 +154,17 @@
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    padding: 7px 16px;
-    background: #fff;
-    color: #dc2626;
-    border: 0.5px solid #fca5a5;
-    border-radius: 8px;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
-}
-
-.btn-delete:hover {
+    font-weight: 600;
+    padding: 8px 18px;
     background: #fef2f2;
+    color: #dc2626 !important;
+    border: 1px solid #fee2e2;
+    border-radius: 8px;
+    text-decoration: none !important;
+    cursor: pointer;
+    transition: background .15s, border-color .15s;
+}
+.btn-delete:hover {
+    background: #fee2e2;
     border-color: #dc2626;
 }

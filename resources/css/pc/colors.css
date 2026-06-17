@@ -1,15 +1,20 @@
 :root {
-    --bg: #f7f8fa;
-    --card: #ffffff;
-    --border: #e5e7eb;
-    --text: #0f172a;
-    --muted: #64748b;
-    --primary: #0ea5e9;
-    --primary-hover: #0284c7;
-    --danger: #dc2626;
-    --success-bg: #ecfdf5;
-    --success-text: #065f46;
-    --radius: 10px;
+    --bg:             #f2f6fb;
+    --bg-subtle:      #eaeff6;
+    --card:           #ffffff;
+    --border:         #e1e8f0;
+    --text:           #0d1b2e;
+    --muted:          #8fa3b8;
+    --primary:        #0057a8;
+    --primary-hover:  #00449a;
+    --primary-50:     #eff6ff;
+    --primary-light:  #dbeafe;
+    --danger:         #dc2626;
+    --danger-bg:      #fef2f2;
+    --danger-light:   #fee2e2;
+    --success-bg:     #f0fdf4;
+    --success-text:   #166534;
+    --radius:         10px;
 }
 
 body {
@@ -22,14 +27,14 @@ a {
 }
 
 .bg-muted {
-    background: #f1f5f9;
+    background: var(--bg-subtle);
 }
 
 .card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+    box-shadow: 0 1px 3px rgba(13, 27, 46, .07);
 }
 
 .muted {
@@ -38,36 +43,39 @@ a {
 
 /* Nav */
 .admin-nav {
-    background: var(--card);
-    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, #004a94 0%, #002e68 100%);
+    border-bottom: none;
+    box-shadow: 0 2px 12px rgba(0, 46, 104, .22);
 }
 
 .nav-brand {
-    color: var(--text);
+    color: #fff;
 }
 
 .nav-link {
-    color: var(--muted);
+    color: rgba(255, 255, 255, .82);
 }
 
 .nav-link.active {
-    color: var(--text);
+    color: #fff;
 }
 
 /* Forms */
 .field input,
 .field select,
 .field textarea {
-    border: 1px solid var(--border);
-    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
     background: #fff;
     color: var(--text);
-
-    &:focus {
-        outline: none;
-        border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(14, 165, 233, .15);
-    }
+    transition: border-color .15s, box-shadow .15s;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 87, 168, .12);
 }
 
 .error {
@@ -76,51 +84,46 @@ a {
 
 /* Buttons */
 .btn {
-    border-radius: 8px;
+    border-radius: 7px;
     border: 1px solid transparent;
-
-    &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-    }
+}
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .btn-primary {
-    /* background: var(--primary); */
-    border: none;
-    background-color: #0067a8;
+    background-color: var(--primary);
     color: white;
-    border-radius: 8px;
-
-    &:hover {
-        background: var(--primary-hover);
-    }
+    border-radius: 7px;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 58, 130, .20);
+}
+.btn-primary:hover {
+    background: var(--primary-hover);
 }
 
 .btn-outline {
     background: #fff;
     border-color: var(--border);
     color: var(--text);
-
-    &:hover {
-        background: var(--bg);
-    }
+}
+.btn-outline:hover {
+    background: var(--bg);
 }
 
 /* Table */
 .table {
     border-collapse: collapse;
 }
-
 .table th,
 .table td {
     border-bottom: 1px solid var(--border);
 }
-
 .table th {
-    color: var(--muted);
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary) 0%, #003b82 100%);
 }
-
 .table tr:last-child td {
     border-bottom: none;
 }
@@ -130,130 +133,153 @@ a {
     border: none;
     color: var(--primary);
 }
-
 .link-danger {
     color: var(--danger);
 }
 
 /* Alerts */
 .alert {
-    border-radius: 8px;
+    border-radius: 7px;
 }
-
 .alert-success {
     background: var(--success-bg);
     color: var(--success-text);
+    border: 1px solid #bbf7d0;
 }
-
 .alert-error {
-    background: var(--danger);
-    color: white;
+    background: var(--danger-bg);
+    color: var(--danger);
+    border: 1px solid var(--danger-light);
 }
 
 .back-link {
+    color: #4a5c70;
+}
+.back-link:hover {
     color: var(--primary);
 }
 
-/* Other */
+/* Navbar */
 .navbar {
-    background-color: #005fa3;
+    background: linear-gradient(135deg, #004a94 0%, #002e68 100%);
     color: white;
+    box-shadow: 0 2px 16px rgba(0, 46, 104, .22);
 }
-
 .navbar a {
-    color: white;
+    color: rgba(255, 255, 255, .88);
+}
+.navbar a:hover {
+    color: #ffffff;
 }
 
+/* Manager page */
 .manager-page {
-    background-color: #f4f8fb;
+    background-color: var(--bg);
 }
 
+/* Footer */
 footer {
-    background-color: #003f6b;
+    background: linear-gradient(135deg, #002e68 0%, #001640 100%);
     color: white;
 }
 
+/* Tables */
 .manager-table,
 table {
     border-collapse: collapse;
     background: white;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(13, 27, 46, .08);
 }
-
 .manager-table th,
 .manager-table td,
 table th,
 table td {
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--border);
 }
-
 .manager-table th,
 table th {
-    background-color: #eaf3ff;
-    color: #005fa3;
+    background: linear-gradient(135deg, var(--primary) 0%, #003b82 100%);
+    color: #ffffff;
 }
 
+/* Form cards */
 .form-card,
 .help-request-card,
 .filter-zone {
     background: white;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 8px rgba(13, 27, 46, .08);
+    border: 1px solid var(--border);
 }
 
+/* Fields */
 .text-field,
 .description-box,
 .form-card input,
 .form-card select,
 .filter-zone input,
 .filter-zone select {
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
 }
 
 .empty-message {
-    color: #64748b;
+    color: var(--muted);
 }
 
+/* Action buttons */
 .btn-edit {
-    background-color: #2ecc71;
+    background-color: #16a34a;
     color: white;
-    border-radius: 5px;
+    border-radius: 7px;
     border: none;
+}
+.btn-edit:hover {
+    background-color: #15803d;
 }
 
 .btn-delete {
-    background-color: #e74c3c;
-    color: white;
-    border-radius: 5px;
-    border: none;
+    background-color: var(--danger-bg);
+    color: var(--danger);
+    border-radius: 7px;
+    border: 1px solid var(--danger-light);
+}
+.btn-delete:hover {
+    background-color: var(--danger-light);
 }
 
+/* Status tabs */
 .status-tabs .tab {
-    background-color: #0067a8;
-    color: white;
-    border: none;
-    border-radius: 8px;
+    background-color: #fff;
+    color: var(--primary);
+    border: 1.5px solid var(--primary);
+    border-radius: 20px;
+}
+.status-tabs .tab.active,
+.status-tabs .tab:hover {
+    background-color: var(--primary);
+    color: #fff;
 }
 
-.status-tabs .tab.active {
-    background-color: #004f82;
-}
-
+/* Help / aanvraag cards */
 .help-request-card {
     background: white;
     border-radius: 14px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 14px rgba(13, 27, 46, .08);
+    border: 1px solid var(--border);
 }
 
 .text-field,
 .description-box {
-    border: 1px solid #cbd5e1;
-    border-radius: 10px;
+    border: 1.5px solid #d1dce8;
+    border-radius: 7px;
     background-color: #f8fafc;
 }
 
 .help-request-footer {
-    color: #0f172a;
+    color: #4a5c70;
 }
 
 .navbar h2 {
@@ -263,126 +289,110 @@ table th {
 .aanvraag-card {
     background: white;
     border-radius: 14px;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 14px rgba(13, 27, 46, .08);
+    border: 1px solid var(--border);
 }
 
 .aanvraag-footer {
-    color: #0f172a;
+    color: #4a5c70;
 }
 
+/* Weather */
 .weer-title {
-    color: #1e3a5f;
+    color: var(--text);
 }
 
 .weer-btn {
-    background: #1e3a5f;
+    background: var(--primary);
     color: white;
-    border-radius: 8px;
-
-    &:hover {
-        background: #2d5282;
-    }
+    border-radius: 20px;
+}
+.weer-btn:hover {
+    background: var(--primary-hover);
 }
 
 .weer-tab {
-    border: 2px solid #1e3a5f;
-    border-radius: 6px;
+    border: 1.5px solid var(--primary);
+    border-radius: 20px;
     background: white;
-    color: #1e3a5f;
-
-    &:hover:not(.active) {
-        background: #e8f0fe;
-    }
+    color: var(--primary);
 }
-
+.weer-tab:hover:not(.active) {
+    background: var(--primary-50);
+}
 .weer-tab.active {
-    background: #1e3a5f;
+    background: var(--primary);
     color: white;
 }
 
 .chart-type-btn {
-    border: 2px solid #6b7280;
-    border-radius: 6px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 7px;
     background: white;
     color: #374151;
-
-    &.active {
-        background: #374151;
-        color: white;
-        border-color: #374151;
-    }
-
-    &:hover:not(.active) {
-        background: #f3f4f6;
-    }
+}
+.chart-type-btn.active {
+    background: #374151;
+    color: white;
+    border-color: #374151;
+}
+.chart-type-btn:hover:not(.active) {
+    background: #f3f4f6;
 }
 
 .weer-table-wrapper {
     border-radius: 8px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 1px 4px rgba(13, 27, 46, .07);
 }
-
 .weer-table {
     border-collapse: collapse;
     background: white;
 }
-
 .weer-table th,
 .weer-table td {
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border);
 }
-
 .weer-table th {
-    background: #1e3a5f;
+    background: linear-gradient(135deg, var(--primary) 0%, #003b82 100%);
     color: white;
 }
 
 .risk-row {
-    background: #fef2f2;
+    background: var(--danger-bg);
 }
-
 .risk-cell {
-    color: #dc2626;
+    color: var(--danger);
     font-weight: 700;
 }
 
 .weer-chart-block {
     background: white;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border);
     border-radius: 10px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 4px rgba(13, 27, 46, .06);
 }
-
 .weer-chart-block h2 {
     color: #374151;
 }
 
 .weer-loading {
-    color: #6b7280;
+    color: var(--muted);
 }
-
 .weer-spinner {
-    border: 4px solid #e5e7eb;
-    border-top-color: #1e3a5f;
+    border: 3px solid var(--border);
+    border-top-color: var(--primary);
     border-radius: 50%;
 }
 
 .weer-error {
-    background: #fef2f2;
-    border: 1px solid #fca5a5;
-    color: #dc2626;
+    background: var(--danger-bg);
+    border: 1px solid var(--danger-light);
+    color: var(--danger);
     border-radius: 8px;
 }
-
 .weer-empty {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    color: #6b7280;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    color: var(--muted);
     border-radius: 8px;
-}
-
-@media screen and (max-width: 1015px) {
-    .table, th{
-        color: red;
-    }
 }

@@ -25,14 +25,18 @@
         @yield('header')
 
         <!-- Toast notifications -->
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-        @if(session('status'))
-            <div class="alert alert-success">{{ session('status') }}</div>
-        @endif
-        @if(session('error'))
-            <div class="alert alert-error">{{ session('error') }}</div>
+        @if(session('success') || session('status') || session('error'))
+        <div style="max-width:1200px;margin:0 auto;padding:12px 32px 0;">
+            @if(session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+            @if(session('status'))
+                <div class="alert alert-success">{{ session('status') }}</div>
+            @endif
+            @if(session('error'))
+                <div class="alert alert-error">{{ session('error') }}</div>
+            @endif
+        </div>
         @endif
 
         <!-- Page Content -->
