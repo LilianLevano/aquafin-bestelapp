@@ -245,15 +245,20 @@ function handleStateChange(prop, newValue, oldValue) {
  *
  * @async
  */
-async function loadWeatherData() {
+export async function loadWeatherData(bestelling_page) {
     state.value = "loading";
-    const cached = loadFromCache(CACHE_KEY, CACHE_DURATION);
+    const cached = await loadFromCache(CACHE_KEY, CACHE_DURATION);
+
+    if (bestelling_page) {
+        overview.value = 14;
+    }
 
     if (cached && cached.length >= overview.value) {
         daily = cached;
-        renderAll();
-        state.value = "data";
-        return;
+
+        if (!bestelling_page) {
+            renderAll();
+        }
     }
 
     try {
@@ -298,7 +303,10 @@ async function loadWeatherData() {
         }
 
         saveToCache(CACHE_KEY, daily);
-        renderAll();
+        if (!bestelling_page){
+            renderAll();
+        }
+
         state.value = "data";
     } catch (error) {
         console.error(error);

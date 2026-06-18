@@ -41,7 +41,7 @@
     <div class="d-flex gap-4 align-items-start flex-wrap" id="bestel-layout">
         {{-- LEFT: FORM --}}
         <div style="flex:1;min-width:0;">
-            <form action="{{ route('technieker.orders.create') }}" method="POST" id="bestel-form">
+            <form action="{{ route('technieker.orders.store') }}" method="POST" id="bestel-form">
                 @csrf
 
                 {{-- ORDER INFO --}}
@@ -87,6 +87,29 @@
                     </div>
                 </div>
 
+                <div class="card" id="priority-list" style="display: none;" >
+                    <div class="card">
+                        <div class="card-header fw-semibold">Prioritaire materialen</div>
+                        <div class="card-header fw-semibold">Selecteer materialen</div>
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0" id="materials-table">
+                                <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Materiaal</th>
+                                    <th class="category-material">Categorie</th>
+                                    <th>Hoeveelheid</th>
+                                    <th>Selecteer</th>
+                                </tr>
+                                </thead>
+                                <tbody id="priority-list-tbody">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
                 {{-- MATERIALS TABLE --}}
                 <div class="card">
                     <div class="card-header fw-semibold">Selecteer materialen</div>
@@ -103,8 +126,9 @@
                             </thead>
                             <tbody>
                                 @foreach($materials as $material)
-                                    <tr data-naam="{{ strtolower($material->name) }}"
-                                        data-categorie="{{ $material->category->name ?? '' }}">
+                                    <tr        data-id="{{ $material->id }}"
+                                               data-naam="{{ strtolower($material->name) }}"
+                                               data-categorie="{{ $material->category->name ?? '' }}">
                                         <td class="text-muted font-monospace small">{{ $material->id }}</td>
                                         <td class="fw-medium"><a href="{{route('technieker.materials.show', $material->id)}}">{{ $material->name }}</a> </td>
                                         <td class="category-material">
@@ -173,6 +197,7 @@
 @push('scripts')
     @vite('resources/js/orders/orders-create.js')
     <script>
+        const materials = @json($materials);
         const basket = JSON.parse(sessionStorage.getItem('basket') ?? '{}');
 
         function updateBasket(id, naam, qty) {
@@ -298,5 +323,54 @@
         document.getElementById('bestel-form').addEventListener('submit', () => {
             sessionStorage.removeItem('basket');
         });
+
+        document.addEventListener('change', function (e) {
+            if (!e.target.classList.contains('material-checkbox')) return;
+
+            const cb = e.target;
+            const id = cb.dataset.id;
+            const naam = cb.dataset.naam;
+
+            const qtyInput = document.querySelector(`.quantity-input[data-id="${id}"]`);
+            const qty = qtyInput ? parseInt(qtyInput.value) || 0 : 0;
+
+            if (!cb.checked) {
+                if (qtyInput) qtyInput.value = 0;
+                delete basket[id];
+                renderBasket();
+            } else if (qty === 0) {
+                if (qtyInput) qtyInput.value = 1;
+                updateBasket(id, naam, 1);
+            }
+        });
+
+        document.addEventListener('input', (e) => {
+            if (!e.target.classList.contains('quantity-input')) return;
+
+            const id = e.target.dataset.id;
+            const naam = e.target.dataset.naam;
+            const qty = parseInt(e.target.value) || 0;
+
+            updateBasket(id, naam, qty);
+        });
+
+        document.getElementById('delivery_date').addEventListener('change', function () {
+            resetPriorityList();
+        });
+
+        function resetPriorityList() {
+
+            const tbody = document.getElementById('priority-list-tbody');
+            if (tbody) tbody.innerHTML = '';
+
+
+            document.querySelectorAll('#materials-table tbody tr').forEach(tr => {
+                tr.style.display = '';
+            });
+
+
+            const box = document.getElementById('priority-list');
+            if (box) box.style.display = 'none';
+        }
     </script>
 @endpush

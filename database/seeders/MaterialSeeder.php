@@ -13,9 +13,9 @@ class MaterialSeeder extends Seeder
     public function run(): void
     {
         $materialData = [
-            ['name' => 'Bouten M6', 'category_id' => 1, 'image_path' => 'bouten-m6.webp', 'description' => 'Metrische zeskantbout M6, geschikt voor lichte constructies en bevestigingen.'],
-            ['name' => 'Bouten M8', 'category_id' => 1, 'image_path' => 'bouten-m8.jpg', 'description' => 'Metrische zeskantbout M8, veelgebruikt in mechanische en constructieve toepassingen.'],
-            ['name' => 'Bouten M10', 'category_id' => 1, 'image_path' => 'bouten-m10.jpg', 'description' => 'Metrische zeskantbout M10, voor middelzware constructies en machinebouw.'],
+            ['name' => 'Bouten M6', 'category_id' => 1, 'image_path' => 'bouten-m6.webp', 'description' => 'Metrische zeskantbout M6, geschikt voor lichte constructies en bevestigingen.', 'type' => 'ALWAYS'],
+            ['name' => 'Bouten M8', 'category_id' => 1, 'image_path' => 'bouten-m8.jpg', 'description' => 'Metrische zeskantbout M8, veelgebruikt in mechanische en constructieve toepassingen.', 'type' => 'ALWAYS'],
+            ['name' => 'Bouten M10', 'category_id' => 1, 'image_path' => 'bouten-m10.jpg', 'description' => 'Metrische zeskantbout M10, voor middelzware constructies en machinebouw.', 'type' => 'ALWAYS'],
             ['name' => 'Bouten M12', 'category_id' => 1, 'image_path' => 'bouten-m12.jpg', 'description' => 'Metrische zeskantbout M12, geschikt voor zware industriële bevestigingen.'],
             ['name' => 'Bouten M16', 'category_id' => 1, 'image_path' => 'bouten-m16.jpg', 'description' => 'Metrische zeskantbout M16, voor zware belastingen in staalconstructies.'],
             ['name' => 'Bouten inox A2', 'category_id' => 1, 'image_path' => 'bouten-inox-a2.jpg', 'description' => 'Roestvrijstalen bout A2 (AISI 304), corrosiebestendig voor binnen- en buitentoepassingen.'],

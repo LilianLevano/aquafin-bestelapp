@@ -48,7 +48,7 @@ class OrderController extends WebController
     #[Override]
     public function create(): View
     {
-        $materials = Material::select(['id', 'name', 'category_id'])->with('category:id,name')->get();
+        $materials = Material::select(['id', 'name', 'category_id', 'type'])->with('category:id,name')->get();
         $sites = Site::select(['id', 'description'])->get();
         return view('orders.create', compact('materials', 'sites'));
     }
