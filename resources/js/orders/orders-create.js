@@ -17,9 +17,8 @@ const datumInput = document.getElementById('delivery_date')
 let dayType = null;
 datumInput.addEventListener('change', ()=>{
 
-    let dayFound = false;
     let dayData = null;
-
+    const alertData = document.getElementById('alert-data')
     try {
         for (const datum of data) {
             if (datumInput.value === datum.date) {
@@ -40,9 +39,12 @@ datumInput.addEventListener('change', ()=>{
         } else {
             dayType = "NORMAL";
         }
-
+        console.log(dayType)
+        alertData.style.display = 'none';
         renderPriorityList(dayType, materials);
     } catch (e) {
+
+        alertData.style.display = 'block'
         console.error('Fout bij datumverwerking:', e.message);
     }
 
@@ -62,7 +64,7 @@ function hideFromMainTable(id) {
 
 function restoreMainTable() {
     document.querySelectorAll('#materials-table tbody tr').forEach(row => {
-        // Remet les names si ils ont été sauvegardés
+
         row.querySelectorAll('input[data-old-name]').forEach(input => {
             input.name = input.dataset.oldName;
             delete input.dataset.oldName;
@@ -92,7 +94,7 @@ function renderPriorityList(dayType, materials){
 
             tr.innerHTML = `
                         <td>${material.id}</td>
-                        <td>${material.name}</td>
+                        <td><a href="/technieker/materials/${material.id}">${material.name}</a> </td>
                         <td class="category-material">${material.category.name ?? ''}</td>
                         <td>
                             <input type="number"

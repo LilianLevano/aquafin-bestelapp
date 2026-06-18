@@ -553,9 +553,26 @@ table td {
     margin: 20px 0;
 }
 
+#priority-list {
+    border: 2px solid #f0a500;
+}
 
+#priority-list .card {
+    background-color: #fffbf0;
+}
 
+#priority-list .card-header {
+    background-color: #f0a500;
+    color: white;
+}
 
+#priority-list thead {
+    background-color: #fef3cd;
+}
+
+#priority-list .table-hover tbody tr:hover {
+    background-color: #fde8a0;
+}
 
 
 

@@ -87,6 +87,8 @@
                     </div>
                 </div>
 
+                <p id="alert-data" class="alert alert-error" style="display: none;">Er zijn geen voorspellingen gevonden voor deze dag. Neem een dag tussen vandaag en 14 dagen later.</p>
+
                 <div class="card" id="priority-list" style="display: none;" >
                     <div class="card">
                         <div class="card-header fw-semibold">Prioritaire materialen</div>
