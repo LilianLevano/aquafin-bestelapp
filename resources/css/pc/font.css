@@ -1,7 +1,7 @@
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-family: "Figtree", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.55;
 }
 
 a {
@@ -13,8 +13,9 @@ a {
 }
 
 .h1 {
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
 .center {
@@ -27,21 +28,25 @@ a {
 
 /* Nav */
 .nav-brand {
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.01em;
 }
 
 .nav-link {
     font-size: 14px;
+    font-weight: 500;
 }
 
 .nav-link.active {
-    font-weight: 500;
+    font-weight: 600;
 }
 
 /* Forms */
 .field label {
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
+    letter-spacing: 0.01em;
 }
 
 .field input,
@@ -52,12 +57,14 @@ a {
 
 .error {
     font-size: 12px;
+    font-weight: 500;
 }
 
 /* Buttons */
 .btn {
     font: inherit;
-    font-weight: 500;
+    font-weight: 600;
+    letter-spacing: 0.01em;
 }
 
 .btn-sm {
@@ -66,7 +73,8 @@ a {
 
 .btn-primary {
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 14px;
 }
 
 /* Table */
@@ -76,9 +84,10 @@ a {
 }
 
 .table th {
-    font-weight: 500;
-    font-size: 12px;
-    text-transform: none;
+    font-weight: 600;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 .link {
@@ -92,16 +101,20 @@ a {
 /* Alerts */
 .alert {
     font-size: 13px;
+    font-weight: 500;
 }
 
 .back-link {
     font-size: 13px;
+    font-weight: 500;
 }
 
 /* Other */
 .navbar a {
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.01em;
 }
 
 .manager-page {
@@ -110,10 +123,13 @@ a {
 
 footer {
     text-align: center;
+    font-size: 13px;
 }
 
 .manager-page h1 {
-    font-size: 32px;
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
 }
 
 .manager-table th,
@@ -125,29 +141,35 @@ table td {
 
 .manager-table th,
 table th {
-    font-weight: bold;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.02em;
 }
 
 .form-card label {
-    font-weight: bold;
+    font-weight: 700;
 }
 
 .empty-message {
     text-align: center;
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .btn-edit {
     text-decoration: none;
+    font-weight: 600;
 }
 
 .status-tabs .tab {
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 13.5px;
+    letter-spacing: 0.01em;
 }
 
 .help-request-title label,
 .help-request-description label {
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 13.5px;
 }
 
 .text-field,
@@ -157,25 +179,31 @@ table th {
 
 .aanvraag-title label,
 .aanvraag-description label {
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 13.5px;
 }
 
 .weer-title {
-    font-size: 1.6rem;
-    font-weight: 700;
+    font-size: 1.7rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
 }
 
 .weer-btn {
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.01em;
 }
 
 .weer-tab {
     font-weight: 600;
+    font-size: 13.5px;
 }
 
 .chart-type-btn {
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 13px;
 }
 
 .weer-table th,
@@ -185,23 +213,24 @@ table th {
 }
 
 .weer-table th {
-    font-weight: 600;
-}
-
-.risk-cell {
     font-weight: 700;
 }
 
+.risk-cell {
+    font-weight: 800;
+}
+
 .weer-chart-block h2 {
-    font-size: 0.95rem;
-    font-weight: 600;
+    font-size: 0.97rem;
+    font-weight: 700;
 }
 
 .weer-error {
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .weer-empty {
     text-align: center;
     font-size: 1rem;
+    font-weight: 500;
 }
