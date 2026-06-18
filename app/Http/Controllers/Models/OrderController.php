@@ -62,6 +62,7 @@ class OrderController extends WebController
         return $this->handleWithCases(
             $request,
             function () use ($request) {
+
                 $validated = $request->validate([
                     'materials' => ['nullable', 'array'],
                     'quantity' => ['nullable', 'array'],

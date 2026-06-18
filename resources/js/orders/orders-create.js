@@ -67,12 +67,15 @@ function renderPriorityList(dayType, materials){
                         <td>
                             <input type="number"
                                    value="0"
+                                   name=quantity[${material.id}]
                                    class="form-control form-control-sm quantity-input"
                                    data-id="${material.id}"
                                    data-naam="${material.name}">
                         </td>
                         <td>
                             <input type="checkbox"
+                                    name="materials[]"
+                                     value=${material.id}
                                    class="form-check-input material-checkbox"
                                    data-id="${material.id}"
                                    data-naam="${material.name}">
@@ -86,7 +89,7 @@ function renderPriorityList(dayType, materials){
 
 function hideFromMainTable(id) {
     const row = document.querySelector(`#materials-table tbody tr[data-id="${id}"]`);
-    if (row) row.style.display = 'none';
+    if (row) row.remove();
 }
 
 function showInMainTable(id) {
