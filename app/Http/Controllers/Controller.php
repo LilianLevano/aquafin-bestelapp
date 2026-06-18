@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use ReflectionClass;
 use Closure;
 use Throwable;
 use Illuminate\Database\QueryException;
@@ -9,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\MessageBag;
 
 /**
  * Base controller for the application.
@@ -17,14 +19,14 @@ use Illuminate\Http\Request;
 abstract class Controller
 {
     /**
-     * Handles a controller action which may result in a redirect or JSON response, standardizing structure and error handling.
+     * Handles a controller action, standardizing structure and error handling for both web redirects and API JSON responses.
      *
      * Example usage:
      *   $this->handleWithCases($request, fn ($request) => ..., [200 => [...], 422 => [...], 500 => [...]], JsonResponse::class);
      *
      * @template T of JsonResponse | RedirectResponse
      * @param Request $request
-     * @param Closure(Request): (T) $methodToTry Main logic that may throw, result will be returned unless an exception is thrown
+     * @param Closure(Request): (mixed) $methodToTry Main logic that may throw, result will be returned unless an exception is thrown
      * @param array{
      *   200: array{message: string, route?: string},
      *   422: array{message: string, route?: string, data?: mixed},
@@ -42,34 +44,34 @@ abstract class Controller
         bool $debug = false
     ) {
         try {
-            $caseData['200']['data'] = $methodToTry($request);
+            $data = $methodToTry($request);
             return $this->handleSuccessResponse(
                 $caseData['200']['message'],
                 $caseData['200']['route'] ?? url()->current(),
-                $caseData['200']['data'] ?? null,
+                $data ?? null,
                 $responseType
             );
-        } catch (ValidationException $e) {
+        } catch (ValidationException $exception) {
             return $this->handleErrorResponse(
                 $caseData['422']['message'],
                 $caseData['422']['route'] ?? url()->current(),
+                $exception->errors(),
                 $caseData['422']['data'] ?? null,
                 $responseType,
-                ['errors' => $e->errors(), 'exception' => $e],
                 $debug
             );
-        } catch (QueryException $e) {
-            $errorType = (new \ReflectionClass($e))->getShortName();
-            $errorCode = $e->getCode();
+        } catch (QueryException $exception) {
+            $errorType = (new ReflectionClass($exception))->getShortName();
+            $errorCode = $exception->getCode();
             $shortMessage = 'A database error occurred';
 
-            // Common SQLSTATE codes and their simple messages
+            // Map common SQLSTATE codes to descriptions
             $knownErrors = [
                 // See https://dev.mysql.com/doc/mysql-errors/8.0/en/server-error-reference.html
                 '23000' => 'Integrity constraint violation',
                 '23505' => 'Unique constraint violation',
                 '42000' => 'Syntax error or access rule violation',
-                'HY000' => 'General database error',
+                'HY000' => 'General database error'
             ];
             $shortMessage = $knownErrors[$errorCode] ?? $shortMessage;
             $displayMessage = "Database error ($errorCode): $shortMessage.";
@@ -77,76 +79,45 @@ abstract class Controller
             return $this->handleErrorResponse(
                 $caseData['500']['message'],
                 $caseData['500']['route'] ?? url()->current(),
+                [$errorType => [$displayMessage]],
                 $caseData['500']['data'] ?? null,
                 $responseType,
-                ['errors' => [$errorType => $displayMessage], 'exception' => $e],
                 $debug
             );
-        } catch (Throwable $e) {
+        } catch (Throwable $exception) {
             return $this->handleErrorResponse(
                 $caseData['500']['message'],
                 $caseData['500']['route'] ?? url()->current(),
+                ['Unhandled' => [$exception->getMessage()]],
                 $caseData['500']['data'] ?? null,
                 $responseType,
-                ['errors' => 'Unhandled error occurred.', 'exception' => $e],
                 $debug
             );
         }
     }
 
     /**
-     * Remove newlines and carriage returns from error arrays.
-     *
-     * @param mixed $errors
-     * @return mixed
-     */
-    private function sanitizeErrors($errors)
-    {
-        if (is_array($errors)) {
-            $clean = [];
-            foreach ($errors as $key => $value) {
-                if (is_array($value)) {
-                    $clean[$key] = array_map(function ($v) {
-                        return is_string($v) ? trim(preg_replace('/[\r\n]+/', ' ', $v)) : $v;
-                    }, $value);
-                } else {
-                    $clean[$key] = is_string($value) ? trim(preg_replace('/[\r\n]+/', ' ', $value)) : $value;
-                }
-            }
-            return $clean;
-        }
-        return $errors;
-    }
-
-    /**
-     * Creates a standardized error response for web or API clients.
+     * Standardizes error responses for web and API.
      *
      * @template T of JsonResponse | RedirectResponse
      * @param string $message
      * @param string $route
+     * @param MessageBag | array | string $errors
      * @param mixed $data
      * @param class-string<T> $responseType
-     * @param array $responseParameters Optional: ['errors' => array, 'exception' => Throwable]
-     * @param bool $debug Attach exception info if true
+     * @param bool $debug
      * @return T
      */
     private function handleErrorResponse(
         string $message,
         string $route,
-        mixed $data,
+        MessageBag | array | string $errors,
+        mixed $data = null,
         string $responseType = RedirectResponse::class,
-        array $responseParameters = [],
         bool $debug = false
     ) {
-        $errors = $responseParameters['errors'] ?? [];
-        $exception = $responseParameters['exception'] ?? null;
-
-        // Clean message for session: remove newlines/carriage returns.
-        $sanitizedMessage = isset($message)
-            ? trim(preg_replace('/[\r\n]+/', ' ', $message))
-            : '';
         $responseData = [
-            'message' => $sanitizedMessage,
+            'message' => $message,
             'success' => false
         ];
 
@@ -155,34 +126,22 @@ abstract class Controller
         }
 
         if ($responseType === RedirectResponse::class) {
-            $safeErrors = $this->sanitizeErrors($errors);
-            $response = redirect()
+            return redirect()
                 ->intended($route)
                 ->with($responseData)
                 ->withInput()
-                ->withErrors($safeErrors);
-
-            if ($debug && $exception instanceof Throwable) {
-                $exceptionMessage = trim(preg_replace('/[\r\n]+/', ' ', $exception->getMessage()));
-                $response->with('exception', $exceptionMessage);
-            }
-            return $response;
+                ->withErrors($errors);
         }
 
-        // For API/JSON
         if (!empty($errors)) {
-            $responseData['errors'] = $errors; // JSON can keep newlines
-        }
-
-        if ($debug && $exception instanceof Throwable) {
-            $responseData['exception'] = $exception->getMessage();
+            $responseData['errors'] = $errors instanceof MessageBag ? $errors->toArray() : $errors;
         }
 
         return response()->json($responseData);
     }
 
     /**
-     * Standardizes successful responses for web or API.
+     * Standardizes successful responses for web and API.
      *
      * @template T of JsonResponse | RedirectResponse
      * @param string $message
@@ -197,12 +156,8 @@ abstract class Controller
         mixed $data,
         string $responseType = RedirectResponse::class
     ) {
-        // Clean message for session: remove newlines/carriage returns.
-        $sanitizedMessage = isset($message)
-            ? trim(preg_replace('/[\r\n]+/', ' ', $message))
-            : '';
         $responseData = [
-            'message' => $sanitizedMessage,
+            'message' => $message,
             'success' => true
         ];
 

@@ -51,9 +51,11 @@ class FloodForecastController extends WebController
         $response = $this->api(request())->getData(true);
 
         // Flash the session data
-        session()->flash('message', $response['message']);
-        session()->flash('success', $response['success']);
-        session()->flash('data', $response['data']);
+        foreach (['message', 'success', 'data'] as $key) {
+            if (isset($response[$key])) {
+                session()->flash($key, $response[$key]);
+            }
+        }
 
         return view('flood-forecast');
     }

@@ -48,7 +48,7 @@
         {{ __('Hulpaanvragen') }}
     </x-nav-link>
 
-    <x-responsive-nav-link :href="route('admin.addresses.index')" :active="request()->routeIs('admin.addresses.index')">
+    <x-nav-link :href="route('admin.addresses.index')" :active="request()->routeIs('admin.addresses.index')">
         {{ __('Adressen') }}
-    </x-responsive-nav-link>
+    </x-nav-link>
 @endif
