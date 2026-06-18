@@ -96,6 +96,7 @@ function renderPriorityList(dayType, materials){
                         <td>${material.id}</td>
                         <td><a href="/technieker/materials/${material.id}">${material.name}</a> </td>
                         <td class="category-material">${material.category.name ?? ''}</td>
+                        <td class="category-material">${material.type}</td>
                         <td>
                             <input type="number"
                                    value="0"
