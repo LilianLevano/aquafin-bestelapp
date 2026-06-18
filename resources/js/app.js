@@ -5,3 +5,4 @@ window.Alpine = Alpine;
 window.saveToCache = saveToCache;
 
 Alpine.start();
+window.dispatchEvent(new Event("saveToCacheReady"));

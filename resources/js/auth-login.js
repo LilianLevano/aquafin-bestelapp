@@ -1,4 +1,4 @@
-import { findIn } from "./utilities";
+import { findIn } from "./utilities.js";
 
 // Get the localized placeholder template
 const placeholder = findIn(document, "input[name='_generic-placeholder']");
@@ -28,8 +28,6 @@ function setupEventListeners(main) {
 
     [loginSection, helpRequestSection].forEach(section => {
         section.addEventListener("click", event => {
-            console.log("clicked");
-
             const target = event.target;
 
             // Toggle visibility of sections

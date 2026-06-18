@@ -75,8 +75,21 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        window.saveToCache && window.saveToCache(@json(session('data')['daily']), "weather_forecast_cache");
+    <script id="weather-forecast-cache-bootstrap">
+        const weatherForecastData = @json(session('data', []));
+        const scriptElement = document.getElementById("weather-forecast-cache-bootstrap");
+
+        window.addEventListener("saveToCacheReady", () => {
+            // Save to cache once /resources/js/app.js is loaded and window.saveToCache is defined
+            if (typeof window.saveToCache === "function") {
+                window.saveToCache("weather_forecast_cache", weatherForecastData);
+
+                // Remove this script node from the DOM after caching is done
+                if (scriptElement && scriptElement.parentNode) {
+                    scriptElement.parentNode.removeChild(scriptElement);
+                }
+            }
+        });
     </script>
     @vite('resources/js/flood-forecast.js')
 @endpush

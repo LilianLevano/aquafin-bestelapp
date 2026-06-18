@@ -58,27 +58,70 @@ export async function postForm(event, form) {
 }
 
 /**
- * Sends a generic GET request to an API endpoint and returns the parsed JSON response.
- * Throws if the response is not OK, allowing caller to handle API errors.
+ * Retrieves data from a given API endpoint with local caching.
+ * If valid cached data (identified by `key` and `duration`) is present, returns it immediately.
+ * Otherwise, performs a GET request to the provided `url`, processes the JSON response, validates the response's success, caches the result, and then returns the data.
+ * If the API returns an error, throws with a detailed message and error information.
  *
- * @param {string} url - The URL to make the GET request to.
- * @returns {Promise<any>} The response data if successful.
- * @throws {any} The response data if an error occurred.
+ * @async
+ * @param {string} key - The unique key for storing/retrieving cached data in localStorage.
+ * @param {number} duration - Cache validity duration in milliseconds.
+ * @param {string} url - The API endpoint to fetch data from.
+ * @returns {Promise<any>} The API response data (from cache or server).
+ * @throws When the request fails or the API responds with an error.
  */
-export async function getForm(url) {
+export async function fetchWithCache(key, duration, url) {
+    const cached = await loadFromCache(key, duration);
+
+    if (cached) {
+        return cached;
+    }
+
     try {
         const response = await fetch(url, {
             headers: { 'Accept': 'application/json' },
             credentials: 'same-origin'
         });
+        const json = await response.json();
+        console.log(json.message);
 
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw data;
+        if (!response.ok || !json.success) {
+            throw new Error(`${json.message}: ${Array.isArray(json.errors) ? json.errors.join(', ') : json.errors?.toString()}`);
         }
 
-        return data;
+        saveToCache(key, json.data);
+        return json.data;
+    } catch (error) {
+        throw error;
+    }
+}
+
+/**
+ * Fetches data from a given API endpoint, bypassing cache entirely.
+ * Performs a GET request to the provided `url`, processes the JSON response, validates success, caches the result, and returns the data.
+ * If the API returns an error, throws with a detailed message.
+ *
+ * @async
+ * @param {string} key - The unique key for storing/retrieving cached data in localStorage.
+ * @param {string} url - The API endpoint to fetch data from.
+ * @returns {Promise<any>} The API response data from the server.
+ * @throws When the request fails or the API responds with an error.
+ */
+export async function fetchWithoutCache(key, url) {
+    try {
+        const response = await fetch(url, {
+            headers: { 'Accept': 'application/json' },
+            credentials: 'same-origin'
+        });
+        const json = await response.json();
+        console.log(json.message);
+
+        if (!response.ok || !json.success) {
+            throw new Error(`${json.message}: ${Array.isArray(json.errors) ? json.errors.join(', ') : json.errors?.toString()}`);
+        }
+
+        saveToCache(key, json.data);
+        return json.data;
     } catch (error) {
         throw error;
     }
@@ -106,6 +149,13 @@ export function createWatchedObject(obj, onChange) {
     });
 }
 
+/**
+ * Adds a blur event to the provided input that validates non-empty input value.
+ * Shows or hides error message accordingly.
+ *
+ * @param {string} inputId - The input field's id.
+ * @param {string} errorId - Element id displaying the error message.
+ */
 export function validateOnBlur(inputId, errorId) {
     const input = document.getElementById(inputId);
     const error = document.getElementById(errorId);
@@ -123,6 +173,13 @@ export function validateOnBlur(inputId, errorId) {
     });
 }
 
+/**
+ * Adds input event to check for maximum length. Displays error if max length reached or exceeded.
+ *
+ * @param {string} inputId - Input field's id.
+ * @param {string} errorId - Element id to show/hide error message.
+ * @param {number} maxLength - Maximum allowed input length.
+ */
 export function checkMaxLength(inputId, errorId, maxLength) {
     const input = document.getElementById(inputId);
     const message = document.getElementById(errorId);
@@ -134,6 +191,14 @@ export function checkMaxLength(inputId, errorId, maxLength) {
     });
 }
 
+/**
+ * Adds blur event to check for a minimum input length.
+ * Shows error message if length is under the minimum.
+ *
+ * @param {string} inputId - Input field id.
+ * @param {string} errorId - Error message element id.
+ * @param {number} minLength - Required minimum length.
+ */
 export function checkMinLength(inputId, errorId, minLength) {
     const input = document.getElementById(inputId);
     const message = document.getElementById(errorId);
@@ -145,6 +210,12 @@ export function checkMinLength(inputId, errorId, minLength) {
     });
 }
 
+/**
+ * Adds a blur event to validate email format. Shows/hides error on invalid/valid format.
+ *
+ * @param {string} inputId - Input field id.
+ * @param {string} errorId - Error message element id.
+ */
 export function checkEmailFormat(inputId, errorId) {
     const input = document.getElementById(inputId);
     const message = document.getElementById(errorId);
@@ -175,7 +246,6 @@ export function saveToCache(key, data) {
         );
     } catch (e) {
         // Most common: storage quota exceeded or JSON stringify error
-        // Consider logging or handling error as needed
         console.error("Failed to save to cache:", e);
     }
 }
