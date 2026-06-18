@@ -1,43 +1,49 @@
 .materials-container {
-    padding: 1.5rem 0;
+    padding: 1.75rem 0;
 }
 
 .materials-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
 }
 
 .materials-title {
-    font-size: 22px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 600;
     margin: 0;
+    color: #0d1b2a;
 }
 
 .btn-new {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 7px;
     font-size: 13px;
-    padding: 7px 16px;
-    background: #111;
+    font-weight: 600;
+    padding: 9px 18px;
+    background: linear-gradient(135deg, #0078c2, #005088);
     color: #fff;
-    border-radius: 8px;
+    border-radius: 10px;
     text-decoration: none;
-    transition: background 0.15s;
+    box-shadow: 0 2px 8px rgba(0, 103, 168, .28);
+    transition: all 0.18s ease;
 }
 
 .btn-new:hover {
-    background: #333;
+    background: linear-gradient(135deg, #0067a8, #003f6b);
+    box-shadow: 0 4px 14px rgba(0, 103, 168, .38);
+    transform: translateY(-1px);
+    text-decoration: none !important;
 }
-
 
 .materials-table-wrapper {
     background: #fff;
-    border: 0.5px solid #e5e7eb;
-    border-radius: 12px;
+    border: 1px solid #dde3ec;
+    border-radius: 14px;
     overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,.07);
 }
 
 .materials-table {
@@ -47,18 +53,18 @@
 }
 
 .materials-table thead tr {
-    background: #f9fafb;
-    border-bottom: 0.5px solid #e5e7eb;
+    background: linear-gradient(180deg, #0078c2 0%, #005fa3 100%);
+    border-bottom: none;
 }
 
 .materials-table th {
-    padding: 10px 16px;
+    padding: 12px 18px;
     text-align: left;
-    font-weight: 500;
-    color: #6b7280;
-    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    font-size: 11.5px;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.07em;
 }
 
 .materials-table th.col-action {
@@ -66,7 +72,12 @@
 }
 
 .materials-table tbody tr {
-    border-bottom: 0.5px solid #e5e7eb;
+    border-bottom: 1px solid #edf2f7;
+    transition: background 0.12s;
+}
+
+.materials-table tbody tr:nth-child(even) {
+    background: #f8fafd;
 }
 
 .materials-table tbody tr:last-child {
@@ -74,16 +85,16 @@
 }
 
 .materials-table tbody tr:hover {
-    background: #f9fafb;
+    background: #e8f3fb;
 }
 
 .materials-table td {
-    padding: 12px 16px;
-    color: #111;
+    padding: 13px 18px;
+    color: #0d1b2a;
 }
 
 .materials-table td.col-id {
-    color: #6b7280;
+    color: #7a8898;
     font-size: 13px;
 }
 
@@ -97,12 +108,13 @@
 
 .category-badge {
     display: inline-block;
-    font-size: 12px;
-    padding: 3px 10px;
-    border-radius: 6px;
-    font-weight: 500;
-    background: #eff6ff;
+    font-size: 11.5px;
+    padding: 3px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    background: #dbeafe;
     color: #1d4ed8;
+    letter-spacing: 0.02em;
 }
 
 .category-badge.no-category {
@@ -121,17 +133,20 @@
     align-items: center;
     gap: 6px;
     font-size: 13px;
+    font-weight: 500;
     padding: 6px 14px;
     background: #fff;
-    color: #111;
-    border: 0.5px solid #d1d5db;
+    color: #374151;
+    border: 1px solid #dde3ec;
     border-radius: 8px;
     text-decoration: none;
-    transition: background 0.15s;
+    transition: all 0.15s;
 }
 
 .btn-details:hover {
-    background: #f3f4f6;
+    background: #f0f4f8;
+    border-color: #b0bac6;
+    text-decoration: none !important;
 }
 
 .btn-edit {
@@ -139,17 +154,22 @@
     align-items: center;
     gap: 6px;
     font-size: 13px;
+    font-weight: 600;
     padding: 6px 14px;
-    background: #111;
+    background: linear-gradient(135deg, #27ae60, #1e8449);
     color: #fff;
     border: none;
     border-radius: 8px;
     text-decoration: none;
-    transition: background 0.15s;
+    box-shadow: 0 2px 6px rgba(39, 174, 96, .22);
+    transition: all 0.18s ease;
 }
 
 .btn-edit:hover {
-    background: #333;
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    box-shadow: 0 4px 10px rgba(39, 174, 96, .32);
+    transform: translateY(-1px);
+    text-decoration: none !important;
 }
 
 .btn-delete {
@@ -157,18 +177,22 @@
     align-items: center;
     gap: 6px;
     font-size: 13px;
+    font-weight: 600;
     padding: 6px 14px;
     background: #fff;
-    color: #dc2626;
-    border: 0.5px solid #fca5a5;
+    color: #c0392b;
+    border: 1px solid #f5b0a8;
     border-radius: 8px;
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s;
+    transition: all 0.15s;
 }
 
 .btn-delete:hover {
-    background: #fef2f2;
-    border-color: #dc2626;
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 10px rgba(192, 57, 43, .3);
+    transform: translateY(-1px);
 }
 
 .btn-delete form {

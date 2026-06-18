@@ -1,7 +1,7 @@
 .order-container {
     margin: 0 auto;
-    padding: 1.5rem 0;
-    max-width: 900px;
+    padding: 1.75rem 0;
+    max-width: 940px;
 }
 
 .order-back-link {
@@ -9,62 +9,67 @@
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    color: #6b7280;
+    color: #5a6a7e;
     text-decoration: none;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
+    transition: color 0.15s;
 }
 
 .order-back-link:hover {
-    color: #111;
+    color: #0067a8;
+    text-decoration: none !important;
 }
 
 .order-title {
-    font-size: 22px;
-    font-weight: 500;
-    margin: 0 0 1.5rem;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 0 1.75rem;
+    color: #0d1b2a;
 }
 
 .order-info-card {
-    background: #fff;
-    border: 0.5px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #f0f7ff 0%, #e8f3fb 100%);
+    border: 1px solid #c8dff2;
+    border-radius: 14px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.75rem;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
+    gap: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0, 103, 168, .08);
 }
 
-
-
 .order-info-card .info-label {
-    font-size: 12px;
-    color: #6b7280;
-    margin: 0 0 4px;
+    font-size: 11px;
+    color: #5a7a9a;
+    margin: 0 0 5px;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.07em;
+    font-weight: 600;
 }
 
 .order-info-card .info-value {
     font-size: 15px;
-    font-weight: 500;
+    font-weight: 600;
     margin: 0;
+    color: #0d1b2a;
 }
 
 .materials-section-label {
-    font-size: 12px;
-    font-weight: 500;
-    color: #6b7280;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #5a6a7e;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin: 0 0 0.75rem;
+    letter-spacing: 0.07em;
+    margin: 0 0 0.875rem;
 }
 
 .materials-table-wrapper {
     background: #fff;
-    border: 0.5px solid #e5e7eb;
-    border-radius: 12px;
+    border: 1px solid #dde3ec;
+    border-radius: 14px;
     overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,.07);
 }
 
 .materials-table {
@@ -74,18 +79,18 @@
 }
 
 .materials-table thead tr {
-    background: #f9fafb;
-    border-bottom: 0.5px solid #e5e7eb;
+    background: linear-gradient(180deg, #0078c2 0%, #005fa3 100%);
+    border-bottom: none;
 }
 
 .materials-table th {
-    padding: 10px 16px;
+    padding: 12px 18px;
     text-align: left;
-    font-weight: 500;
-    color: #6b7280;
-    font-size: 12px;
+    font-weight: 600;
+    color: white;
+    font-size: 11.5px;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.07em;
 }
 
 .materials-table th.col-action {
@@ -93,7 +98,12 @@
 }
 
 .materials-table tbody tr {
-    border-bottom: 0.5px solid #e5e7eb;
+    border-bottom: 1px solid #edf2f7;
+    transition: background 0.12s;
+}
+
+.materials-table tbody tr:nth-child(even) {
+    background: #f8fafd;
 }
 
 .materials-table tbody tr:last-child {
@@ -101,16 +111,16 @@
 }
 
 .materials-table tbody tr:hover {
-    background: #f9fafb;
+    background: #e8f3fb;
 }
 
 .materials-table td {
-    padding: 12px 16px;
-    color: #111;
+    padding: 13px 18px;
+    color: #0d1b2a;
 }
 
 .materials-table td.col-id {
-    color: #6b7280;
+    color: #7a8898;
     font-size: 13px;
 }
 
@@ -124,12 +134,13 @@
 
 .category-badge {
     display: inline-block;
-    font-size: 12px;
-    padding: 3px 10px;
-    border-radius: 6px;
-    font-weight: 500;
-    background: #eff6ff;
+    font-size: 11.5px;
+    padding: 3px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    background: #dbeafe;
     color: #1d4ed8;
+    letter-spacing: 0.02em;
 }
 
 .category-badge.no-category {
@@ -142,22 +153,25 @@
     align-items: center;
     gap: 6px;
     font-size: 13px;
-    padding: 6px 14px;
+    font-weight: 500;
+    padding: 7px 16px;
     background: #fff;
-    color: #111;
-    border: 0.5px solid #d1d5db;
+    color: #374151;
+    border: 1px solid #dde3ec;
     border-radius: 8px;
     text-decoration: none;
-    transition: background 0.15s;
+    transition: all 0.15s;
 }
 
 .btn-details:hover {
-    background: #f3f4f6;
+    background: #f0f4f8;
+    border-color: #b0bac6;
+    text-decoration: none !important;
 }
 
 .materials-empty {
-    padding: 2rem;
+    padding: 2.5rem;
     text-align: center;
-    color: #6b7280;
+    color: #7a8898;
     font-size: 14px;
 }
