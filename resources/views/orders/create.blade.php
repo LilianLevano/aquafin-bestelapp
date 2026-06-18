@@ -100,6 +100,7 @@
                                     <th>ID</th>
                                     <th>Materiaal</th>
                                     <th class="category-material">Categorie</th>
+                                    <th class="category-material">Type</th>
                                     <th>Hoeveelheid</th>
                                     <th>Selecteer</th>
                                 </tr>
@@ -122,6 +123,7 @@
                                     <th>ID</th>
                                     <th>Materiaal</th>
                                     <th class="category-material">Categorie</th>
+                                    <th class="category-material">Type</th>
                                     <th>Hoeveelheid</th>
                                     <th>Selecteer</th>
                                 </tr>
@@ -136,6 +138,11 @@
                                         <td class="category-material">
                                             <span class="badge bg-primary bg-opacity-10 text-primary ">
                                                 {{ $material->category->name ?? '—' }}
+                                            </span>
+                                        </td>
+                                        <td class="category-material">
+                                            <span class="badge bg-primary bg-opacity-10 text-primary ">
+                                                {{ $material->type }}
                                             </span>
                                         </td>
                                         <td>
