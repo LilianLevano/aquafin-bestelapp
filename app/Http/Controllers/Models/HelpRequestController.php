@@ -3,16 +3,34 @@
 namespace App\Http\Controllers\Models;
 
 use App\Http\Controllers\WebController;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Models\HelpRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Override;
 
+/**
+ * Handles CRUD operations for help requests.
+ *
+ * Visitors can submit help requests without authentication via {@see create()} and {@see store()}.
+ * Admins can view, answer, and close requests via {@see index()}, {@see edit()},
+ * {@see update()}, and {@see show()}.
+ */
 class HelpRequestController extends WebController
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of help requests filtered by their completion status.
+     *
+     * Accepts an optional query parameter "is_completed":
+     * - "completed" — returns only completed requests, sorted by creation date descending.
+     * - "open"      — returns only open (unanswered) requests, sorted by creation date descending.
+     * - any other value — returns all requests unsorted.
+     *
+     * Defaults to "completed" if no query parameter is provided.
+     *
+     * @return View
      */
     #[Override]
     public function index(): View
@@ -31,7 +49,11 @@ class HelpRequestController extends WebController
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for submitting a new help request.
+     *
+     * Accessible without authentication.
+     *
+     * @return View
      */
     #[Override]
     public function create(): View
@@ -40,7 +62,16 @@ class HelpRequestController extends WebController
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created help request in storage.
+     *
+     * Accessible without authentication.
+     * On success, validation error (422), or server error (500),
+     * redirects to the home page with a status message.
+     *
+     * @param Request $request The incoming HTTP request containing help request form data.
+     *
+     * @return RedirectResponse Redirects to the home page with a status message.
+     * @throws ValidationException If any required field fails validation.
      */
     #[Override]
     public function store(Request $request): RedirectResponse
@@ -72,7 +103,15 @@ class HelpRequestController extends WebController
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for submitting an admin answer to the specified help request.
+     *
+     * Although named edit() to satisfy the resourceful controller contract,
+     * this method renders a dedicated answer partial rather than a generic edit form.
+     *
+     * @param string $id The primary key of the help request to answer.
+     *
+     * @return View
+     * @throws ModelNotFoundException If no help request exists with the given ID.
      */
     #[Override]
     public function edit(string $id): View
@@ -82,7 +121,21 @@ class HelpRequestController extends WebController
     }
 
     /**
-     * Update the specified resource in storage.
+     * Store the admin's answer and mark the help request as completed.
+     *
+     * Sets "is_completed" to 1 directly on the model instance before calling
+     * updateOrFail(), so both the answer and the completion flag are persisted
+     * in a single database write.
+     * On success, redirects to the full listing.
+     * On validation error (422) or server error (500), redirects back to the answer form.
+     *
+     * @param Request $request The incoming HTTP request containing the admin's answer.
+     * @param string  $id      The primary key of the help request to update.
+     *
+     * @return RedirectResponse Redirects to the help request index on success,
+     *                          or back to the answer form on error.
+     * @throws ValidationException    If the answer field is missing or invalid.
+     * @throws ModelNotFoundException If no help request exists with the given ID.
      */
     #[Override]
     public function update(Request $request, string $id): RedirectResponse
@@ -113,11 +166,17 @@ class HelpRequestController extends WebController
         );
     }
 
+
     /**
-     * Display the specified resource.
+     * Display the details of the specified help request.
+     *
+     * @param string $id The primary key of the help request to display.
+     *
+     * @return View
+     * @throws ModelNotFoundException If no help request exists with the given ID.
      */
     #[Override]
-    public function show($id): View
+    public function show(string $id): View
     {
         $request = HelpRequest::findOrFail($id);
         return view('help-requests.show', compact('request'));
