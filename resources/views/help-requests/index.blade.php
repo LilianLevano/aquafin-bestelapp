@@ -21,7 +21,7 @@
             <p id="empty-msg" class="muted center">No requests found.</p>
         @else
             @foreach ($requests as $request)
-                <div class="aanvraag-card" data-status="{{ $request->status ?? 'open' }}">
+                <div data-title="{{$request->title}}" class="aanvraag-card" data-status="{{ $request->status ?? 'open' }}">
                     <div class="aanvraag-header">
                         <div class="aanvraag-title">
                             <label>Titel</label>
