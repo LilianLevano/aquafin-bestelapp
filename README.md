@@ -33,6 +33,35 @@ Dit webapplicatie werd gemaakt in opdracht van Aquafin voor een examenproject bi
 
 ---
 
+## Documentatie
+
+De technische documentatie van de broncode wordt gegenereerd via [phpDocumentor](https://www.phpdoc.org/).
+
+### Documentatie genereren
+
+- Publiek hulpverzoekformulier
+- Beveiligd met rolgebaseerde toegangscontrole
+
+---
+
+## Installatie
+
+### Vereisten
+
+- PHP >= 8.3
+- Composer
+- Node.js >= 18 & npm
+- MySQL
+
+composer require --dev phpdocumentor/shim ## Een keer uitvoeren
+php vendor/bin/phpdoc -d app -t docs
+```
+
+
+De documentatie bevindt zich dan in `docs/index.html`, die je in jouw browser kan openen.
+
+---
+
 ## Installatie
 
 ### Vereisten
@@ -119,7 +148,6 @@ De applicatie gebruikt een rolgebaseerd toegangssysteem via `RoleMiddleware`. El
 | **Magazijnier** | Bestellingenlijst raadplegen                                     |
 
 ---
----
 ## Testaccounts
 
 Een account per rol worden automatisch aangemaakt bij het seeden (database aanvullen) om makkelijk toegang te krijgen binnen de webapplicatie.
@@ -148,4 +176,3 @@ Maak zelf een aparte admin account, via de admin testaccount, dan kunnen de test
 ## ERD Diagram
 
 ![ERD Diagram](public/images/erd_diagram.png)
-

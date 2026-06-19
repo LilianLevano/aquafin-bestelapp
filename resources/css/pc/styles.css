@@ -17,7 +17,7 @@ body {
 .container {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 32px 24px;
+    padding: 36px 28px;
 }
 
 .centered {
@@ -29,11 +29,11 @@ body {
 }
 
 .card {
-    padding: 28px;
+    padding: 32px;
 }
 
 .h1 {
-    margin: 0 0 20px;
+    margin: 0 0 24px;
 }
 
 .mb {
@@ -44,7 +44,7 @@ body {
 .nav-inner {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 12px 24px;
+    padding: 14px 28px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -54,32 +54,32 @@ body {
 .nav-right {
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 20px;
 }
 
 /* Forms */
 .form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 18px;
 }
 
 .field {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 7px;
 }
 
 .field input,
 .field select,
 .field textarea {
     width: 100%;
-    padding: 8px 12px;
+    padding: 10px 14px;
 }
 
 .field textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 110px;
 }
 
 .error {
@@ -89,7 +89,7 @@ body {
 .grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 14px;
 }
 
 /* Buttons */
@@ -97,9 +97,8 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 8px 16px;
+    padding: 9px 18px;
     cursor: pointer;
-    transition: .15s;
 
     &:disabled {
         cursor: not-allowed;
@@ -107,20 +106,20 @@ body {
 }
 
 .btn-sm {
-    padding: 6px 12px;
+    padding: 6px 13px;
 }
 
 .btn-primary {
-    margin-top: 10px ;
+    margin-top: 10px;
     cursor: pointer;
-    padding: 11px 22px;
+    padding: 12px 26px;
     display: inline-block;
 }
 
 .row-end {
     display: flex;
     justify-content: flex-end;
-    gap: 8px;
+    gap: 10px;
 }
 
 .row-between {
@@ -136,7 +135,7 @@ body {
 
 .table th,
 .table td {
-    padding: 10px 12px;
+    padding: 11px 14px;
 }
 
 .link {
@@ -146,23 +145,26 @@ body {
 
 /* Alerts */
 .alert {
-    padding: 10px 14px;
-    margin-bottom: 16px;
+    padding: 13px 18px;
+    margin-bottom: 18px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .back-link {
     display: inline-block;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
 }
 
 /* Other */
 .logo {
-    max-width: 100px;
-    max-height: 30px;
+    max-width: 120px;
+    max-height: 36px;
 }
 
 .navbar {
-    padding: 20px 40px;
+    padding: 18px 44px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -174,7 +176,7 @@ body {
 
 .navbar nav {
     display: flex;
-    gap: 22px;
+    gap: 24px;
     flex-direction: row;
 }
 
@@ -184,7 +186,7 @@ body {
 }
 
 footer {
-    padding: 20px;
+    padding: 22px;
 }
 
 .navbar button,
@@ -193,33 +195,36 @@ footer {
 }
 
 .manager-page h1 {
-    margin-bottom: 30px;
+    margin-bottom: 32px;
 }
 
 .manager-table,
 table {
-    width: 85%;
+    width: 88%;
     margin: 30px auto;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0,0,0,.07);
 }
 
 .manager-table th,
 .manager-table td,
 table th,
 table td {
-    padding: 15px;
+    padding: 15px 18px;
 }
 
 .form-card,
 .help-request-card,
 .filter-zone {
-    max-width: 850px;
-    margin: 30px auto;
-    padding: 30px;
+    max-width: 860px;
+    margin: 32px auto;
+    padding: 32px;
 }
 
 .form-card label {
     display: block;
-    margin-top: 15px;
+    margin-top: 16px;
     margin-bottom: 8px;
 }
 
@@ -229,7 +234,7 @@ table td {
 .form-card select,
 .filter-zone input,
 .filter-zone select {
-    padding: 10px;
+    padding: 11px 14px;
 }
 
 .filter-zone {
@@ -242,41 +247,41 @@ table td {
 
 .empty-message {
     display: none;
-    margin-top: 20px;
+    margin-top: 22px;
 }
 
 .btn-edit {
-    padding: 6px 12px;
+    padding: 7px 14px;
 }
 
 .btn-delete {
-    padding: 6px 12px;
+    padding: 7px 14px;
     cursor: pointer;
 }
 
 .status-tabs {
     display: flex;
     justify-content: center;
-    gap: 12px;
-    margin-bottom: 36px;
+    gap: 14px;
+    margin-bottom: 40px;
 }
 
 .status-tabs .tab {
-    padding: 10px 22px;
+    padding: 11px 26px;
     cursor: pointer;
 }
 
 .help-request-card {
-    max-width: 850px;
+    max-width: 860px;
     margin: 0 auto;
-    padding: 32px;
+    padding: 36px;
 }
 
 .help-request-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 20px;
+    gap: 22px;
 }
 
 .help-request-title {
@@ -292,7 +297,7 @@ table td {
 .text-field,
 .description-box {
     width: 100%;
-    padding: 12px;
+    padding: 13px 14px;
 }
 
 .description-box {
@@ -301,27 +306,27 @@ table td {
 }
 
 .help-request-description {
-    margin-top: 20px;
+    margin-top: 22px;
 }
 
 .help-request-footer {
     display: flex;
     gap: 32px;
-    margin-top: 20px;
+    margin-top: 22px;
 }
 
 .aanvraag-card {
-    max-width: 850px;
+    max-width: 860px;
     margin: 0 auto;
-    padding: 32px;
-    margin-bottom: 5px;
+    padding: 36px;
+    margin-bottom: 22px;
 }
 
 .aanvraag-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 20px;
+    gap: 22px;
 }
 
 .aanvraag-title {
@@ -335,61 +340,56 @@ table td {
 }
 
 .aanvraag-description {
-    margin-top: 20px;
+    margin-top: 22px;
 }
 
 .aanvraag-footer {
     display: flex;
     gap: 32px;
-    margin-top: 20px;
+    margin-top: 22px;
 }
-
 .weer-container {
     max-width: 1100px;
-    margin: 40px auto;
-    padding: 0 20px;
-}.visually-hidden {
-    display: none !important;
+    margin: 44px auto;
+    padding: 0 24px;
 }
 
+
 .weer-title {
-    margin-bottom: 24px;
+    margin-bottom: 26px;
 }
 
 .weer-btn {
     display: inline-block;
-    margin-top: 24px;
-    padding: 12px 28px;
-    transition: background 0.2s;
+    margin-top: 26px;
+    padding: 13px 30px;
 }
 
 .weer-tab-bar {
     display: flex;
-    gap: 8px;
-    margin-bottom: 24px;
+    gap: 10px;
+    margin-bottom: 26px;
 }
 
 .weer-tab {
-    padding: 9px 22px;
+    padding: 10px 24px;
     cursor: pointer;
-    transition: all 0.2s;
 }
 
 .weer-chart-selector {
     display: flex;
-    gap: 8px;
-    margin: 28px 0 16px;
+    gap: 10px;
+    margin: 30px 0 18px;
 }
 
 .chart-type-btn {
-    padding: 7px 18px;
+    padding: 8px 20px;
     cursor: pointer;
-    transition: all 0.2s;
 }
 
 .weer-table-wrapper {
     overflow-x: auto;
-    margin-bottom: 32px;
+    margin-bottom: 36px;
 }
 
 .weer-table {
@@ -398,7 +398,7 @@ table td {
 
 .weer-table th,
 .weer-table td {
-    padding: 11px 14px;
+    padding: 12px 16px;
 }
 
 .weer-charts-grid {
@@ -421,25 +421,25 @@ table td {
 }
 
 .weer-chart-block h2 {
-    margin-bottom: 14px;
+    margin-bottom: 16px;
 }
 
 .weer-loading {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 48px 0;
-    gap: 12px;
+    padding: 56px 0;
+    gap: 14px;
 }
 
 .weer-spinner {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     animation: spin 0.8s linear infinite;
 }
 
 .account-card {
-    max-width: 560px;
+    max-width: 580px;
     margin: 0 auto;
 }
 
@@ -453,25 +453,26 @@ table td {
 .account-avatar-group {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
 }
 
 .account-avatar {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
-    background: #dbeafe;
+    background: linear-gradient(135deg, #d0e8f9, #b8d8f5);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 500;
-    font-size: 15px;
-    color: #1d4ed8;
+    font-weight: 600;
+    font-size: 16px;
+    color: #0055a0;
+    box-shadow: 0 2px 8px rgba(0, 103, 168, .2);
 }
 
 .account-name {
-    font-weight: 500;
-    font-size: 17px;
+    font-weight: 600;
+    font-size: 18px;
     margin: 0;
 }
 
@@ -483,14 +484,15 @@ table td {
 
 .account-badge {
     font-size: 12px;
-    padding: 4px 10px;
-    border-radius: 6px;
-    background: #dcfce7;
-    color: #15803d;
+    padding: 4px 12px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    color: #065f46;
+    font-weight: 600;
 }
 
 .account-details {
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid #dde3ec;
     padding-top: 1rem;
 }
 
@@ -498,10 +500,17 @@ table td {
     width: 100%;
     font-size: 14px;
     border-collapse: collapse;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 0;
+    overflow: visible;
+    margin: 0;
+    width: 100%;
 }
 
 .account-details td {
-    padding: 8px 0;
+    padding: 9px 0;
+    border: none;
 }
 
 .account-details .label {
@@ -510,12 +519,12 @@ table td {
 }
 
 .account-actions {
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid #dde3ec;
     padding-top: 1rem;
     margin-top: 0.5rem;
     display: flex;
     justify-content: flex-end;
-    gap: 8px;
+    gap: 10px;
 }
 
 .btn-danger {
@@ -533,10 +542,11 @@ table td {
     align-items: center;
     gap: 6px;
     font-size: 13px;
+    transition: color 0.15s;
 }
 
 .btn-toggle-pw:hover {
-    color: #111827;
+    color: #0067a8;
 }
 
 @keyframes spin {
@@ -546,13 +556,13 @@ table td {
 }
 
 .weer-error {
-    padding: 16px 20px;
-    margin: 20px 0;
+    padding: 18px 22px;
+    margin: 22px 0;
 }
 
 .weer-empty {
-    padding: 40px;
-    margin: 20px 0;
+    padding: 44px;
+    margin: 22px 0;
 }
 
 #priority-list {
@@ -575,9 +585,3 @@ table td {
 #priority-list .table-hover tbody tr:hover {
     background-color: #fde8a0;
 }
-
-
-
-
-
-

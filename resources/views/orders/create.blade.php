@@ -201,6 +201,139 @@
             </div>
         </div>
     </div>
+
+    <div class="d-flex gap-4 align-items-start flex-wrap" id="bestel-layout">
+
+        {{-- LEFT: FORM --}}
+        <div style="flex:1;min-width:0;">
+            <form action="{{ route('technieker.orders.store') }}" method="POST" id="bestel-form">
+                @csrf
+
+                {{-- ORDER INFO --}}
+                <div class="card mb-4">
+                    <div class="card-body d-flex flex-wrap gap-4 align-items-end">
+                        <div>
+                            <label for="delivery_date" class="form-label small fw-semibold mb-1">
+                                Leverdatum <span class="text-danger">*</span>
+                            </label>
+                            <input type="date"
+                                   id="delivery_date"
+                                   name="delivery_date"
+                                   class="form-control form-control-sm @error('delivery_date') is-invalid @enderror"
+                                   value="{{ old('delivery_date') }}"
+                                   required>
+                            @error('delivery_date')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label for="site_id" class="form-label small fw-semibold mb-1">
+                                Locatie <span class="text-danger">*</span>
+                            </label>
+                            <select name="site_id" id="site_id"
+                                    class="form-select form-select-sm @error('site_id') is-invalid @enderror">
+                                <option value="">Kies een locatie</option>
+                                <option value="1" @selected(old('site_id') == '1')>Limburg</option>
+                                <option value="2" @selected(old('site_id') == '2')>Oost-Vlaanderen</option>
+                                <option value="3" @selected(old('site_id') == '3')>West-Vlaanderen</option>
+                                <option value="4" @selected(old('site_id') == '4')>Antwerpen</option>
+                            </select>
+                            @error('site_id')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="ms-auto">
+                            <button type="submit" class="btn btn-primary">
+                                Bestelling plaatsen
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- MATERIALS TABLE --}}
+                <div class="card">
+                    <div class="card-header fw-semibold">Selecteer materialen</div>
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0" id="materials-table">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Materiaal</th>
+                                    <th class="category-material">Categorie</th>
+                                    <th>Hoeveelheid</th>
+                                    <th>Selecteer</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($materials as $material)
+                                    <tr data-naam="{{ strtolower($material->name) }}"
+                                        data-categorie="{{ $material->category->name ?? '' }}">
+                                        <td class="text-muted font-monospace small">{{ $material->id }}</td>
+                                        <td class="fw-medium"><a href="{{route('technieker.materials.show', $material->id)}}">{{ $material->name }}</a> </td>
+                                        <td class="category-material">
+                                            <span class="badge bg-primary bg-opacity-10 text-primary ">
+                                                {{ $material->category->name ?? '—' }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <input type="number"
+                                                   value="0" min="0"
+                                                   name="quantity[{{ $material->id }}]"
+                                                   class="form-control form-control-sm quantity-input"
+                                                   data-id="{{ $material->id }}"
+                                                   data-naam="{{ $material->name }}">
+                                        </td>
+                                        <td >
+                                            <input type="checkbox"
+                                                   name="materials[]"
+                                                   value="{{ $material->id }}"
+                                                   class="form-check-input material-checkbox"
+                                                   data-id="{{ $material->id }}"
+                                                   data-naam="{{ $material->name }}">
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        {{-- RIGHT: BASKET --}}
+        <div class="basket-panel" id="basket-panel"
+             style="width:300px;flex-shrink:0;position:sticky;top:1rem;display:none;">
+            <div class="card shadow-sm">
+                <div class="card-header fw-semibold d-flex justify-content-between align-items-center"
+                     style="background:#1a5fa8;color:white;">
+                    <span>🛒 Winkelmandje</span>
+                    <span id="basket-count"
+                          class="badge bg-white text-primary rounded-pill">0</span>
+                </div>
+
+                <div id="basket-empty"
+                     class="card-body text-center text-muted fst-italic small py-4">
+                    Nog geen items geselecteerd.
+                </div>
+
+                <ul id="basket-list"
+                    class="list-group list-group-flush"
+                    style="display:none;max-height:400px;overflow-y:auto;">
+                </ul>
+
+                <div id="basket-footer"
+                     class="card-footer d-grid"
+                     style="display:none!important;">
+                    <button type="submit" form="bestel-form" class="btn btn-primary btn-sm">
+                        ✓ Bestelling plaatsen
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
