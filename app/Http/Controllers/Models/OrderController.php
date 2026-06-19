@@ -47,10 +47,17 @@ class OrderController extends WebController
         $date = request()->query('datum', Carbon::today()->toDateString());
 
         try {
-            $orders = Order::with(['user', 'materials', 'site'])
-                ->where('user_id', Auth::id())
-                ->orderByDesc('created_at')
-                ->get();
+            if (auth()->user()->role->name !== "Manager"){
+                $orders = Order::with(['user', 'materials', 'site'])
+                    ->where('user_id', Auth::id())
+                    ->orderByDesc('created_at')
+                    ->get();
+            }else{
+                $orders = Order::with(['user', 'materials', 'site'])
+                    ->orderByDesc('created_at')
+                    ->get();
+            }
+
 
             return view('orders.index', compact('orders'));
         } catch (Exception $e) {

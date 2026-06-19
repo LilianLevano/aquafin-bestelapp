@@ -1,6 +1,6 @@
-import { initFuzzySearch } from "../fuzzy-search.js";
-import { fetchWithCache } from "../utilities.js";
-import { CACHE_KEY_WEATHER_FORECAST, CACHE_DURATION_WEATHER_FORECAST } from "../constants/cache.js";
+import {initFuzzySearch} from "../fuzzy-search.js";
+import {loadFromCache} from "../utilities.js";
+import {loadWeatherData} from "../flood-forecast.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     initFuzzySearch({
@@ -8,14 +8,15 @@ document.addEventListener('DOMContentLoaded', () => {
         suggestionsId: 'search-suggestions',
         tbodyId:       'materials-tbody',
         keys:           ['name'],
-    });
+    })
 })
+await loadWeatherData(true);
 
-const data = fetchWithCache(CACHE_KEY_WEATHER_FORECAST, CACHE_DURATION_WEATHER_FORECAST, `/api/technieker/flood-forecast?days_ahead=7`).daily;
+const data = loadFromCache('weather_forecast_cache', 30 * 60 * 1000)
 const datumInput = document.getElementById('delivery_date')
 let dayType = null;
-
 datumInput.addEventListener('change', ()=>{
+
     let dayData = null;
     const alertData = document.getElementById('alert-data')
     try {
@@ -75,7 +76,6 @@ function restoreMainTable() {
 
 const priorityTbody = document.getElementById('priority-list-tbody')
 const priorityList = document.getElementById('priority-list')
-
 function renderPriorityList(dayType, materials){
     priorityTbody.innerHTML = '';  // ← vide la priority list
     restoreMainTable();             // ← remet tout dans le main
@@ -96,7 +96,6 @@ function renderPriorityList(dayType, materials){
                         <td>${material.id}</td>
                         <td><a href="/technieker/materials/${material.id}">${material.name}</a> </td>
                         <td class="category-material">${material.category.name ?? ''}</td>
-                        <td class="category-material">${material.type}</td>
                         <td>
                             <input type="number"
                                    value="0"
@@ -119,3 +118,4 @@ function renderPriorityList(dayType, materials){
         }
     }
 }
+

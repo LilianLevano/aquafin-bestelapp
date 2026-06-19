@@ -1,14 +1,19 @@
-import { findIn, fetchWithCache, fetchWithoutCache, createWatchedObject } from "./utilities.js";
-import { CACHE_KEY_WEATHER_FORECAST, CACHE_DURATION_WEATHER_FORECAST } from "./constants/cache.js";
-import { API_URL_WEATHER_FORECAST } from "./constants/api.js";
+import { findIn, getForm, createWatchedObject, saveToCache, loadFromCache } from "./utilities";
+
+const CACHE_KEY      = 'weather_forecast_cache';
+const CACHE_DURATION = 30 * 60 * 1000; // 30 min
+
+/**
+ * API endpoint URL for fetching flood forecast data.
+ * @type {string}
+ */
+const API_URL = '/api/technieker/flood-forecast';
 
 /**
  * State object for managing the selected overview window (number of forecast days).
- * When the state changes, the handler {@link handleOverviewChange} is triggered to update the data and UI.
- *
- * @typedef {Object} OverviewState
- * @property {number} value - Number of days to display (default: 7).
- * @property {HTMLElement | null} dom - DOM reference to the active overview button element.
+ * - value: Number of days to display (default: 7).
+ * - dom: DOM reference to the active overview button element.
+ * Calls handleOverviewChange on state changes.
  */
 const overview = createWatchedObject({
     value: 7,
@@ -16,13 +21,11 @@ const overview = createWatchedObject({
 }, handleOverviewChange);
 
 /**
- * State object for managing the selected chart type and holding Chart.js and DOM references.
- * When the chart state changes, the handler {@link handleChartChange} is triggered to update the UI highlights and toggle chart block visibility accordingly.
- *
- * @typedef {Object} ChartState
- * @property {string} value - Type of chart to show ("mixed", "line", "bar").
- * @property {Object} doms - Mapping of chart type keys to DOM button elements (mixed, line, bar).
- * @property {Object} charts - Structure holding chart blocks, canvases, and Chart.js context instances:
+ * State object for managing selected chart type and holding Chart.js and DOM references.
+ * - value: Type of chart to show ("mixed", "line", "bar").
+ * - doms: Buttons in the DOM for each chart type.
+ * - charts: Chart block/canvas/context per chart type.
+ * Calls handleChartChange on state changes.
  */
 const chart = createWatchedObject({
     value: "mixed",
@@ -33,13 +36,13 @@ const chart = createWatchedObject({
     },
     charts: {
         line: {
-            block: null, // Chart container block DOM node for evolution chart
-            canvas: null, // <canvas> element for evolution chart
+            block: null,
+            canvas: null,
             context: null // Chart.js instance for evolution chart
         },
         bar: {
-            block: null, // Chart container block DOM node for trend chart
-            canvas: null, // <canvas> element for trend chart
+            block: null,
+            canvas: null,
             context: null // Chart.js instance for trend chart
         }
     }
@@ -47,11 +50,9 @@ const chart = createWatchedObject({
 
 /**
  * State object reflecting the current UI/UX display state for the page.
- * When the fetch state changes, the handler {@link handleStateChange} is triggered to ensure only the relevant content section's DOM is visible.
- *
- * @typedef {Object} UiState
- * @property {string} value - One of "loading", "error", "empty", or "data". Indicates which section is shown.
- * @property {Object} doms - Object with references to DOM containers for all UI sections ("loading", "error", "empty", "data").
+ * - value: Must be "loading", "error", "empty", or "data".
+ * - doms: Corresponding element references for each state section.
+ * Calls handleStateChange on value changes.
  */
 const state = createWatchedObject({
     value: "loading",
@@ -64,43 +65,34 @@ const state = createWatchedObject({
 }, handleStateChange);
 
 /**
- * State object holding the full array of processed daily forecast objects, populated by weather data API.
- * The `value` property always contains the largest API result ever seen (allows subsetting for tabs).
- * When the weather data state changes, the handler {@link handleDailyChange} is triggered to update the UI.
- *
- * @typedef {Object} DailyState
- * @property {Array<Object>|null} value - Array of processed forecast day objects (after API/caching fetch).
+ * Array holding processed daily forecast objects for the current API result; populated by loadWeatherData.
+ * @type {Array<object>}
  */
-const daily = createWatchedObject({
-    value: null
-}, handleDailyChange);
+let daily = [];
 
-/**
- * Tracks the largest value of daily.value.length returned thus far from the weather API.
- * Used so that changes in overview/tabs do not throw away already-fetched available data.
- *
- * @type {number}
- */
+// Track the largest value of daily.length we've ever received
 let maxFetchedDays = 0;
 
-await main();
+main();
 
 /**
  * Main page initialization function.
- * - Locates UI container elements (main, forecast area, tabs, charts, error/loading/data containers)
- * - Binds UI controls (overview tabs, chart tabs, reload button) to their watched objects
- * - Registers a click delegate for all tab, chart, and reload buttons.
- * - Associates the state/dom structure (see objects above) to persist references as user interacts
+ * Locates UI sections, binds all event handlers for tabs, chart buttons, reloads, etc.
+ * Then triggers initial data load.
  *
- * Should be called once when the page loads.
+ * Notes:
+ * - Tab & chart DOM buttons are linked to watched state objects.
+ * - All DOM lookups are performed safely.
+ * - Listeners automatically update state and trigger render/updating logic as needed.
+ * - Should be called once on page load.
  */
-async function main() {
+function main() {
     const main = findIn(document, "main");
     const forecastContainer = findIn(main, "#forecast-container");
 
     if (!main || !forecastContainer) return;
 
-    // DOM lookups (buttons & content sections)
+    // Tab & chart UI bindings
     const b_overviewOneWeek = findIn(forecastContainer, "#tab-1week");
     const b_overviewTwoWeek = findIn(forecastContainer, "#tab-2weken");
     const b_chartTypeMixed = findIn(forecastContainer, "#btn-gemengd");
@@ -112,19 +104,15 @@ async function main() {
     const s_empty = findIn(forecastContainer, "#empty-state");
     const s_data = findIn(forecastContainer, "#data-content");
 
-    // Bind initial overview and chart types to DOM nodes
+    // Bind UI to observed state objects
     overview.dom = b_overviewOneWeek;
     chart.doms.mixed = b_chartTypeMixed;
     chart.doms.line = b_chartTypeLine;
     chart.doms.bar = b_chartTypeBar;
-
-    // Bind chart containers and canvases
     chart.charts.line.block = findIn(forecastContainer, "#evolution-chart-block");
     chart.charts.line.canvas = findIn(chart.charts.line.block, "canvas");
     chart.charts.bar.block = findIn(forecastContainer, "#trend-chart-block");
     chart.charts.bar.canvas = findIn(chart.charts.bar.block, "canvas");
-
-    // Bind UI state doms
     state.doms.loading = s_loading;
     state.doms.error = s_error;
     state.doms.empty = s_empty;
@@ -134,67 +122,62 @@ async function main() {
     forecastContainer.addEventListener("click", event => {
         const target = event.target;
 
-        // Overview tabs: switch forecast section (number of days in view)
+        // Handle switching forecast window (overview tab)
         if ([b_overviewOneWeek, b_overviewTwoWeek].includes(target)) {
             overview.dom.classList.remove("active");
             overview.value = parseInt(target.value);
             overview.dom = target;
             target.classList.add("active");
+            updateAll();
         }
 
-        // Chart type tabs: switch charts between mixed/line/bar modes
+        // Handle switching chart type (mixed/line/bar)
         if ([b_chartTypeMixed, b_chartTypeBar, b_chartTypeLine].includes(target)) {
             chart.value = target.value;
         }
 
-        // Reload button: refresh full web page
+        // Handle reload button
         if (b_reload === target) {
             location.reload();
         }
     });
 
-    daily.value = await loadWeatherData();
+    loadWeatherData();
 }
 
 /**
- * Handler for overview (forecast) state changes.
- * Triggers a fresh daily data fetch for the new number of days.
+ * Watched-object handler for changes to overview state.
+ * (Currently stubbed to console, but may be extended for advanced tab sync logic.)
  *
- * @param {string} prop - Name of the changed property
+ * @param {string} prop - Changed property
  * @param {*} newValue - New value for the property
  * @param {*} oldValue - Previous value
  */
-async function handleOverviewChange(prop, newValue, oldValue) {
+function handleOverviewChange(prop, newValue, oldValue) {
     // console.log(`overview[${prop}] changed from`, oldValue, 'to', newValue);
 
     if (prop === "value") {
-        const data = await fetchWithoutCache(
-            CACHE_KEY_WEATHER_FORECAST,
-            `${API_URL_WEATHER_FORECAST}?days_ahead=${overview.value}`
-        );
-
-        if (data) {
-            daily.value = data.daily;
-        }
-        updateAll();
+        loadWeatherData();
     }
 }
 
 /**
- * Handler for chart type state changes.
- * Updates UI highlights to reflect selected chart type and toggles visibility of corresponding chart blocks.
- * - If "mixed", both charts are shown.
- * - If "line" or "bar", only the selected chart is shown, the other is hidden.
+ * Watched-object handler for changes to chart state.
+ * Updates tab UI highlight and correct chart block visibility.
  *
- * @param {string} prop - Name of the changed property
- * @param {*} newValue - New value for the property
- * @param {*} oldValue - Previous value
+ * - Swaps chart button styling.
+ * - Switches visibility of corresponding chart blocks to match selection.
+ * - For "mixed", shows both charts; for "line"/"bar", hides the other.
+ *
+ * @param {string} prop
+ * @param {*} newValue
+ * @param {*} oldValue
  */
 function handleChartChange(prop, newValue, oldValue) {
     // console.log(`chart[${prop}] changed from`, oldValue, 'to', newValue);
 
     if (prop === "value") {
-        // Highlight and un-highlight chart buttons
+        // Highlight the active chart button.
         if (chart.doms[oldValue]) chart.doms[oldValue].classList.remove("active");
         if (chart.doms[newValue]) chart.doms[newValue].classList.add("active");
 
@@ -223,12 +206,12 @@ function handleChartChange(prop, newValue, oldValue) {
 }
 
 /**
- * Handler for changes to the fetch state.
- * Ensures only the appropriate DOM section (loading, empty, error, data) is visible.
+ * Watched-object handler for changes to global state value.
+ * Ensures that only the relevant content section is visible for the state.
  *
- * @param {string} prop - Name of the changed property
- * @param {*} newValue - New value for the property
- * @param {*} oldValue - Previous value
+ * @param {string} prop
+ * @param {*} newValue
+ * @param {*} oldValue
  */
 function handleStateChange(prop, newValue, oldValue) {
     // console.log(`state[${prop}] changed from`, oldValue, 'to', newValue);
@@ -256,108 +239,91 @@ function handleStateChange(prop, newValue, oldValue) {
 }
 
 /**
- * Handler for processed daily forecast data changes.
- * Also updates maxFetchedDays tracker to ensure app caching logic works as intended.
- *
- * @param {string} prop - Name of the changed property
- * @param {*} newValue - New value for the property
- * @param {*} oldValue - Previous value
- */
-function handleDailyChange(prop, newValue, oldValue) {
-    // console.log(`overview[${prop}] changed from`, oldValue, 'to', newValue);
-
-    if (prop === "value") {
-        maxFetchedDays = Math.max(
-            Array.isArray(newValue) ? newValue.length : 0,
-            Array.isArray(oldValue) ? oldValue.length : 0,
-            maxFetchedDays
-        );
-    }
-}
-
-/**
- * Fetches weather forecast data from backend API for the selected forecast window.
- * Populates `daily` with processed data and triggers rendering of all major UI components.
- * Ensures that the `daily.value` always holds the largest length result fetched so far, never throwing away available days.
- *
- * Sets the UI state for loading, error, empty, or data as appropriate.
+ * Fetches weather forecast data from backend for the selected window and updates state.
+ * Populates `daily` with processed data, then triggers rendering. Sets daily to always be the largest API returned set.
+ * Sets empty, error, and success states.
  *
  * @async
- * @returns {Promise<Array<Object> | null>} Resolves to the latest daily data array
  */
-async function loadWeatherData() {
+export async function loadWeatherData(bestelling_page) {
     state.value = "loading";
+    const cached = await loadFromCache(CACHE_KEY, CACHE_DURATION);
+
+    if (bestelling_page) {
+        overview.value = 14;
+    }
+
+    if (cached && cached.length >= overview.value) {
+        daily = cached;
+
+        if (!bestelling_page) {
+            renderAll();
+        }
+    }
 
     try {
-        const data = await fetchWithoutCache(
-            CACHE_KEY_WEATHER_FORECAST,
-            `${API_URL_WEATHER_FORECAST}?days_ahead=${overview.value}`
+        const { message, data, success, errors, exception } = await getForm(
+            `${API_URL}?days_ahead=${overview.value}`
         );
+        console.log(message);
 
-        if (!data || !data.daily) {
+        if (!success || (!data && !data.daily)) {
             state.value = "empty";
-            return null;
-        }
-
-        if (data.daily && data.daily.length >= overview.value) {
-            daily.value = data.daily;
-
-            renderAll();
-            state.value = "data";
-            return data.daily;
+            return;
         }
 
         // If daily is not yet defined or empty, just replace it and update maxFetchedDays
-        if (!Array.isArray(daily.value) || daily.value.length === 0) {
-            daily.value = data.daily;
+        if (!Array.isArray(daily) || daily.length === 0) {
+            daily = data.daily;
+            maxFetchedDays = data.daily.length;
         } else {
-            // Merge the new data in, ensuring full set for largest daily window ever requested
+            // When processed is longer than or equal to what we've seen before, update all/extend
             if (data.daily.length >= maxFetchedDays) {
                 for (const newDay of data.daily) {
-                    const idx = daily.value.findIndex(item => item.date === newDay.date);
-
+                    const idx = daily.findIndex(item => item.date === newDay.date);
                     if (idx !== -1) {
-                        daily.value[idx] = newDay;
+                        daily[idx] = newDay;
                     } else {
-                        daily.value.push(newDay);
+                        daily.push(newDay);
                     }
                 }
+                maxFetchedDays = data.daily.length;
             } else {
-                // If data.daily is shorter, only update the matching days
+                // processed is shorter (less days than previously seen): only update those days
                 for (const newDay of data.daily) {
-                    const idx = daily.value.findIndex(item => item.date === newDay.date);
-
+                    const idx = daily.findIndex(item => item.date === newDay.date);
                     if (idx !== -1) {
-                        daily.value[idx] = newDay;
+                        daily[idx] = newDay;
                     } else {
-                        daily.value.push(newDay);
+                        daily.push(newDay);
                     }
                 }
+                // maxFetchedDays stays the same because we still have more days present in daily
             }
         }
 
-        renderAll();
+        saveToCache(CACHE_KEY, daily);
+        if (!bestelling_page){
+            renderAll();
+        }
+
         state.value = "data";
-        return daily.value;
     } catch (error) {
         console.error(error);
         state.value = "error";
-        return null;
     }
 }
 
 /**
- * Called after successfully loading daily weather data.
- * Slices current daily data to the displayed overview length and re-renders all main UI components:
- * - Weather/Flood data table
- * - "Trend" bar chart with risk scores
- * - "Evolution" min/max/avg temperature chart
- * - Extracts list of current risk days to global variable
+ * Invoked after loading new weather data.
+ * Slices current `daily` to length of current overview, then renders:
+ * - Main table
+ * - Bar trend chart
+ * - Line evolution chart
+ * - Export of risk day list to window
  */
 function renderAll() {
-    if (!Array.isArray(daily.value) || daily.value.length === 0) return;
-
-    const sliced = daily.value.slice(0, overview.value);
+    const sliced = daily.slice(0, overview.value);
     updateTable(sliced);
     renderTrendChart(sliced);
     renderEvolutionChart(sliced);
@@ -365,14 +331,16 @@ function renderAll() {
 }
 
 /**
- * Updates main UI after a settings change (such as overview tab or chart style).
- * Uses pre-fetched daily data to update visible charts and tables.
- * Also updates the exported window.riskDays list.
+ * Updates UI after a settings change (tab or chart style).
+ * Uses new overview window, but does not fetch data.
+ * Slices current `daily` to length of current overview, then Updates:
+ * - Main table
+ * - Bar trend chart
+ * - Line evolution chart
+ * - Risk day list on window
  */
 function updateAll() {
-    if (!Array.isArray(daily.value) || daily.value.length === 0) return;
-
-    const sliced = daily.value.slice(0, overview.value);
+    const sliced = daily.slice(0, overview.value);
     updateTable(sliced);
     updateTrendChart(sliced);
     updateEvolutionChart(sliced);
@@ -380,10 +348,11 @@ function updateAll() {
 }
 
 /**
- * Fills the weather table body with rows based on the provided daily forecast records.
- * Highlights risk days visually. Table requires a <tbody id="weather-table-body">.
+ * Fills the weather table body with rows based on latest data.
+ * Risk days ("isRisk") are visually distinguished.
+ * Table expects `<tbody id="weather-table-body">` in DOM.
  *
- * @param {Array<Object>} data - Array of processed, per-day weather/risk objects to render for the table.
+ * @param {object[]} data - Processed daily data slice to graph
  */
 function updateTable(data) {
     const tbody = document.getElementById("weather-table-body");
@@ -408,11 +377,11 @@ function updateTable(data) {
 }
 
 /**
- * Initializes the "trend" bar chart (risk score per day, colored for risks).
+ * Initializes the "trend" bar chart with risk scores, setting custom colors for risk days.
  * Chart is rendered using Chart.js and stored in `chart.charts.bar.context`.
  * Destroys previous chart instance.
  *
- * @param {Array<Object>} data - Processed daily data slice to visualize as chart bars
+ * @param {object[]} data - Processed daily data slice to graph
  */
 function renderTrendChart(data) {
     // Defensive destroy if instance exists (optional best practice)
@@ -439,7 +408,7 @@ function renderTrendChart(data) {
                 borderColor: borderColors,
                 borderWidth: 2,
                 borderRadius: 4,
-                pointBackgroundColor: bgColors,
+                pointBackgroundColor: bgColors, // for line mode
                 tension: 0.3
             }]
         },
@@ -448,12 +417,8 @@ function renderTrendChart(data) {
                 legend: { display: true },
                 tooltip: {
                     callbacks: {
-                        /**
-                         * Tooltip callback for bar chart showing risk/weather for the selected day.
-                         *
-                         * @param {*} ctx - Tooltip context from Chart.js
-                         */
                         label: ctx => {
+                            // Tooltip shows risk information and weather for the day
                             const d = data[ctx.dataIndex];
                             return [
                                 `Risicowaarde: ${d.riskValue}`,
@@ -474,14 +439,12 @@ function renderTrendChart(data) {
 }
 
 /**
- * Updates the "trend" bar chart to reflect a new data slice (e.g., if overview tab changed).
- * Chart.js instance (`chart.charts.bar.context`) is kept intact; only data/appearance is refreshed.
+ * Updates the "trend" bar chart if forecast window is changed, without re-instantiating the Chart.
+ * Colors, data, and tooltips all refreshed according to slicing and risks.
  *
- * @param {Array<Object>} data - Slice of daily data to render in the trend chart
+ * @param {object[]} data - Processed daily data slice to graph
  */
 function updateTrendChart(data) {
-    if (!chart.charts.bar.context) return;
-
     const labels = data.map(d => d.date);
     const values = data.map(d => d.riskValue);
     const bgColors = data.map(d =>
@@ -491,7 +454,7 @@ function updateTrendChart(data) {
         d.isRisk ? "rgba(220,38,38,1)" : "rgba(59,130,246,1)"
     );
 
-    // Update existing chart with new data and appearance
+    // Update existing
     chart.charts.bar.context.data.labels = labels;
     chart.charts.bar.context.data.datasets[0].data = values;
     chart.charts.bar.context.data.datasets[0].backgroundColor = bgColors;
@@ -501,12 +464,11 @@ function updateTrendChart(data) {
 }
 
 /**
- * Initializes the "evolution" line+bar chart, which charts daily min/max/average temperatures,
- * coloring risk days distinctly. Chart is rendered with Chart.js and instance saved in
- * chart.charts.line.context.
+ * Initializes the "evolution" line chart for daily min/max/average temperature, coloring risk days.
+ * Chart is rendered using Chart.js and stored in `chart.charts.line.context`.
  * Destroys previous chart instance.
  *
- * @param {Array<Object>} data - Processed daily data to graph on lines/bars
+ * @param {object[]} data - Processed daily data slice to graph
  */
 function renderEvolutionChart(data) {
     // Defensive destroy if instance exists (optional best practice)
@@ -568,11 +530,6 @@ function renderEvolutionChart(data) {
                 legend: { display: true },
                 tooltip: {
                     callbacks: {
-                        /**
-                         * Tooltip for line chart - shows risk flag if relevant
-                         *
-                         * @param {Array<Object>} items - Tooltip context array
-                         */
                         afterBody: items => {
                             const d = data[items[0].dataIndex];
                             return d.isRisk
@@ -589,14 +546,12 @@ function renderEvolutionChart(data) {
 }
 
 /**
- * Updates the "evolution" line chart (min/max/average temp) for the new daily data.
- * The instance (`chart.charts.line.context`) is not destroyed; dataset data and colors are refreshed.
+ * Updates the "evolution" line chart if forecast window is changed, without re-instantiating the Chart.
+ * Data, point backgrounds, and average bar colors all refreshed according to slicing and risks.
  *
- * @param {Array<Object>} data - Current data slice to graph
+ * @param {object[]} data - Processed daily data slice to graph
  */
 function updateEvolutionChart(data) {
-    if (!chart.charts.line.context) return;
-
     const labels = data.map(d => d.date);
     const minTemps = data.map(d => d.minTemp);
     const maxTemps = data.map(d => d.maxTemp);
@@ -605,8 +560,9 @@ function updateEvolutionChart(data) {
             ? parseFloat(((d.minTemp + d.maxTemp) / 2).toFixed(1))
             : null
     );
-    // riskBg is unused but could be used for background color overlays.
-    // const riskBg = data.map((d) => d.isRisk ? "rgba(220,38,38,0.12)" : "rgba(0,0,0,0)");
+    const riskBg = data.map((d) =>
+        d.isRisk ? "rgba(220,38,38,0.12)" : "rgba(0,0,0,0)"
+    );
 
     // Update existing chart datasets and styling
     chart.charts.line.context.data.labels = labels;
@@ -626,12 +582,9 @@ function updateEvolutionChart(data) {
 }
 
 /**
- * Extracts and exposes the current list of risk days (forecast day objects where isRisk is true).
- * The list is assigned to window.riskDays for consumption by external code (scripts, analytics, etc).
+ * Exports current risk days (as objects from data where isRisk is true) to global window object.
+ * Allows other modules/scripts to check or query risk periods if desired.
  */
 function updateRiskDays() {
-    if (!Array.isArray(daily.value)) {
-        return;
-    }
-    window.riskDays = daily.value.filter(d => d.isRisk);
+    window.riskDays = daily.filter(d => d.isRisk);
 }
