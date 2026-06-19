@@ -19,9 +19,9 @@
             <p>Gegevens laden...</p>
         </div>
 
-        <div id="error-state" class="weer-error visually-hidden">
-            Er ging iets mis bij het ophalen van de weersomstandigheden gegevens.
-        </div>
+       <div id="error-state" class="weer-error visually-hidden">
+    Er ging iets mis bij het ophalen van de overstromingsgegevens.
+</div>
 
         <div id="empty-state" class="weer-empty visually-hidden">
             Er zijn geen gegevens beschikbaar om te tonen.
