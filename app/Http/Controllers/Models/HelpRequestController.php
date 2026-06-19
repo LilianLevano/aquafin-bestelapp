@@ -147,6 +147,8 @@ class HelpRequestController extends WebController
                     'answer' => ['required']
                 ]);
 
+        
+
                 $helpRequest = HelpRequest::findOrFail($id);
 
                 $helpRequest->is_completed = 1;
@@ -158,10 +160,10 @@ class HelpRequestController extends WebController
                     'route' => route('admin.help-requests.index', ['is_completed' => 'all'], absolute: true)],
                 422 => [
                     'message' => 'Er was iets mis met de validatie, check uw input.',
-                    route('admin.help-requests.edit', ['help_request' => $id])],
+                    'route' => route('admin.help-requests.edit', ['help_request' => $id])],
                 500 => [
                     'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
-                route('admin.help-requests.edit', ['help_request' => $id])],
+                    'route' =>  route('admin.help-requests.edit', ['help_request' => $id])],
             ]
         );
     }
