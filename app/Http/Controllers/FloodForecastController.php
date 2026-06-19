@@ -16,8 +16,8 @@ use Override;
 /**
  * Handles flood forecast display and weather data retrieval for the authenticated user's site.
  *
- * Delegates weather fetching, risk calculation, and prediction generation to dedicated services:
- * {@see WeatherService}, {@see RiskCalculationService}, and {@see FloodForecastService}.
+ * Delegates weather fetching and risk calculation to dedicated services:
+ * {@see WeatherService} and {@see RiskCalculationService}.
  * Forecast results are cached per site and forecast window to avoid redundant API calls.
  */
 class FloodForecastController extends WebController
@@ -27,7 +27,7 @@ class FloodForecastController extends WebController
      *
      * @param WeatherService        $weatherService  Fetches raw weather data from Open-Meteo.
      * @param RiskCalculationService $riskService    Processes daily records and computes risk values.
-     * @param FloodForecastService  $forecastService Generates and persists multi-year flood predictions.
+     * @param FloodForecastService  $forecastService Reserved for historical risk analysis (currently unused by this endpoint).
      */
     public function __construct(
         protected WeatherService $weatherService,
@@ -61,9 +61,9 @@ class FloodForecastController extends WebController
     }
 
     /**
- *  4. Generate a historical flood risk analysis (since 2004) and persist it via
-     *     {@see FloodForecastService::generateHistoricalAnalysis()} and
-     *     {@see FloodForecastService::saveAnalyses()}.
+     * Retrieve the daily forecast and precipitation/risk summary for the authenticated
+     * user's site, using {@see WeatherService::fetchForecast()} and
+     * {@see RiskCalculationService::processDailyRecords()} / {@see RiskCalculationService::calculateWeeklySummary()}.
      *
      * The response payload includes:
      *  - "daily"         — processed daily records with risk values.
@@ -71,7 +71,6 @@ class FloodForecastController extends WebController
      *  - "riskThreshold" — the global risk threshold constant from {@see RiskCalculationService}.
      *  - "days"          — the effective forecast window used.
      *  - "raw"           — the raw weather data returned by the API.
-     *  - "historical"    — historical monthly risk analyses and identified high-risk months.
      */
     public function api(Request $request): JsonResponse
     {
@@ -102,32 +101,24 @@ class FloodForecastController extends WebController
                 $longitude = $user->site->longitude;
                 $cacheKey = "weather_forecast_{$siteId}_{$days_ahead}";
 
-              $result = cache()->remember($cacheKey, now()->addMinutes(30), function () use ($latitude, $longitude, $days_ahead, $siteId) {
-    // 1. Fetch raw weather data (forecast)
-    $raw = $this->weatherService->fetchForecast($latitude, $longitude, $days_ahead);
+                $result = cache()->remember($cacheKey, now()->addMinutes(30), function () use ($latitude, $longitude, $days_ahead) {
+                    // 1. Fetch raw weather data (forecast)
+                    $raw = $this->weatherService->fetchForecast($latitude, $longitude, $days_ahead);
 
-    // 2. Process daily records with risk values
-    $dailyRecords = $this->riskService->processDailyRecords($raw, $days_ahead);
+                    // 2. Process daily records with risk values
+                    $dailyRecords = $this->riskService->processDailyRecords($raw, $days_ahead);
 
-    // 3. Calculate weekly summary
-    $weeklySummary = $this->riskService->calculateWeeklySummary($dailyRecords);
+                    // 3. Calculate weekly summary
+                    $weeklySummary = $this->riskService->calculateWeeklySummary($dailyRecords);
 
-    // 4. Generate historical risk analysis (real data since 2004) + save to DB
-    $analyses = $this->forecastService->generateHistoricalAnalysis($latitude, $longitude, $siteId);
-    $saved = $this->forecastService->saveAnalyses($analyses, $siteId);
-
-    return [
-        'daily'         => $dailyRecords,
-        'summary'       => $weeklySummary,
-        'riskThreshold' => RiskCalculationService::RISK_THRESHOLD,
-        'days'          => $days_ahead,
-        'raw'           => $raw,
-        'historical'    => [
-            'analyses'   => $saved['analyses'],
-            'riskMonths' => $saved['riskMonths'],
-        ],
-    ];
-});
+                    return [
+                        'daily'         => $dailyRecords,
+                        'summary'       => $weeklySummary,
+                        'riskThreshold' => RiskCalculationService::RISK_THRESHOLD,
+                        'days'          => $days_ahead,
+                        'raw'           => $raw,
+                    ];
+                });
 
                 return $result;
             },

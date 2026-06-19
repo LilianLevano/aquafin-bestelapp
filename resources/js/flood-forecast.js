@@ -219,6 +219,13 @@ function handleChartChange(prop, newValue, oldValue) {
             default:
                 console.warn(`Unhandled chart case: ${newValue}`);
         }
+
+        // The evolution chart's actual Chart.js type (line vs bar) follows this
+        // selector too, so it needs to be redrawn whenever the tab changes.
+        if (Array.isArray(daily.value) && daily.value.length > 0) {
+            const sliced = daily.value.slice(0, overview.value);
+            updateEvolutionChart(sliced);
+        }
     }
 }
 
@@ -352,7 +359,9 @@ async function loadWeatherData() {
  * Slices current daily data to the displayed overview length and re-renders all main UI components:
  * - Weather/Flood data table
  * - "Trend" bar chart with risk scores
- * - "Evolution" min/max/avg temperature chart
+ * - "Evolution" precipitation (mm/day) chart
+ * - Weekly precipitation summary cards
+ * - Two-week precipitation forecast cards
  * - Extracts list of current risk days to global variable
  */
 function renderAll() {
@@ -363,6 +372,8 @@ function renderAll() {
     renderTrendChart(sliced);
     renderEvolutionChart(sliced);
     updateRiskDays();
+    renderWeekSummary(daily.value);
+    renderTwoWeekForecast(daily.value);
 }
 
 /**
@@ -378,11 +389,14 @@ function updateAll() {
     updateTrendChart(sliced);
     updateEvolutionChart(sliced);
     updateRiskDays();
+    renderWeekSummary(daily.value);
+    renderTwoWeekForecast(daily.value);
 }
 
 /**
  * Fills the weather table body with rows based on the provided daily forecast records.
  * Highlights risk days visually. Table requires a <tbody id="weather-table-body">.
+ * Temperature is intentionally not displayed — this table is precipitation/risk focused.
  *
  * @param {Array<Object>} data - Array of processed, per-day weather/risk objects to render for the table.
  */
@@ -395,8 +409,6 @@ function updateTable(data) {
         if (day.isRisk) tr.classList.add("risk-row");
         tr.innerHTML = `
             <td>${day.date}</td>
-            <td>${day.minTemp != null ? day.minTemp + " °C" : "-"}</td>
-            <td>${day.maxTemp != null ? day.maxTemp + " °C" : "-"}</td>
             <td>${day.humidity != null ? day.humidity + "%" : "-"}</td>
             <td>${day.rainChance != null ? day.rainChance + "%" : "-"}</td>
             <td>${day.rainMm != null ? day.rainMm + " mm" : "-"}</td>
@@ -502,12 +514,25 @@ function updateTrendChart(data) {
 }
 
 /**
- * Initializes the "evolution" line+bar chart, which charts daily min/max/average temperatures,
+ * Determines the Chart.js chart type to use for the evolution (precipitation) chart.
+ * The evolution chart is always rendered as a line chart, regardless of the
+ * Gemengd/Lijn/Staaf tab — those buttons only control which chart block(s) are
+ * visible, not the evolution chart's underlying type.
+ *
+ * @returns {"line"} Chart.js type string
+ */
+function getEvolutionChartType() {
+    return "line";
+}
+
+/**
+ * Initializes the "evolution" chart, which charts daily precipitation (mm),
  * coloring risk days distinctly. Chart is rendered with Chart.js and instance saved in
- * chart.charts.line.context.
+ * chart.charts.line.context. Temperature is no longer part of this chart.
+ * Chart type (line vs bar) follows the currently selected chart-type tab.
  * Destroys previous chart instance.
  *
- * @param {Array<Object>} data - Processed daily data to graph on lines/bars
+ * @param {Array<Object>} data - Processed daily data to graph
  */
 function renderEvolutionChart(data) {
     // Defensive destroy if instance exists (optional best practice)
@@ -515,52 +540,31 @@ function renderEvolutionChart(data) {
         chart.charts.line.context.destroy();
     }
     const labels = data.map(d => d.date);
-    const minTemps = data.map(d => d.minTemp);
-    const maxTemps = data.map(d => d.maxTemp);
-    const avgTemps = data.map(d =>
-        (d.minTemp != null && d.maxTemp != null)
-            ? parseFloat(((d.minTemp + d.maxTemp) / 2).toFixed(1))
-            : null
+    const rainValues = data.map(d => d.rainMm);
+    const bgColors = data.map(d =>
+        d.isRisk ? "rgba(220,38,38,0.75)" : "rgba(59,130,246,0.75)"
     );
+    const borderColors = data.map(d =>
+        d.isRisk ? "rgba(220,38,38,1)" : "rgba(59,130,246,1)"
+    );
+    const type = getEvolutionChartType();
 
     chart.charts.line.context = new Chart(chart.charts.line.canvas, {
-        type: "line",
+        type,
         data: {
             labels,
             datasets: [
                 {
-                    label: "Min °C",
-                    data: minTemps,
-                    type: "line",
-                    borderColor: "rgba(59,130,246,1)",
-                    backgroundColor: "rgba(59,130,246,0.08)",
-                    tension: 0.3,
-                    pointBackgroundColor: data.map((d) =>
-                        d.isRisk ? "rgba(220,38,38,1)" : "rgba(59,130,246,1)"
-                    )
-                },
-                {
-                    label: "Max °C",
-                    data: maxTemps,
-                    type: "line",
-                    borderColor: "rgba(234,88,12,1)",
-                    backgroundColor: "rgba(234,88,12,0.08)",
-                    tension: 0.3,
-                    pointBackgroundColor: data.map((d) =>
-                        d.isRisk ? "rgba(220,38,38,1)" : "rgba(234,88,12,1)"
-                    )
-                },
-                {
-    label: "Gemiddelde °C",
-    data: avgTemps,
-    type: "line",
-    borderColor: "rgba(22,163,74,1)",
-    backgroundColor: "rgba(22,163,74,0.08)",
-    pointBackgroundColor: data.map((d) =>
-        d.isRisk ? "rgba(220,38,38,1)" : "rgba(22,163,74,1)"
-    ),
-    tension: 0.3
-}
+                    label: "Neerslag (mm)",
+                    data: rainValues,
+                    backgroundColor: type === "line" ? "rgba(59,130,246,0.08)" : bgColors,
+                    borderColor: borderColors,
+                    borderWidth: 2,
+                    borderRadius: type === "bar" ? 4 : undefined,
+                    pointBackgroundColor: bgColors,
+                    fill: type === "line",
+                    tension: 0.3
+                }
             ]
         },
         options: {
@@ -569,7 +573,7 @@ function renderEvolutionChart(data) {
                 tooltip: {
                     callbacks: {
                         /**
-                         * Tooltip for line chart - shows risk flag if relevant
+                         * Tooltip for precipitation chart - shows risk flag if relevant
                          *
                          * @param {Array<Object>} items - Tooltip context array
                          */
@@ -582,6 +586,7 @@ function renderEvolutionChart(data) {
                     }
                 }
             },
+            scales: { y: { beginAtZero: true } },
             responsive: true,
             maintainAspectRatio: false
         }
@@ -589,40 +594,135 @@ function renderEvolutionChart(data) {
 }
 
 /**
- * Updates the "evolution" line chart (min/max/average temp) for the new daily data.
- * The instance (`chart.charts.line.context`) is not destroyed; dataset data and colors are refreshed.
+ * Updates the "evolution" precipitation chart for the new daily data.
+ * If the chart-type tab changed (line <-> bar) since the chart was created,
+ * the chart is destroyed and fully re-rendered, since Chart.js does not
+ * support changing a dataset's chart type in place.
  *
  * @param {Array<Object>} data - Current data slice to graph
  */
 function updateEvolutionChart(data) {
     if (!chart.charts.line.context) return;
 
-    const labels = data.map(d => d.date);
-    const minTemps = data.map(d => d.minTemp);
-    const maxTemps = data.map(d => d.maxTemp);
-    const avgTemps = data.map(d =>
-        (d.minTemp != null && d.maxTemp != null)
-            ? parseFloat(((d.minTemp + d.maxTemp) / 2).toFixed(1))
-            : null
-    );
-    // riskBg is unused but could be used for background color overlays.
-    // const riskBg = data.map((d) => d.isRisk ? "rgba(220,38,38,0.12)" : "rgba(0,0,0,0)");
+    const desiredType = getEvolutionChartType();
+    if (chart.charts.line.context.config.type !== desiredType) {
+        renderEvolutionChart(data);
+        return;
+    }
 
-    // Update existing chart datasets and styling
-    chart.charts.line.context.data.labels = labels;
-    chart.charts.line.context.data.datasets[0].data = minTemps;
-    chart.charts.line.context.data.datasets[0].pointBackgroundColor = data.map(d =>
+    const labels = data.map(d => d.date);
+    const rainValues = data.map(d => d.rainMm);
+    const bgColors = data.map(d =>
+        d.isRisk ? "rgba(220,38,38,0.75)" : "rgba(59,130,246,0.75)"
+    );
+    const borderColors = data.map(d =>
         d.isRisk ? "rgba(220,38,38,1)" : "rgba(59,130,246,1)"
     );
-    chart.charts.line.context.data.datasets[1].data = maxTemps;
-    chart.charts.line.context.data.datasets[1].pointBackgroundColor = data.map(d =>
-        d.isRisk ? "rgba(220,38,38,1)" : "rgba(234,88,12,1)"
-    );
-    chart.charts.line.context.data.datasets[2].data = avgTemps;
-chart.charts.line.context.data.datasets[2].pointBackgroundColor = data.map(d =>
-    d.isRisk ? "rgba(220,38,38,1)" : "rgba(22,163,74,1)"
-);
+
+    chart.charts.line.context.data.labels = labels;
+    chart.charts.line.context.data.datasets[0].data = rainValues;
+    chart.charts.line.context.data.datasets[0].backgroundColor =
+        desiredType === "line" ? "rgba(59,130,246,0.08)" : bgColors;
+    chart.charts.line.context.data.datasets[0].borderColor = borderColors;
+    chart.charts.line.context.data.datasets[0].pointBackgroundColor = bgColors;
     chart.charts.line.context.update();
+}
+
+/**
+ * Renders the "Gemiddelde neerslag deze week" summary cards: total mm this week,
+ * average mm/day, and number of days with measurable rain (out of 7).
+ * Requires a container <div id="week-summary-cards"> in the page markup.
+ *
+ * @param {Array<Object>} allData - Full daily dataset (at least 7 days) to summarize for "this week".
+ */
+function renderWeekSummary(allData) {
+    const container = document.getElementById("week-summary-cards");
+    if (!container || !Array.isArray(allData) || allData.length === 0) return;
+
+    const week = allData.slice(0, 7);
+    const totalMm = week.reduce((sum, d) => sum + (d.rainMm || 0), 0);
+    const avgMm = week.length ? totalMm / week.length : 0;
+    const rainDays = week.filter(d => (d.rainMm || 0) > 0).length;
+
+    container.innerHTML = `
+        <div class="weer-stat-card">
+            <span class="weer-stat-value">${totalMm.toFixed(1)} mm</span>
+            <span class="weer-stat-label">Totaal deze week</span>
+        </div>
+        <div class="weer-stat-card">
+            <span class="weer-stat-value">${avgMm.toFixed(1)} mm</span>
+            <span class="weer-stat-label">Gemiddeld per dag</span>
+        </div>
+        <div class="weer-stat-card">
+            <span class="weer-stat-value">${rainDays}/${week.length}</span>
+            <span class="weer-stat-label">Dagen met neerslag</span>
+        </div>
+    `;
+}
+
+/**
+ * Renders the "Neerslag voorspelling komende 2 weken" cards, grouping the available
+ * daily data into 7-day chunks (week 1, week 2, ...) and showing total mm, average mm/day,
+ * and rain days per chunk. Requires a container <div id="two-week-forecast-cards">.
+ * Always uses up to 14 days regardless of which overview tab (1 week / 2 weken) is active,
+ * since this section is meant to be a standalone 2-week outlook.
+ *
+ * @param {Array<Object>} allData - Full daily dataset to group into weekly chunks.
+ */
+function renderTwoWeekForecast(allData) {
+    const container = document.getElementById("two-week-forecast-cards");
+    if (!container || !Array.isArray(allData) || allData.length === 0) return;
+
+    const twoWeekData = allData.slice(0, 14);
+    container.innerHTML = "";
+
+    for (let i = 0; i < twoWeekData.length; i += 7) {
+        const chunk = twoWeekData.slice(i, i + 7);
+        if (chunk.length === 0) continue;
+
+        const totalMm = chunk.reduce((sum, d) => sum + (d.rainMm || 0), 0);
+        const avgMm = chunk.length ? totalMm / chunk.length : 0;
+        const rainDays = chunk.filter(d => (d.rainMm || 0) > 0).length;
+        const startDate = chunk[0].date;
+        const endDate = chunk[chunk.length - 1].date;
+
+        const card = document.createElement("div");
+        card.className = "weer-period-card";
+        card.innerHTML = `
+            <h3 class="weer-period-title">${startDate} – ${endDate}</h3>
+            <div class="weer-period-stats">
+                <div class="weer-period-stat">
+                    <span class="weer-period-value">${totalMm.toFixed(1)} mm</span>
+                    <span class="weer-period-label">Totaal neerslag</span>
+                </div>
+                <div class="weer-period-stat">
+                    <span class="weer-period-value">${avgMm.toFixed(1)} mm</span>
+                    <span class="weer-period-label">Gem. per dag</span>
+                </div>
+                <div class="weer-period-stat">
+                    <span class="weer-period-value">${rainDays}/${chunk.length}</span>
+                    <span class="weer-period-label">Regendagen</span>
+                </div>
+            </div>
+        `;
+        container.appendChild(card);
+    }
+
+    // If we only have 7 days of data so far (e.g. page just loaded on the
+    // "1 week" tab), fetch the remaining days in the background so the
+    // 2-week outlook can fill in its second card without requiring the
+    // user to click the "2 weken" tab first.
+    if (twoWeekData.length < 14) {
+        fetchWithoutCache(
+            CACHE_KEY_WEATHER_FORECAST,
+            `${API_URL_WEATHER_FORECAST}?days_ahead=14`
+        ).then(data => {
+            if (data && Array.isArray(data.daily) && data.daily.length > daily.value.length) {
+                daily.value = data.daily;
+                renderTwoWeekForecast(daily.value);
+            }
+        }).catch(err => console.error(err));
+    }
 }
 
 /**

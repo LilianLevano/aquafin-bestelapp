@@ -49,7 +49,7 @@
                                 <td class="extra-information">{{ $a->email }}</td>
                                 <td class="extra-information">{{ $a->phone_number }}</td>
                                 <td class="extra-information">{{ $a->role->name ?? '—' }}</td>
-                                <td class="extra-information">{{ $a->site->description }}</td>
+                               <td class="extra-information">{{ $a->site?->description ?? '—' }}</td>
                                 <td class="right">
                                     <a href="{{ route('admin.accounts.show', $a->id) }}" class="show" >Meer details</a>
                                     <a href="{{ route('admin.accounts.edit', $a->id) }}" class="link">Bewerken</a>

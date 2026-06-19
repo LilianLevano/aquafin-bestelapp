@@ -28,14 +28,16 @@
         </div>
 
         <div id="data-content" class="visually-hidden">
+            {{-- WEEKLY PRECIPITATION SUMMARY --}}
+            <h2 class="weer-section-title">Gemiddelde neerslag deze week</h2>
+            <div id="week-summary-cards" class="weer-stat-cards"></div>
+
             {{-- TABLE --}}
             <div class="weer-table-wrapper">
                 <table class="weer-table">
                     <thead>
                         <tr>
                             <th>Datum</th>
-                            <th>Min °C</th>
-                            <th>Max °C</th>
                             <th>Vochtigheid (%)</th>
                             <th>Neerslag kans (%)</th>
                             <th>Neerslag (mm)</th>
@@ -65,10 +67,14 @@
                     <canvas id="trendChart"></canvas>
                 </div>
                 <div id="evolution-chart-block" class="weer-chart-block">
-                    <h2>Evolutiegrafiek – Min / Max / Gemiddelde</h2>
+                    <h2>Evolutiegrafiek – Neerslag (mm)</h2>
                     <canvas id="evolutionChart"></canvas>
                 </div>
             </div>
+
+            {{-- TWO-WEEK PRECIPITATION FORECAST --}}
+            <h2 class="weer-section-title">Neerslag voorspelling komende 2 weken</h2>
+            <div id="two-week-forecast-cards" class="weer-period-cards"></div>
         </div>
     </div>
 @endsection
