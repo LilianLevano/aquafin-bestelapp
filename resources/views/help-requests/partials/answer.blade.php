@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Hulp aanvraag beantwoorden - ' . $request->title)
+
 @section('content')
     <div class="help-request-card">
         <div class="back-section">
@@ -11,6 +12,7 @@
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
+
         @if(session('error'))
             <div class="alert alert-error">{{ session('error') }}</div>
         @endif
@@ -27,13 +29,12 @@
         <form action="{{route('admin.help-requests.update', $request->id)}}" method="post">
             @method('PATCH')
             @csrf
-        <h3>Answer</h3>
-        <textarea class="description-box" rows="8" id="answer" name="answer" placeholder="Type your answer here..."></textarea>
+            <h3>Answer</h3>
+            <textarea class="description-box" rows="8" id="answer" name="answer" placeholder="Type your answer here..."></textarea>
 
-
-        <div class="answer-button">
-            <button type="submit" class="btn-primary">Submit Answer</button>
-        </div>
+            <div class="answer-button">
+                <button type="submit" class="btn-primary">Submit Answer</button>
+            </div>
         </form>
     </div>
 @endsection

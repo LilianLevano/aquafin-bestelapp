@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('help_requests', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('email');
+            $table->string('first_name')->nullable(false);
+            $table->string('last_name')->nullable(false);
+            $table->string('email')->nullable(false);
             $table->string('title')->nullable(false);
             $table->text('description')->nullable(false);
             $table->text('answer')->nullable();

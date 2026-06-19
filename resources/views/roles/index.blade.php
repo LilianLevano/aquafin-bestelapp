@@ -2,28 +2,24 @@
 @section('title', 'Rollen')
 
 @section('content')
-
-  <style>
+    <style>
         .card {
             border-radius: 14px;
         }
 
-         .table th {
+        .table th {
             background-color: #eaf3ff;
             color: #005fa3;
-    } 
+        }
 
-
-          .table tr:hover {
+        .table tr:hover {
             background-color: #eaf3ff;
-         }
+        }
     </style>
-
 
     <div class="card">
         <div class="tabs">
-
-            <a href="{{route('admin.roles.create')}}" class="btn-primary">
+            <a href="{{ route('admin.roles.create') }}" class="btn-primary">
                 + Rol
             </a>
         </div>
@@ -60,30 +56,28 @@
                 </thead>
                 <tbody id="roles-tbody">
                     @forelse($roles as $r)
-                    <tr data-id="{{ $r->id }}" data-name="{{ $r->name }}">
-                        <td>{{ $r->id }}</td>
-                        <td>{{ $r->name }}</td>
+                        <tr data-id="{{ $r->id }}" data-name="{{ $r->name }}">
+                            <td>{{ $r->id }}</td>
+                            <td>{{ $r->name }}</td>
 
-                        <td class="right">
-                            <button type="button" class="link"><a href="{{route('admin.roles.edit', $r->id)}}">Bewerk</a> </button>
-                            <form method="POST" action="{{ route('admin.roles.destroy', $r) }}" style="display:inline"
-                                onsubmit="return confirm('Delete this role?');">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="link link-danger">Verwijder</button>
-                            </form>
-                        </td>
-                    </tr>
+                            <td class="right">
+                                <button type="button" class="link"><a href="{{route('admin.roles.edit', $r->id)}}">Bewerk</a> </button>
+                                <form method="POST" action="{{ route('admin.roles.destroy', $r->id) }}" style="display:inline"
+                                    onsubmit="return confirm('Delete this role?');">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="link link-danger">Verwijder</button>
+                                </form>
+                            </td>
+                        </tr>
                     @empty
-                    <tr id="empty-row"><td colspan="4" class="muted center">Geen rollen gevonden.</td></tr>
+                        <tr id="empty-row"><td colspan="4" class="muted center">Geen rollen gevonden.</td></tr>
                     @endforelse
                 </tbody>
             </table>
             <p id="no-results" class="muted center" style="display:none;padding:16px;">Geen resultaat gevonden.</p>
         </div>
     </div>
-
 @endsection
-
 
 @push('scripts')
     @vite('resources/js/roles/roles-index.js')

@@ -13,7 +13,7 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update', Auth::user()->id) }}" class="mt-6 space-y-6">
         @csrf
         @method('patch')
 
@@ -53,7 +53,6 @@
             @endif
         </div>
 
-
         <div class="field">
             <label for="phone_number">Telefoonnummer</label>
             <input id="phone_number" type="tel" name="phone_number"
@@ -64,7 +63,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <button type="submit" class="btn-primary">Save</button>
+            <button type="submit" class="btn-primary">{{ __('Opslaan') }}</button>
 
             @if (session('status') === 'profile-updated')
                 <p

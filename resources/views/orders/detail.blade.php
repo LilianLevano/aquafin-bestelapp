@@ -2,8 +2,7 @@
 
 @section('content')
     <div class="order-container">
-
-        <a href="{{ route('orders.index') }}" class="order-back-link">
+        <a href="{{ route('technieker.orders.index') }}" class="order-back-link">
             ← Bestellingen
         </a>
 
@@ -33,40 +32,37 @@
         <div class="materials-table-wrapper">
             <table class="materials-table">
                 <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Naam</th>
-                    <th>Categorie</th>
-                    <th>Quantity</th>
-
-                </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Naam</th>
+                        <th>Categorie</th>
+                        <th>Quantity</th>
+                    </tr>
                 </thead>
                 <tbody>
-                @forelse($order->materials as $material)
-                    <tr>
-                        <td class="col-id">#{{ $material->id }}</td>
-                        <td class="col-name"><a href="{{ route('materials.show', $material->id) }}">{{ $material->name }}</a> </td>
-                        <td>
-                            @if($material->category)
-                                <span class="category-badge">{{ $material->category->name }}</span>
-                            @else
-                                <span class="category-badge no-category">Geen categorie</span>
-                            @endif
-                        </td>
-                        <td>
-                            {{$material->pivot->quantity}}
-                        </td>
-
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="4" class="materials-empty">Deze bestelling heeft geen materialen.</td>
-                    </tr>
-                @endforelse
+                    @forelse($order->materials as $material)
+                        <tr>
+                            <td class="col-id">#{{ $material->id }}</td>
+                            <td class="col-name"><a href="{{ route('technieker.materials.show', $material->id) }}">{{ $material->name }}</a> </td>
+                            <td>
+                                @if($material->category)
+                                    <span class="category-badge">{{ $material->category->name }}</span>
+                                @else
+                                    <span class="category-badge no-category">Geen categorie</span>
+                                @endif
+                            </td>
+                            <td>
+                                {{$material->pivot->quantity}}
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="4" class="materials-empty">Deze bestelling heeft geen materialen.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
-
     </div>
 @endsection
 

@@ -4,7 +4,7 @@
 @section('content')
     <div class="card">
         <div class="tabs">
-            <a href="{{route('admin.accounts.create')}}" class="btn-primary">
+            <a href="{{ route('admin.accounts.create') }}" class="btn-primary">
                 + Account
             </a>
         </div>
@@ -40,38 +40,34 @@
                     </tr>
                 </thead>
                 <tbody id="accounts-tbody">
-                    @forelse($accounts as $a)
-                        <tr data-id="{{ $a->id }}" data-firstname="{{ $a->first_name }}" data-lastname="{{ $a->last_name }}">
-                        <td class="id-account">{{ $a->id }}</td>
-                        <td>{{ $a->first_name }}</td>
-                        <td>{{ $a->last_name }}</td>
-                        <td class="extra-information">{{ $a->email }}</td>
-                        <td class="extra-information">{{ $a->phone_number }}</td>
-                        <td class="extra-information">{{ $a->role->name ?? '—' }}</td>
-                        <td class="extra-information">{{ $a->site->description }}</td>
-                        <td class="right">
+                    @if (!(empty($accounts) || $accounts->isEmpty()))
+                        @forelse($accounts as $a)
+                            <tr data-id="{{ $a->id }}" data-firstname="{{ $a->first_name }}" data-lastname="{{ $a->last_name }}">
+                                <td class="id-account">{{ $a->id }}</td>
+                                <td>{{ $a->first_name }}</td>
+                                <td>{{ $a->last_name }}</td>
+                                <td class="extra-information">{{ $a->email }}</td>
+                                <td class="extra-information">{{ $a->phone_number }}</td>
+                                <td class="extra-information">{{ $a->role->name ?? '—' }}</td>
+                                <td class="extra-information">{{ $a->site->description }}</td>
+                                <td class="right">
+                                    <a href="{{ route('admin.accounts.show', $a->id) }}" class="show" >Meer details</a>
+                                    <a href="{{ route('admin.accounts.edit', $a->id) }}" class="link">Bewerken</a>
 
-                            <a href="{{route('admin.accounts.show', $a->id)}}" class="show" >Meer details</a>
-
-                            <a href="{{route('admin.accounts.edit', $a->id)}}" class="link">Bewerken</a>
-
-                            <form method="POST" action="{{ route('admin.accounts.destroy', $a) }}" style="display:inline"
-                                onsubmit="return confirm('Delete this account?');">
-                                @csrf @method('DELETE')
-                                <button type="submit"  class="link link-danger">Verwijderen</button>
-                            </form>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr id="empty-row"><td colspan="7" class="muted center">No users to display.</td></tr>
-                    @endforelse
+                                    <form method="POST" action="{{ route('admin.accounts.destroy', $a->id) }}" style="display:inline"
+                                        onsubmit="return confirm('Delete this account?');">
+                                        @csrf @method('DELETE')
+                                        <button type="submit"  class="link link-danger">Verwijderen</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr id="empty-row"><td colspan="7" class="muted center">No users to display.</td></tr>
+                        @endforelse
+                    @endif
                 </tbody>
             </table>
             <p id="no-results" class="muted center" style="display:none;padding:16px;">No results found.</p>
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    @vite('resources/js/accounts/account-index.js')
-@endpush

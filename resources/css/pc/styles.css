@@ -402,14 +402,22 @@ table td {
 }
 
 .weer-charts-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 26px;
-    margin-top: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    margin-top: 8px;
+    height: 400px;
 }
 
 .weer-chart-block {
-    padding: 22px;
+    padding: 20px;
+    width: 100%;
+
+    canvas {
+        max-width: 100%;
+        max-height: calc(100% - 20px);
+    }
 }
 
 .weer-chart-block h2 {
@@ -555,4 +563,25 @@ table td {
 .weer-empty {
     padding: 44px;
     margin: 22px 0;
+}
+
+#priority-list {
+    border: 2px solid #f0a500;
+}
+
+#priority-list .card {
+    background-color: #fffbf0;
+}
+
+#priority-list .card-header {
+    background-color: #f0a500;
+    color: white;
+}
+
+#priority-list thead {
+    background-color: #fef3cd;
+}
+
+#priority-list .table-hover tbody tr:hover {
+    background-color: #fde8a0;
 }

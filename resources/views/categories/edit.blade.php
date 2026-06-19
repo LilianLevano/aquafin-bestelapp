@@ -7,7 +7,7 @@
         @if(session('status'))
             <div class="alert alert-success">{{ session('status') }}</div>
         @endif
-        <form id="edit-form" method="POST" action="{{ route('admin.categories.update', $category) }}" class="form">
+        <form id="edit-form" method="POST" action="{{ route('admin.categories.update', $category->id) }}" class="form">
             @csrf @method('PUT')
 
             <div class="field">

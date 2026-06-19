@@ -1,64 +1,85 @@
 <?php
 
-use App\Http\Controllers\Admin\AccountController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\MaterialController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\HelpRequestController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Models\UserController;
+use App\Http\Controllers\Models\RoleController;
+use App\Http\Controllers\Models\MaterialController;
+use App\Http\Controllers\Models\HelpRequestController;
+use App\Http\Controllers\Models\OrderController;
+use App\Http\Controllers\Models\AddressController;
+use App\Http\Controllers\Models\CategoryController;
+use App\Http\Controllers\Models\SiteController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\BestellingController;
+use App\Http\Controllers\FloodForecastController;
 use Illuminate\Support\Facades\Route;
-
-require __DIR__.'/auth.php';
+use Illuminate\Support\Facades\Auth;
 
 // Guest Routes
+Route::resource('help-requests', HelpRequestController::class)->only(['create', 'store']);
+Route::get('/', function () {
+    if (Auth::check()) {
+        return redirect()->route('home');
+    }
+    return redirect()->route('login');
+});
 
-Route::resource('help-request', HelpRequestController::class)->names('help-request')->only(['create', 'store']);
 // Protected Routes
 Route::middleware('auth')->group(function () {
+    Route::get('home', function () {
+        $roleName = Auth::user()->role->name;
+        $routeName = strtolower($roleName . '.home');
 
-    Route::get('/', fn() => view('dashboard'))
-        ->middleware('verified')
-        ->name('/');
+        if (Route::has($routeName)) {
+            return redirect()->route($routeName);
+        }
+        return redirect()->route('login');
+    })->name('home');
 
-    Route::get('/categories', fn() => view('categories.index'))
-        ->name('categories');
-
-    // ── Admin ──
+    // Admin
     Route::middleware('role:Admin')->group(function () {
         Route::prefix('admin')
             ->name('admin.')
             ->group(function () {
-                Route::resource('accounts', AccountController::class);
+                Route::resource('accounts', UserController::class);
                 Route::resource('roles', RoleController::class)->except(['show']);
                 Route::resource('materials', MaterialController::class);
+                Route::resource('help-requests', HelpRequestController::class)->except(['store']);
+                Route::resource('addresses', AddressController::class);
                 Route::resource('categories', CategoryController::class)->except(['show']);
-                Route::get('/help-requests/{is_completed}', [HelpRequestController::class, 'index'])->name('help-requests.index');
-                Route::get('/help-requests/show/{id}', [HelpRequestController::class, 'show'])->name('help-requests.show');
-                Route::resource('help-requests', HelpRequestController::class)->except(['index']);
-
+                // Route::resource('sites', SiteController::class)->except(['store']);
+                Route::get('home', function () {
+                    return redirect()->route('admin.accounts.index');
+                })->name('home');
             });
     });
 
-    // ── Technieker ──
+    // Technician
     Route::middleware('role:Technieker')->group(function () {
-        Route::prefix('technieker')->group(function () {
-            Route::resource('orders', OrderController::class);
-            Route::resource('materials', MaterialController::class)->only('show');
+        Route::prefix('technieker')
+            ->name('technieker.')
+            ->group(function () {
+                Route::resource('orders', OrderController::class);
+                Route::resource('flood-forecast', FloodForecastController::class)->except(['api']);
+                Route::resource('materials', MaterialController::class)->only('show');
+                Route::get('home', function () {
+                    return redirect()->route('technieker.orders.index');
+                })->name('home');
+            });
+    });
+
+    // Manager
+    Route::middleware('role:Manager')->group(function () {
+        Route::prefix('manager')
+            ->name('manager.')
+            ->group(function () {
+                Route::resource('orders', OrderController::class)->only(['index', 'show']);
+                Route::get('home', function () {
+                    return redirect()->route('manager.orders.index');
+                })->name('home');
         });
     });
 
-    // ── Manager ──
-    Route::middleware('role:Manager')->group(function () {
-        Route::get('/bestellingen', [BestellingController::class, 'index'])
-            ->name('bestellingen.index');
-        Route::get('/bestellingen/{id}', [BestellingController::class, 'show'])
-            ->name('bestellingen.show');
-    });
-
-    // ── Profiel ──
-    Route::get('/profile',    [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile',  [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Profile
+    Route::resource('profile', ProfileController::class);
 });
+
+require __DIR__.'/auth.php';

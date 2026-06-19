@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name')->nullable(false);
             $table->text('description')->nullable();
             $table->string('image_path')->nullable();
+            $table->string('type')->default("NORMAL");
             $table->timestamps();
             $table->softDeletes('deleted_at', precision: 0);
         });

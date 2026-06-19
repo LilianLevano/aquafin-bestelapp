@@ -1,5 +1,5 @@
 # Aquafin bestelapp
-Webapplicatie voor het beheer van materiaalbestellingen binnen het Aquafin netwerk. Deze applicatie laat techniekers toe om bestellingen te plaatsen voor hun werksite, terwijl managers bestellingen kunnen raadplegen voor logistieke doelen.
+Webapplicatie voor het beheer van materiaalbestellingen binnen het Aquafin netwerk. Deze applicatie laat techniekers toe om bestellingen te plaatsen voor hun werksite, terwijl managers en magazijniers bestellingen kunnen raadplegen voor logistieke doelen.
 
 Admins hebben volledige controle over wat (materialen, rollen, categorieën, ...) beschikbaar is op de website voor de verschillende werknemers binnen Aquafin.
 
@@ -17,6 +17,9 @@ Dit webapplicatie werd gemaakt in opdracht van Aquafin voor een examenproject bi
 - Volledig overzicht en beheer van alle bestellingen
 - Detailweergave per bestelling met materialen, hoeveelheden, leverdatum, datum van bestelling, leverplaats
 
+### Magazijniers
+
+- Overzicht over bestellingen met materialen, hoeveelheden, leverdatum, leverplaats
 
 ### Admins
 
@@ -36,9 +39,22 @@ De technische documentatie van de broncode wordt gegenereerd via [phpDocumentor]
 
 ### Documentatie genereren
 
-```bash
+- Publiek hulpverzoekformulier
+- Beveiligd met rolgebaseerde toegangscontrole
+
+---
+
+## Installatie
+
+### Vereisten
+
+- PHP >= 8.3
+- Composer
+- Node.js >= 18 & npm
+- MySQL
+
 composer require --dev phpdocumentor/shim ## Een keer uitvoeren
-php vendor/bin/phpdoc -d app -t docs     
+php vendor/bin/phpdoc -d app -t docs
 ```
 
 
@@ -63,7 +79,7 @@ De documentatie bevindt zich dan in `docs/index.html`, die je in jouw browser ka
 mkdir <naam-project>
 cd <naam-project>
 git clone https://github.com/LilianLevano/aquafin-bestelapp
- 
+
 ```
 
 2. Dependencies installeren
@@ -129,8 +145,8 @@ De applicatie gebruikt een rolgebaseerd toegangssysteem via `RoleMiddleware`. El
 | **Admin**       | Accounts, rollen, materialen, categorieën, hulpverzoeken beheren |
 | **Technieker**  | Bestellingen plaatsen en annuleren, materialen bekijken          |
 | **Manager**     | Overzicht, detail en beheren van alle bestellingen               |
- 
----
+| **Magazijnier** | Bestellingenlijst raadplegen                                     |
+
 ---
 ## Testaccounts
 
@@ -143,6 +159,7 @@ Maak zelf een aparte admin account, via de admin testaccount, dan kunnen de test
 | Admin       | `admin@aquawerf.com`       | `password` |
 | Technieker  | `technieker@aquawerf.com`  | `password` |
 | Manager     | `manager@aquawerf.com`     | `password` |
+| Magazijnier | `magazijnier@aquawerf.com` | `password` |
 
 ---
 ## Auteurs
@@ -155,8 +172,7 @@ Maak zelf een aparte admin account, via de admin testaccount, dan kunnen de test
 | Aouragh Nisrine      | https://github.com/nisrineaourag1-star |
 | Levano Lilian        | https://github.com/LilianLevano        |
 
---- 
+---
 ## ERD Diagram
 
 ![ERD Diagram](public/images/erd_diagram.png)
-

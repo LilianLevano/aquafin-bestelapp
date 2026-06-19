@@ -9,7 +9,7 @@
         </p>
     </header>
 
-    <form method="post" action="{{ route('password.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('password.update', Auth::user()->id) }}" class="mt-6 space-y-6">
         @csrf
         @method('put')
 
@@ -32,7 +32,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <button type="submit" class="btn-primary">Save</button>
+            <button type="submit" class="btn-primary">{{ __('Opslaan') }}</button>
 
             @if (session('status') === 'password-updated')
                 <p

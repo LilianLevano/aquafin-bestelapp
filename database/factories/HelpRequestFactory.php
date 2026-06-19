@@ -18,9 +18,13 @@ class HelpRequestFactory extends Factory
     public function definition(): array
     {
         return [
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
+            'email' => $this->faker->email(),
             'title' => $this->faker->sentence(),
             'description' => $this->faker->paragraph(),
-            'is_completed' => $this->faker->boolean(),
+            'answer' => $this->faker->paragraph(),
+            'is_completed' => $this->faker->boolean()
         ];
     }
 }

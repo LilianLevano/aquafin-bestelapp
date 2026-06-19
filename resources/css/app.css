@@ -9,6 +9,9 @@
 /* Styles for tablets and PCs (screens wider than 768px) */
 @import url("./pc/styles.css") screen and (min-width: 768px);
 
+/* Styles for large desktops (screens wider than 1024px) */
+/* @import url("./wide/styles.css") screen and (min-width: 1025px); */
+
 /* Global polish */
 html {
     scroll-behavior: smooth;

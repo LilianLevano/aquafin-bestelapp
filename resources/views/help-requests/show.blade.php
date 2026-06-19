@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('title', 'Hulp aanvraag - ' . $request->title)
+
 @section('content')
     <div class="help-request-card">
         <div class="back-section">
@@ -11,6 +12,7 @@
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
+
         @if(session('error'))
             <div class="alert alert-error">{{ session('error') }}</div>
         @endif
@@ -24,8 +26,7 @@
         <h3>Answer to</h3>
         <input type="email" class="text-field" placeholder="test@gmail.com" value="{{ $request->email}}" readonly>
 
-            <h3>Answer</h3>
-            <textarea class="description-box" readonly rows="8" id="answer" name="answer" placeholder="Type your answer here...">{{$request->answer}}</textarea>
-
+        <h3>Answer</h3>
+        <textarea class="description-box" readonly rows="8" id="answer" name="answer" placeholder="Type your answer here...">{{$request->answer}}</textarea>
     </div>
 @endsection

@@ -5,10 +5,10 @@
     <div class="card" style="max-width:480px;margin:0 auto;">
         <div class="tabs">
             <a href="{{ route('admin.categories.index') }}" class="tab">Huidig</a>
-
         </div>
 
         <h1 class="h1">Maak een Categorie</h1>
+
         @if(session('succes'))
             <div class="alert alert-success">{{ session('status') }}</div>
         @endif
@@ -16,11 +16,10 @@
         @if(session('error'))
             <div class="alert alert-error">{{ session('status') }}</div>
         @endif
+
         <form x-data="{ sent: false }" @submit.prevent="sent = true; $el.submit()" id="create-form" method="POST" action="{{ route('admin.categories.store') }}" class="form">
             @csrf
             <fieldset :disabled="sent">
-
-
                 <div class="field">
                     <label for="name">Categorie Name</label>
                     <input id="name" name="name" value="{{ old('name') }}" required autofocus

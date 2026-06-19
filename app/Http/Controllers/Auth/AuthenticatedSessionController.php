@@ -8,14 +8,13 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
      * Display the login view.
      */
-    public function create(): View
+    public function index(): View
     {
         return view('auth.login');
     }
@@ -25,31 +24,53 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        try {
-            $request->authenticate();
-            $request->session()->regenerate();
-
-            return redirect()
-                ->intended(route('/', absolute: false))
-                ->with('status', 'Je bent ingelogd!');
-        } catch (ValidationException $e) {
-            return redirect()->route('login')->with('error', 'Foutieve loging gegevens');
-
-        } catch (\Exception $e) {
-            return redirect()->route('login')->with('error', 'Er ging iets mis met het verzoeken voor autorisatie...');
-
-        }
+        return $this->handleWithCases(
+            $request,
+            function () use ($request) {
+                $request->authenticate();
+                $request->session()->regenerate();
+            },
+            [
+                200 => [
+                    'message' => 'U bent ingelogd!',
+                    'route' => route('home', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('login', absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('login', absolute: true)]
+            ]
+        );
     }
 
     /**
      * Destroy an authenticated session.
+     * Logs out the user, invalidates the session, and regenerates the CSRF token.
+     *
+     * @param Request $request
+     * @return RedirectResponse
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return redirect('/');
+        return $this->handleWithCases(
+            $request,
+            function () use ($request) {
+                Auth::guard('web')->logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+            },
+            [
+                200 => [
+                    'message' => 'U bent uitgelogd!',
+                    'route' => route('login', absolute: true)],
+                422 => [
+                    'message' => 'Er was iets mis met de validatie, check uw input.',
+                    'route' => route('home', absolute: true)],
+                500 => [
+                    'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
+                    'route' => route('home', absolute: true)]
+            ]
+        );
     }
 }

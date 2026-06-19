@@ -1,4 +1,4 @@
-import {checkMinLength} from "../utils.js";
+import {checkMinLength} from "../utilities.js";
 
 checkMinLength('name', 'name-error', 2 )
 

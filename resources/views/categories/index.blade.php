@@ -5,7 +5,7 @@
     <div class="page-header">
         <h1>Admin Categorieën</h1>
 
-        <a href="{{route('admin.categories.create')}}" class="btn-primary">
+        <a href="{{ route('admin.categories.create') }}" class="btn-primary">
             + Categorie
         </a>
     </div>
@@ -30,8 +30,8 @@
             <tr data-id="{{$category->id}}" data-name="{{$category->name}}">
                 <td>{{$category->id}}</td>
                 <td>{{$category->name}}</td>
-                <td><div class="table-actions">
-
+                <td>
+                    <div class="table-actions">
                         <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn-edit">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                             <span class="text-button">Bewerken</span>
@@ -45,9 +45,9 @@
                                 <span class="text-button">Verwijderen</span>
                             </button>
                         </form>
-                    </div></td>
+                    </div>
+                </td>
             </tr>
-
         @empty
             <p>There are no categories to display.</p>
         @endforelse

@@ -1,4 +1,4 @@
-import {checkMaxLength, checkMinLength, checkEmailFormat, validateOnBlur} from '../utils.js';
+import {checkMaxLength, checkMinLength, checkEmailFormat, validateOnBlur} from '../utilities.js';
 
 
 

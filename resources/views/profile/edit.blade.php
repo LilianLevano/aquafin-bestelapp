@@ -4,7 +4,7 @@
     <header class="bg-white shadow">
 
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-           Profile
+            {{ __('Profiel') }}
         </h2>
     </header>
 @endsection

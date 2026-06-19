@@ -1,3 +1,5 @@
+@use(Illuminate\Support\Facades\Auth)
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -18,22 +20,16 @@
 </head>
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
-        <!-- Page Navigation -->
-        @include('layouts.navigation')
+        @if (Auth::check())
+            <!-- Page Navigation -->
+            @include('layouts.navigation')
+        @endif
 
         <!-- Page Heading -->
         @yield('header')
 
         <!-- Toast notifications -->
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-        @if(session('status'))
-            <div class="alert alert-success">{{ session('status') }}</div>
-        @endif
-        @if(session('error'))
-            <div class="alert alert-error">{{ session('error') }}</div>
-        @endif
+        <x-session-status />
 
         <!-- Page Content -->
         <main class="manager-page">
