@@ -289,9 +289,10 @@ async function loadWeatherData() {
     state.value = "loading";
 
     try {
-        const data = await fetchWithoutCache(
-            CACHE_KEY_WEATHER_FORECAST,
-            `${API_URL_WEATHER_FORECAST}?days_ahead=${overview.value}`
+      const data = await fetchWithCache(
+    CACHE_KEY_WEATHER_FORECAST,
+    CACHE_DURATION_WEATHER_FORECAST,
+    `${API_URL_WEATHER_FORECAST}?days_ahead=${overview.value}`
         );
 
         if (!data || !data.daily) {
@@ -550,17 +551,16 @@ function renderEvolutionChart(data) {
                     )
                 },
                 {
-                    label: "Gemiddelde °C",
-                    data: avgTemps,
-                    type: "bar",
-                    borderColor: "rgba(22,163,74,1)",
-                    backgroundColor: data.map((d) =>
-                        d.isRisk ? "rgba(220,38,38,0.5)" : "rgba(22,163,74,0.4)"
-                    ),
-                    borderDash: chart.value === "line" ? [5, 5] : [],
-                    tension: 0.3,
-                    borderRadius: 4
-                }
+    label: "Gemiddelde °C",
+    data: avgTemps,
+    type: "line",
+    borderColor: "rgba(22,163,74,1)",
+    backgroundColor: "rgba(22,163,74,0.08)",
+    pointBackgroundColor: data.map((d) =>
+        d.isRisk ? "rgba(220,38,38,1)" : "rgba(22,163,74,1)"
+    ),
+    tension: 0.3
+}
             ]
         },
         options: {
@@ -619,9 +619,9 @@ function updateEvolutionChart(data) {
         d.isRisk ? "rgba(220,38,38,1)" : "rgba(234,88,12,1)"
     );
     chart.charts.line.context.data.datasets[2].data = avgTemps;
-    chart.charts.line.context.data.datasets[2].backgroundColor = data.map(d =>
-        d.isRisk ? "rgba(220,38,38,0.5)" : "rgba(22,163,74,0.4)"
-    );
+chart.charts.line.context.data.datasets[2].pointBackgroundColor = data.map(d =>
+    d.isRisk ? "rgba(220,38,38,1)" : "rgba(22,163,74,1)"
+);
     chart.charts.line.context.update();
 }
 

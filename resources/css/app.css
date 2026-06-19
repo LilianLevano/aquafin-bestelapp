@@ -11,3 +11,11 @@
 
 /* Styles for large desktops (screens wider than 1024px) */
 /* @import url("./wide/styles.css") screen and (min-width: 1025px); */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+.visually-hidden {
+    display: none !important;
+}
+

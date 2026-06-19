@@ -10,6 +10,9 @@
         <a href="{{ route('technieker.orders.create') }}" class="btn btn-primary">
             + Nieuwe bestelling
         </a>
+        <a href="{{ route('technieker.flood-forecast.index') }}" class="btn btn-secondary">
+    🌧 Voorspelling weersomstandigheden
+</a>
     </div>
     <div class="filter-zone">
         <div class="filter-item">
@@ -47,8 +50,10 @@
             </tr>
         </thead>
 
-        <div id="geen-data" class="hidden py-5 text-center text-muted fst-italic small"></div>
-        <tbody>
+      <tbody id="bestellingen-body">
+    <tr id="empty-row" class="{{ $orders->isEmpty() ? '' : 'd-none' }}">
+        <td colspan="5" class="text-center text-muted fst-italic py-4">Geen bestellingen gevonden.</td>
+    </tr>
             @foreach($orders as $order)
                 <tr>
                     <td>{{$order->id}}</td>
