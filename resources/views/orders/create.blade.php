@@ -206,7 +206,7 @@
 
         {{-- LEFT: FORM --}}
         <div style="flex:1;min-width:0;">
-            <form action="{{ route('orders.store') }}" method="POST" id="bestel-form">
+            <form action="{{ route('technieker.orders.store') }}" method="POST" id="bestel-form">
                 @csrf
 
                 {{-- ORDER INFO --}}
@@ -271,7 +271,7 @@
                                     <tr data-naam="{{ strtolower($material->name) }}"
                                         data-categorie="{{ $material->category->name ?? '' }}">
                                         <td class="text-muted font-monospace small">{{ $material->id }}</td>
-                                        <td class="fw-medium"><a href="{{route('materials.show', $material->id)}}">{{ $material->name }}</a> </td>
+                                        <td class="fw-medium"><a href="{{route('technieker.materials.show', $material->id)}}">{{ $material->name }}</a> </td>
                                         <td class="category-material">
                                             <span class="badge bg-primary bg-opacity-10 text-primary ">
                                                 {{ $material->category->name ?? '—' }}
