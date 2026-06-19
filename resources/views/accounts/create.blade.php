@@ -109,3 +109,7 @@
         </form>
     </div>
 @endsection
+
+@push('scripts')
+    @vite('resources/js/accounts/account-create.js')
+@endpush

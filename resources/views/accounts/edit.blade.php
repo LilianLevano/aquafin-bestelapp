@@ -111,3 +111,6 @@
         </form>
     </div>
 @endsection
+@push('scripts')
+    @vite('resources/js/accounts/account-edit.js')
+@endpush

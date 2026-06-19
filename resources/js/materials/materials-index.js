@@ -1,10 +1,3 @@
-import {initFuzzySearch} from "../fuzzy-search.js";
+import {addFuzzySearch} from "../utilities.js";
 
-document.addEventListener('DOMContentLoaded', () => {
-    initFuzzySearch({
-        inputId:       'search-materials',
-        suggestionsId: 'search-suggestions',
-        tbodyId:       'materials-tbody',
-        keys:           ['name'],
-    })
-})
+addFuzzySearch('search-materials','search-suggestions', 'materials-tbody', ['name'],)
