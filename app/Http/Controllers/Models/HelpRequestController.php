@@ -158,10 +158,10 @@ class HelpRequestController extends WebController
                     'route' => route('admin.help-requests.index', ['is_completed' => 'all'], absolute: true)],
                 422 => [
                     'message' => 'Er was iets mis met de validatie, check uw input.',
-                    'route' => route('admin.help-requests.edit', ['help-request' => $id], absolute: true)],
+                    route('admin.help-requests.edit', ['help_request' => $id])],
                 500 => [
                     'message' => 'Er ging iets intern miss, neem contact op met de IT dienst.',
-                    'route' => route('admin.help-requests.edit', ['help-request' => $id], absolute: true)]
+                route('admin.help-requests.edit', ['help_request' => $id])],
             ]
         );
     }
