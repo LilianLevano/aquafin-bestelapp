@@ -32,7 +32,6 @@ class CategoryController extends WebController
         return view('categories.index', compact('categories'));
     }
 
-
     /**
      * Show the form for creating a new category.
      *

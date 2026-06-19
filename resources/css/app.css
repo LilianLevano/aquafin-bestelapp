@@ -11,3 +11,41 @@
 
 /* Styles for large desktops (screens wider than 1024px) */
 /* @import url("./wide/styles.css") screen and (min-width: 1025px); */
+
+/* Global polish */
+html {
+    scroll-behavior: smooth;
+}
+
+::selection {
+    background: rgba(0, 103, 168, 0.18);
+    color: #0d1b2a;
+}
+
+::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f0f4f8;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #b0bfcf;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0067a8;
+}
+
+::placeholder {
+    color: #9caaba;
+    opacity: 1;
+}
+
+/* Fix wrapper background */
+div.min-h-screen.bg-gray-100 {
+    background-color: #f0f4f8 !important;
+}
