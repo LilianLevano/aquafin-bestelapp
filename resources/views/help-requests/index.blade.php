@@ -5,9 +5,9 @@
     <h1>Aanvragen</h1>
 
     <div class="status-tabs">
-        <a class="btn-primary" href="{{route('admin.help-requests.index', 'open')}}">Open</a>
-        <a class="btn-primary" href="{{route('admin.help-requests.index', 'completed')}}">Gesloten</a>
-        <a class="btn-primary" href="{{route('admin.help-requests.index', 'all')}}">Alle</a>
+        <a class="btn-primary" href="{{ route('admin.help-requests.index', ['is_completed' => 'open']) }}">Open</a>
+        <a class="btn-primary" href="{{ route('admin.help-requests.index', ['is_completed' => 'completed']) }}">Gesloten</a>
+        <a class="btn-primary" href="{{ route('admin.help-requests.index', ['is_completed' => 'all']) }}">Alle</a>
     </div>
 
     <div class="mb">

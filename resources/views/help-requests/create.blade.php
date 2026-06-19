@@ -17,7 +17,7 @@
         </a>
         <h1 class="h1">Request Help</h1>
 
-        <form method="POST" action="{{ route('help-request.store') }}" class="form" x-data="{ sent: false }" @submit.prevent="sent = true; $el.submit()">
+        <form method="POST" action="{{ route('help-requests.store') }}" class="form" x-data="{ sent: false }" @submit.prevent="sent = true; $el.submit()">
             @csrf
 
             <fieldset :disabled="sent">
