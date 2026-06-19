@@ -61,23 +61,9 @@ class FloodForecastController extends WebController
     }
 
     /**
-     * Fetch weather forecast data from the Open-Meteo API for the authenticated user's site.
-     *
-     * Accepts an optional "days_ahead" query parameter (integer, 1–14, default: 7).
-     * Throws a ValidationException if the value is out of range or if the authenticated
-     * user has no site with configured latitude/longitude coordinates.
-     *
-     * Results are cached per site and forecast window for 30 minutes to avoid
-     * redundant external API calls. The cache key format is:
-     * "weather_forecast_{siteId}_{days_ahead}".
-     *
-     * The pipeline executed inside the cache callback:
-     *  1. Fetch raw hourly/daily weather data via {@see WeatherService::fetchForecast()}.
-     *  2. Process daily records and attach risk values via {@see RiskCalculationService::processDailyRecords()}.
-     *  3. Compute a weekly summary via {@see RiskCalculationService::calculateWeeklySummary()}.
-     *  4. Generate a 5-year flood prediction and persist it to the database via
-     *     {@see FloodForecastService::generateFiveYearPrediction()} and
-     *     {@see FloodForecastService::savePredictions()}.
+ *  4. Generate a historical flood risk analysis (since 2004) and persist it via
+     *     {@see FloodForecastService::generateHistoricalAnalysis()} and
+     *     {@see FloodForecastService::saveAnalyses()}.
      *
      * The response payload includes:
      *  - "daily"         — processed daily records with risk values.
@@ -85,13 +71,7 @@ class FloodForecastController extends WebController
      *  - "riskThreshold" — the global risk threshold constant from {@see RiskCalculationService}.
      *  - "days"          — the effective forecast window used.
      *  - "raw"           — the raw weather data returned by the API.
-     *  - "fiveYear"      — prediction analyses (first 24 months) and high-risk months.
-     *
-     * @param Request $request The incoming HTTP request, optionally carrying "days_ahead".
-     *
-     * @return JsonResponse The forecast payload wrapped in a standard JSON response.
-     * @throws ValidationException If "days_ahead" is out of range (1–14) or the site
-     *                             location is not configured for the authenticated user.
+     *  - "historical"    — historical monthly risk analyses and identified high-risk months.
      */
     public function api(Request $request): JsonResponse
     {
@@ -122,32 +102,32 @@ class FloodForecastController extends WebController
                 $longitude = $user->site->longitude;
                 $cacheKey = "weather_forecast_{$siteId}_{$days_ahead}";
 
-                $result = cache()->remember($cacheKey, now()->addMinutes(30), function () use ($latitude, $longitude, $days_ahead, $siteId) {
-                    // 1. Fetch raw weather data
-                    $raw = $this->weatherService->fetchForecast($latitude, $longitude, $days_ahead);
+              $result = cache()->remember($cacheKey, now()->addMinutes(30), function () use ($latitude, $longitude, $days_ahead, $siteId) {
+    // 1. Fetch raw weather data (forecast)
+    $raw = $this->weatherService->fetchForecast($latitude, $longitude, $days_ahead);
 
-                    // 2. Process daily records with risk values
-                    $dailyRecords = $this->riskService->processDailyRecords($raw, $days_ahead);
+    // 2. Process daily records with risk values
+    $dailyRecords = $this->riskService->processDailyRecords($raw, $days_ahead);
 
-                    // 3. Calculate weekly summary
-                    $weeklySummary = $this->riskService->calculateWeeklySummary($dailyRecords);
+    // 3. Calculate weekly summary
+    $weeklySummary = $this->riskService->calculateWeeklySummary($dailyRecords);
 
-                    // 4. Generate 5-year prediction + save to DB
-                    $predictions = $this->forecastService->generateFiveYearPrediction($dailyRecords, $siteId);
-                    $saved = $this->forecastService->savePredictions($predictions, $siteId);
+    // 4. Generate historical risk analysis (real data since 2004) + save to DB
+    $analyses = $this->forecastService->generateHistoricalAnalysis($latitude, $longitude, $siteId);
+    $saved = $this->forecastService->saveAnalyses($analyses, $siteId);
 
-                    return [
-                        'daily'         => $dailyRecords,
-                        'summary'       => $weeklySummary,
-                        'riskThreshold' => RiskCalculationService::RISK_THRESHOLD,
-                        'days'          => $days_ahead,
-                        'raw'           => $raw,
-                        'fiveYear'      => [
-                            'analyses'   => array_slice($saved['analyses'], 0, 24), // first 2 years for frontend
-                            'riskMonths' => $saved['riskMonths'],
-                        ],
-                    ];
-                });
+    return [
+        'daily'         => $dailyRecords,
+        'summary'       => $weeklySummary,
+        'riskThreshold' => RiskCalculationService::RISK_THRESHOLD,
+        'days'          => $days_ahead,
+        'raw'           => $raw,
+        'historical'    => [
+            'analyses'   => $saved['analyses'],
+            'riskMonths' => $saved['riskMonths'],
+        ],
+    ];
+});
 
                 return $result;
             },

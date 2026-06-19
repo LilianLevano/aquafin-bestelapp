@@ -80,5 +80,46 @@ class WeatherService
         }
 
         return $data;
+        
     }
+    /**
+ * Fetch historical daily weather data from the Open-Meteo Archive API.
+ *
+ * Unlike fetchForecast(), this retrieves real past observations rather
+ * than predictions. Used as the basis for historical flood risk analysis,
+ * replacing speculative simulation with grounded data.
+ *
+ * @param float $latitude
+ * @param float $longitude
+ * @param string $startDate Format: YYYY-MM-DD (e.g. '2004-01-01')
+ * @param string $endDate   Format: YYYY-MM-DD
+ * @return array Same structure as fetchForecast(): 'daily' and 'hourly' blocks.
+ * @throws Exception
+ */
+public function fetchHistorical(float $latitude, float $longitude, string $startDate, string $endDate): array
+{
+    $query = http_build_query([
+        'latitude'   => $latitude,
+        'longitude'  => $longitude,
+        'start_date' => $startDate,
+        'end_date'   => $endDate,
+        'daily'      => 'temperature_2m_max,temperature_2m_min,precipitation_sum',
+        'hourly'     => 'relative_humidity_2m,precipitation_probability',
+        'timezone'   => 'Europe/Berlin',
+    ]);
+
+    $response = Http::timeout(30)->get("https://archive-api.open-meteo.com/v1/archive?{$query}");
+
+    if ($response->failed()) {
+        throw new Exception('Could not acquire historical data from Open-Meteo Archive. ' . $response->body());
+    }
+
+    $data = $response->json();
+
+    if (!is_array($data) || !array_key_exists('daily', $data)) {
+        throw new Exception('Malformed historical weather data received from API.');
+    }
+
+    return $data;
+}
 }
